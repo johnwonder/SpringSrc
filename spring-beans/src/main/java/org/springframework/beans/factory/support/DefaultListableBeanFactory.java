@@ -1150,6 +1150,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		return null;
 	}
 
+	//最主要的子类要实现的模板方法是
+	// AutowireCapableBeanFactory.resolveDependency(DependencyDescriptor, String, Set, TypeConverter), 这个方法用来实现类型的自动绑定.
 	@Override
 	@Nullable
 	public Object resolveDependency(DependencyDescriptor descriptor, @Nullable String requestingBeanName,

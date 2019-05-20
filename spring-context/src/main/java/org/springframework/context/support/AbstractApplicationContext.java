@@ -633,6 +633,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	//得到beanFactory
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		//抽象类AbstractRefreshableApplicationContext
 		refreshBeanFactory();
 		return getBeanFactory();
 	}
@@ -1046,6 +1047,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#destroySingletons()
 	 */
 	protected void destroyBeans() {
+		//AbstractRefreshableApplicationContext
+
+		//DefaultListableBeanFactory destroySingletons();
 		getBeanFactory().destroySingletons();
 	}
 
