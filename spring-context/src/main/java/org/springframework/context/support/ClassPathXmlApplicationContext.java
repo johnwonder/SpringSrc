@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  * Standalone XML application context, taking the context definition files
  * from the class path, interpreting plain paths as class path resource names
  * that include the package path (e.g. "mypackage/myresource.txt"). Useful for
- * test harnesses as well as for application contexts embedded within JARs.
+ * test harnesses(测试框架) as well as for application contexts embedded within JARs.
  *
  * <p>The config location defaults can be overridden via {@link #getConfigLocations},
  * Config locations can either denote concrete files like "/myfiles/context.xml"
@@ -35,8 +35,8 @@ import org.springframework.util.Assert;
  * {@link org.springframework.util.AntPathMatcher} javadoc for pattern details).
  *
  * <p>Note: In case of multiple config locations, later bean definitions will
- * override ones defined in earlier loaded files. This can be leveraged to
- * deliberately override certain bean definitions via an extra XML file.
+ * override ones defined in earlier loaded files. This can be leveraged to(促使)
+ * deliberately(蓄意) override certain bean definitions via an extra XML file.
  *
  * <p><b>This is a simple, one-stop shop convenience ApplicationContext.
  * Consider using the {@link GenericApplicationContext} class in combination
@@ -49,6 +49,7 @@ import org.springframework.util.Assert;
  * @see #getResourceByPath
  * @see GenericApplicationContext
  */
+//https://blog.csdn.net/qq_34190023/article/details/80879382
 public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContext {
 
 	@Nullable
@@ -82,6 +83,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	 * @throws BeansException if context creation failed
 	 */
 	public ClassPathXmlApplicationContext(String configLocation) throws BeansException {
+
 		this(new String[] {configLocation}, true, null);
 	}
 
@@ -91,6 +93,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	 * @param configLocations array of resource locations
 	 * @throws BeansException if context creation failed
 	 */
+	//https://www.cnblogs.com/uptownBoy/articles/1698335.html
+	//可变参数
 	public ClassPathXmlApplicationContext(String... configLocations) throws BeansException {
 		this(configLocations, true, null);
 	}
@@ -139,8 +143,11 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
+		System.out.println("进入源码...");
 		setConfigLocations(configLocations);
+		//默认为true
 		if (refresh) {
+			//调用抽象类AbstractApplicationContext中的refresh方法
 			refresh();
 		}
 	}

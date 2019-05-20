@@ -83,6 +83,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * ApplicationContext
  * Abstract implementation of the {@link org.springframework.context.ApplicationContext}
  * interface. Doesn't mandate the type of storage used for configuration; simply
  * implements common context functionality. Uses the Template Method design pattern,
@@ -168,6 +169,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private String displayName = ObjectUtils.identityToString(this);
 
 	/** Parent context. */
+	//ApplicationContext 实现了BeanFactory 接口
 	@Nullable
 	private ApplicationContext parent;
 
@@ -458,6 +460,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	// Implementation of ConfigurableApplicationContext interface
 	//---------------------------------------------------------------------
 
+	//ConfigurableApplicationContext
 	/**
 	 * Set the parent of this application context.
 	 * <p>The parent {@linkplain ApplicationContext#getEnvironment() environment} is
@@ -470,6 +473,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void setParent(@Nullable ApplicationContext parent) {
 		this.parent = parent;
 		if (parent != null) {
+			//合并环境
+			//ConfiguraableEnvironment实现了Environment接口
 			Environment parentEnvironment = parent.getEnvironment();
 			if (parentEnvironment instanceof ConfigurableEnvironment) {
 				getEnvironment().merge((ConfigurableEnvironment) parentEnvironment);
@@ -594,6 +599,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment
+		//context environment
+		//ClassPathXmlApplicationContext
+		//https://rkdu2-163-com.iteye.com/blog/2003638
+		//spring-web
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable
@@ -610,6 +619,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.env.PropertySource.StubPropertySource
 	 * @see org.springframework.web.context.support.WebApplicationContextUtils#initServletPropertySources
 	 */
+	//
+	//https://rkdu2-163-com.iteye.com/blog/2003638
 	protected void initPropertySources() {
 		// For subclasses: do nothing by default.
 	}
@@ -620,6 +631,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
 	 */
+	//得到beanFactory
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		refreshBeanFactory();
 		return getBeanFactory();
@@ -1354,6 +1366,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @throws IllegalStateException if already initialized and multiple refresh
 	 * attempts are not supported
 	 */
+	//
+	//
+	//AbstractRefreshableApplicationContext
 	protected abstract void refreshBeanFactory() throws BeansException, IllegalStateException;
 
 	/**
@@ -1362,6 +1377,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Should never throw an exception but rather log shutdown failures.
 	 */
 	protected abstract void closeBeanFactory();
+
 
 	/**
 	 * Subclasses must return their internal bean factory here. They should implement the
@@ -1376,6 +1392,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #refreshBeanFactory()
 	 * @see #closeBeanFactory()
 	 */
+	//ConfigurableApplicationContext 接口
 	@Override
 	public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
 

@@ -43,7 +43,7 @@ import org.springframework.lang.Nullable;
  * for example). See chapters 4 and 11 of "Expert One-on-One J2EE Design and
  * Development" for a discussion of the benefits of this approach.
  *
- * <p>Note that it is generally better to rely on Dependency Injection
+ * <p>Note that it is generally better to rely on(信任) Dependency Injection
  * ("push" configuration) to configure application objects through setters
  * or constructors, rather than use any form of "pull" configuration like a
  * BeanFactory lookup. Spring's Dependency Injection functionality is
@@ -113,10 +113,12 @@ import org.springframework.lang.Nullable;
  * @see DisposableBean#destroy
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getDestroyMethodName
  */
+//https://www.cnblogs.com/redcool/p/6413461.html
+	//https://www.cnblogs.com/digdeep/p/4518571.html
 public interface BeanFactory {
 
 	/**
-	 * Used to dereference a {@link FactoryBean} instance and distinguish it from
+	 * Used to dereference a {@link FactoryBean} instance and distinguish(区分) it from
 	 * beans <i>created</i> by the FactoryBean. For example, if the bean named
 	 * {@code myJndiObject} is a FactoryBean, getting {@code &myJndiObject}
 	 * will return the factory, not the instance returned by the factory.
@@ -137,6 +139,8 @@ public interface BeanFactory {
 	 * with the specified name
 	 * @throws BeansException if the bean could not be obtained
 	 */
+	//返回给定名称注册的bean实例。根据bean的配置情况，
+	// 如果是singleton模式将返回一个共享实例，否则将返回一个新建的实例，如果没有找到指定bean,该方法可能会抛出异常
 	Object getBean(String name) throws BeansException;
 
 	/**

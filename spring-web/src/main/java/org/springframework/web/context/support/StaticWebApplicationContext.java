@@ -190,6 +190,7 @@ public class StaticWebApplicationContext extends StaticApplicationContext
 		this.themeSource = UiApplicationContextUtils.initThemeSource(this);
 	}
 
+	//impl AbstractApplicationContext
 	@Override
 	protected void initPropertySources() {
 		WebApplicationContextUtils.initServletPropertySources(getEnvironment().getPropertySources(),

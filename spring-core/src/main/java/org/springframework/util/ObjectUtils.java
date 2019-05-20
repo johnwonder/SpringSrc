@@ -619,6 +619,8 @@ public abstract class ObjectUtils {
 	 * @param obj the object
 	 * @return the object's identity code in hex notation
 	 */
+	//https://blog.csdn.net/zh921112/article/details/34807145
+	//java.lang.Integer.toHexString()
 	public static String getIdentityHexString(Object obj) {
 		return Integer.toHexString(System.identityHashCode(obj));
 	}

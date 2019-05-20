@@ -88,7 +88,9 @@ public class PropertyPlaceholderHelper {
 		Assert.notNull(placeholderSuffix, "'placeholderSuffix' must not be null");
 		this.placeholderPrefix = placeholderPrefix;
 		this.placeholderSuffix = placeholderSuffix;
+		//
 		String simplePrefixForSuffix = wellKnownSimplePrefixes.get(this.placeholderSuffix);
+		//
 		if (simplePrefixForSuffix != null && this.placeholderPrefix.endsWith(simplePrefixForSuffix)) {
 			this.simplePrefix = simplePrefixForSuffix;
 		}
@@ -129,6 +131,7 @@ public class PropertyPlaceholderHelper {
 
 		StringBuilder result = new StringBuilder(value);
 
+		//如果没有{ 前缀 那直接返回result
 		int startIndex = value.indexOf(this.placeholderPrefix);
 		while (startIndex != -1) {
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
@@ -207,6 +210,8 @@ public class PropertyPlaceholderHelper {
 	}
 
 
+	//
+	//https://blog.csdn.net/aitangyong/article/details/54137067
 	/**
 	 * Strategy interface used to resolve replacement values for placeholders contained in Strings.
 	 */
