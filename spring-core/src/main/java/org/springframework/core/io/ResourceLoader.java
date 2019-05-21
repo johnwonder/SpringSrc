@@ -39,6 +39,7 @@ import org.springframework.util.ResourceUtils;
  * @see org.springframework.context.ApplicationContext
  * @see org.springframework.context.ResourceLoaderAware
  */
+//资源的加载则由 ResourceLoader 来统一定义
 public interface ResourceLoader {
 
 	/** Pseudo URL prefix for loading from the class path: "classpath:". */
@@ -76,6 +77,8 @@ public interface ResourceLoader {
 	 * @see org.springframework.util.ClassUtils#getDefaultClassLoader()
 	 * @see org.springframework.util.ClassUtils#forName(String, ClassLoader)
 	 */
+	//ClassPathResource ，这个类是可以根据指定的 ClassLoader 来加载资源的
+	//https://mp.weixin.qq.com/s/Ozc18IOsZnYERxrL1bfJVA
 	@Nullable
 	ClassLoader getClassLoader();
 

@@ -51,6 +51,11 @@ import org.springframework.core.io.ResourceLoader;
  * @see org.springframework.context.ApplicationContext
  * @see org.springframework.context.ResourceLoaderAware
  */
+//ResourceLoader 的 ResourcegetResource(Stringlocation) 每次只能根据 location 返回一个 Resource，
+// 当需要加载多个资源时，我们除了多次调用 getResource() 外别无他法。
+// ResourcePatternResolver 是 ResourceLoader 的扩展，
+// 它支持根据指定的资源路径匹配模式每次返回多个 Resource 实例，其定义如下
+	//PathMatchingResourcePatternResolver 为 ResourcePatternResolver 最常用的子类
 public interface ResourcePatternResolver extends ResourceLoader {
 
 	/**

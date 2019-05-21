@@ -29,6 +29,14 @@ import org.springframework.lang.Nullable;
  * @since 4.3
  * @see DefaultResourceLoader#addProtocolResolver
  */
+//有了 ProtocolResolver 后，我们不需要直接继承 DefaultResourceLoader，
+// 改为实现 ProtocolResolver 接口也可以实现自定义的 ResourceLoader。
+// ProtocolResolver 接口，
+// 仅有一个方法 Resourceresolve(Stringlocation,ResourceLoaderresourceLoader)，
+// 该方法接收两个参数：资源路径location，指定的加载器 ResourceLoader，
+// 返回为相应的 Resource 。
+// 在 Spring 中你会发现该接口并没有实现类，
+// 它需要用户自定义，自定义的 Resolver 如何加入 Spring 体系呢？调用 DefaultResourceLoader.addProtocolResolver()
 @FunctionalInterface
 public interface ProtocolResolver {
 
