@@ -17,6 +17,7 @@ public class App
 		//
 
 		//AbstractBeanDefinitionReader
+		//XmlBeanDefinitionReader
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
 		ILogin login = (ILogin) applicationContext.getBean("loginService");
 		login.loginCheck("boy", "123");

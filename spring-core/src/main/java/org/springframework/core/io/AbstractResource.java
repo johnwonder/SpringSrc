@@ -163,7 +163,7 @@ public abstract class AbstractResource implements Resource {
 	}
 
 	/**
-	 * This implementation checks the timestamp of the underlying File,
+	 * This implementation checks the timestamp of the underlying File(底层文件),
 	 * if available.
 	 * @see #getFileForLastModifiedCheck()
 	 */

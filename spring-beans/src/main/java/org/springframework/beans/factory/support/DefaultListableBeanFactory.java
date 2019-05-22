@@ -117,6 +117,15 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("serial")
 //to suppress warnings relative to missing serialVersionUID field for a serializable class
 //https://www.cnblogs.com/yuefan/p/3763898.html spring中的设计模式
+
+//接口ConfigurableListableBeanFactory 中实现了 接口ConfigurableBeanFactory
+//ConfigurableBeanFactory 实现了  接口HierarchicalBeanFactory, SingletonBeanRegistry
+
+//抽象类AbstractAutowireCapableBeanFactory  继承了抽象类AbstractBeanFactory
+//AbstractBeanFactory 继承了 FactoryBeanRegistrySupport
+//抽象类FactoryBeanRegistrySupport 继承了普通类DefaultSingletonBeanRegistry
+//DefaultSingletonBeanRegistry 实现了SingletonBeanRegistry
+
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory
 		implements ConfigurableListableBeanFactory, BeanDefinitionRegistry, Serializable {
 
@@ -769,6 +778,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				new BeanDefinitionHolder(mbd, beanName, getAliases(beanDefinitionName)), descriptor);
 	}
 
+	//实现 BeanDefinitionRegistry
+	//实现 AbstractBeanFactory
+	//BeanFactory 接口的 getBean方法  转而在 AbstractBeanFactory 里实现了
 	@Override
 	public BeanDefinition getBeanDefinition(String beanName) throws NoSuchBeanDefinitionException {
 		BeanDefinition bd = this.beanDefinitionMap.get(beanName);
@@ -877,7 +889,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	//---------------------------------------------------------------------
 	// Implementation of BeanDefinitionRegistry interface
 	//---------------------------------------------------------------------
-
+	// BeanDefinitionRegistry 的 接口实现
 	@Override
 	public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
 			throws BeanDefinitionStoreException {
@@ -1029,8 +1041,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		return isAllowBeanDefinitionOverriding();
 	}
 
+	//https://mp.weixin.qq.com/s?__biz=MzA4NDEzNjQ5OA==&mid=2647785072&idx=1&sn=e82b1ab8b7a66d03c1c312fd1a889e51&chksm=87ce992db0b9103b0639cc0e13ca84a72988a2f674b2eda93fc7471aef896fd8165da54a7b64&scene=0&xtrack=1&key=cdcd0cf40170acb7da4281de657f635350774cb3dcf842ab8c0efd93a8d35047822489dbd2fd6a0a1b978b1651e4177c7e8093d6010064326020b7cfcedfe9ac839fdf99e89f650712c647683ab95488&ascene=1&uin=MjQ4NzM0MjEwMA%3D%3D&devicetype=Windows+7&version=62060739&lang=zh_CN&pass_ticket=%2BtkAvbIj0w062hsoqrWFdqr22oEllxQ0Bf%2FFYSrmE6ZfB8fVJVqXZLHWPaa2HEaC
 	@Override
 	public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
+
+		//调用DefaultSingletonBeanRegistry的registerSingleton方法
 		super.registerSingleton(beanName, singletonObject);
 
 		if (hasBeanCreationStarted()) {
