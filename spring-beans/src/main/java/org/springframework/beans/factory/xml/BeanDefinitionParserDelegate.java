@@ -412,7 +412,10 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
+		//获取id属性
 		String id = ele.getAttribute(ID_ATTRIBUTE);
+
+		//获取name属性
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
 		List<String> aliases = new ArrayList<>();
@@ -421,6 +424,10 @@ public class BeanDefinitionParserDelegate {
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
+		//// 分割 name 属性
+		//beanName 的命名规则：如果 id 不为空，则 beanName = id；
+		// 如果 id 为空，但是 alias 不空，
+		// 则 beanName 为 alias 的第一个元素，如果两者都为空，则根据默认规则来设置 beanName。
 		String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
@@ -430,10 +437,13 @@ public class BeanDefinitionParserDelegate {
 			}
 		}
 
+		//// 检查 name 的唯一性
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
+		//注入嵌套Bean https://blog.csdn.net/confirmaname/article/details/9362267
 
+		// 解析 属性，构造 AbstractBeanDefinition
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -512,17 +522,27 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		try {
+			//// 创建用于承载属性的 GenericBeanDefinition 实例
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-
+			// 解析默认 bean 的各种属性
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			// 提取 description
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
-
+			// 解析元数据
 			parseMetaElements(ele, bd);
-			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
-			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			//https://blog.csdn.net/qq_22912803/article/details/52503914
+			//https://www.cnblogs.com/atwanli/articles/6154920.html
+			//由于采用cglib生成之类的方式，所以需要用来动态注入的类，不能是final修饰的；需要动态注入的方法，也不能是final修饰的。
+			// 解析 lookup-method 属性
+			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			// 解析 replaced-method 属性
+			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
+			// 解析构造函数参数
 			parseConstructorArgElements(ele, bd);
+			// 解析 property 子元素
 			parsePropertyElements(ele, bd);
+			// 解析 qualifier 子元素
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
@@ -556,6 +576,7 @@ public class BeanDefinitionParserDelegate {
 	public AbstractBeanDefinition parseBeanDefinitionAttributes(Element ele, String beanName,
 			@Nullable BeanDefinition containingBean, AbstractBeanDefinition bd) {
 
+		//single 标签过期了
 		if (ele.hasAttribute(SINGLETON_ATTRIBUTE)) {
 			error("Old 1.x 'singleton' attribute in use - upgrade to 'scope' declaration", ele);
 		}

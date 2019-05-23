@@ -223,6 +223,8 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
 				int count = loadBeanDefinitions(resources);
 				if (actualResources != null) {
+					//我们在编码时经常需要将一些元素添加到一个List中，此时我们一般有两种选择：Collections.addAll()或者是ArrayList.addAll()。在需添加元素比较少的情况下，并在List的size在万级以上时，一般建议Collections.addAll()，
+					// 但当List的size较小时，两种方法没有什么区别，甚至ArrayList.addAll()更好。
 					Collections.addAll(actualResources, resources);
 				}
 				if (logger.isTraceEnabled()) {
