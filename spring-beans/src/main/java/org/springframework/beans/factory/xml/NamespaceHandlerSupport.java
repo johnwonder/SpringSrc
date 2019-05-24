@@ -134,6 +134,7 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	 * handle the specified element. The element name is the local (non-namespace qualified)
 	 * name.
 	 */
+	//自定义Bean标签注册
 	protected final void registerBeanDefinitionParser(String elementName, BeanDefinitionParser parser) {
 		this.parsers.put(elementName, parser);
 	}
