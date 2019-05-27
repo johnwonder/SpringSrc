@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="loginService" class="com.john.LoginImpl"/>
+
+	<bean id="beanAbstract" abstract="true">
+		<property name="id" value="1"/>
+		<property name="name" value="Jack"/>
+	</bean>
+
+	<bean id="bean3" class="com.john.Bean1" parent="beanAbstract">
+		<!-- 可以覆盖父类赋予的值 -->
+		<property name="name" value="Tom"/>
+		<property name="password" value="123"/>
+	</bean>
+	<bean id="bean4" class="com.john.Bean2" parent="beanAbstract">
+		<property name="loginpass" value="123"/>
+	</bean>
+</beans>
