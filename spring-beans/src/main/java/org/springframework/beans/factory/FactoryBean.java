@@ -37,16 +37,17 @@ import org.springframework.lang.Nullable;
  * {@link org.springframework.jndi.JndiObjectFactoryBean}. It can be used for
  * custom components as well; however, this is only common for infrastructure code.
  *
- * <p><b>{@code FactoryBean} is a programmatic contract. Implementations are not
- * supposed to rely on annotation-driven injection or other reflective facilities.</b>
+ * <p><b>{@code FactoryBean} is a programmatic contract(程序约定). Implementations are not
+ * supposed to rely on annotation-driven injection or other reflective facilities.(不应依赖注释驱动的注入或其他反射设施)</b>
  * {@link #getObjectType()} {@link #getObject()} invocations may arrive early in
- * the bootstrap process, even ahead of any post-processor setup. If you need access
+ * the bootstrap process, even ahead of(早于) any post-processor setup. If you need access
  * other beans, implement {@link BeanFactoryAware} and obtain them programmatically.
  *
- * <p>Finally, FactoryBean objects participate in the containing BeanFactory's
+ * <p>Finally, FactoryBean objects participate(参与) in the containing BeanFactory's
  * synchronization of bean creation. There is usually no need for internal
  * synchronization other than for purposes of lazy initialization within the
  * FactoryBean itself (or the like).
+ * //通常不需要进行内部同步，除了在FactoryBean本身（或类似对象）内进行延迟初始化之外
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -56,6 +57,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.aop.framework.ProxyFactoryBean
  * @see org.springframework.jndi.JndiObjectFactoryBean
  */
+//从Spring 3.0开始，FactoryBean开始支持泛型，即接口声明改为FactoryBean<T>的形式
 public interface FactoryBean<T> {
 
 	/**
@@ -63,6 +65,7 @@ public interface FactoryBean<T> {
 	 * managed by this factory.
 	 * <p>As with a {@link BeanFactory}, this allows support for both the
 	 * Singleton and Prototype design pattern.
+	 * //允许singleton 和 prototype 设计模式
 	 * <p>If this FactoryBean is not fully initialized yet at the time of
 	 * the call (for example because it is involved in a circular reference),
 	 * throw a corresponding {@link FactoryBeanNotInitializedException}.
@@ -85,8 +88,9 @@ public interface FactoryBean<T> {
 	 * instantiating objects, for example on autowiring.
 	 * <p>In the case of implementations that are creating a singleton object,
 	 * this method should try to avoid singleton creation as far as possible;
-	 * it should rather estimate the type in advance.
+	 * it should rather estimate the type in advance.//它应该提前估计类型
 	 * For prototypes, returning a meaningful type here is advisable too.
+	 * //对于原型，在这里返回有意义的类型也是可取的
 	 * <p>This method can be called <i>before</i> this FactoryBean has
 	 * been fully initialized. It must not rely on state created during
 	 * initialization; of course, it can still use such state if available.
@@ -97,6 +101,7 @@ public interface FactoryBean<T> {
 	 * or {@code null} if not known at the time of the call
 	 * @see ListableBeanFactory#getBeansOfType
 	 */
+	//https://blog.csdn.net/zknxx/article/details/79572387
 	@Nullable
 	Class<?> getObjectType();
 

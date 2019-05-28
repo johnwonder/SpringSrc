@@ -36,6 +36,9 @@ import org.springframework.beans.BeansException;
  * @param <T> the object type
  * @see FactoryBean
  */
+//该注解只能标记在"有且仅有一个抽象方法"的接口上
+//如果一个接口中包含不止一个抽象方法，那么不能使用@FunctionalInterface，编译会报错。
+//https://blog.csdn.net/aitangyong/article/details/54137067
 @FunctionalInterface
 public interface ObjectFactory<T> {
 

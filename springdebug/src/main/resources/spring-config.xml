@@ -18,4 +18,16 @@
 	<bean id="bean4" class="com.john.Bean2" parent="beanAbstract">
 		<property name="loginpass" value="123"/>
 	</bean>
+
+	<bean id="car" class="com.john.factorybean.CarFactoryBean">
+		<property name="carInfo" value="超级跑车,400,2000000"/>
+	</bean>
+
+	<!--https://www.iteye.com/problems/92270-->
+	<bean id="myBeanFactory" class="com.john.beanFactory.MyBeanFactory"></bean>
+	<!--https://www.cnblogs.com/sishang/p/6583057.html-->
+	<bean id="autowireTest1" class="com.john.autowire.AutowireTest1" autowire="byType"/>
+
+	<bean id="autowireTest2" class="com.john.autowire.AutowireTest2">
+	</bean>
 </beans>
