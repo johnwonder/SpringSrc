@@ -79,6 +79,7 @@ import org.springframework.util.StringUtils;
  * @see #forInstance(Object)
  * @see ResolvableTypeProvider
  */
+//https://blog.csdn.net/shenchaohao12321/article/details/80282833
 @SuppressWarnings("serial")
 public class ResolvableType implements Serializable {
 
@@ -212,6 +213,13 @@ public class ResolvableType implements Serializable {
 		}
 		Type rawType = this.type;
 		if (rawType instanceof ParameterizedType) {
+			/**
+			 * 1、map: 获取ParameterizedType:class java.lang.String
+			 * 2、map: 获取ParameterizedType:class com.wangji.demo.ParameterizedTypeTest
+			 * 3、map:getOwnerType is null
+			 * 4、map:getRawType:interface java.util.Map
+			 */
+			//private Map<String, ParameterizedTypeTest> map;
 			rawType = ((ParameterizedType) rawType).getRawType();
 		}
 		return (rawType instanceof Class ? (Class<?>) rawType : null);
@@ -993,8 +1001,8 @@ public class ResolvableType implements Serializable {
 
 	/**
 	 * Return a {@link ResolvableType} for the specified {@link Class}, doing
-	 * assignability checks against the raw class only (analogous to
-	 * {@link Class#isAssignableFrom}, which this serves as a wrapper for.
+	 * assignability(可分配性) checks against the raw class only (analogous to
+	 * {@link Class#isAssignableFrom}, which this serves as a wrapper for(用作包装).
 	 * For example: {@code ResolvableType.forRawClass(List.class)}.
 	 * @param clazz the class to introspect ({@code null} is semantically
 	 * equivalent to {@code Object.class} for typical use cases here}
@@ -1106,6 +1114,7 @@ public class ResolvableType implements Serializable {
 	 * @return a {@link ResolvableType} for the specified field
 	 * @see #forField(Field, Class)
 	 */
+	//获取指定字段的类型
 	public static ResolvableType forField(Field field) {
 		Assert.notNull(field, "Field must not be null");
 		return forType(null, new FieldTypeProvider(field), null);

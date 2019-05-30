@@ -242,7 +242,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
-		// Eagerly check singleton cache for manually registered singletons.
+		// Eagerly(赶紧) check singleton cache for manually registered singletons.
 		Object sharedInstance = getSingleton(beanName);
 		//args参数是为了创建一个新的对象 所以 不为null 的时候 就直接走else了
 		if (sharedInstance != null && args == null) {
@@ -385,6 +385,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 
 		// Check if required type matches the type of the actual bean instance.
+		//需要的类型和实际类型 需要convert
 		if (requiredType != null && !requiredType.isInstance(bean)) {
 			try {
 				T convertedBean = getTypeConverter().convertIfNecessary(bean, requiredType);
@@ -1798,12 +1799,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * The bean definition will already have been merged with the parent definition
 	 * in case of a child definition.
 	 * <p>All bean retrieval methods delegate to this method for actual bean creation.
+	 * 所有bean检索方法都代理到这个方法，用于实际bean的创建
+	 * //返回bean的一个新对象
 	 * @param beanName the name of the bean
-	 * @param mbd the merged bean definition for the bean
+	 * @param mbd the merged bean definition for the bean 合并的bean定义
 	 * @param args explicit arguments to use for constructor or factory method invocation
+	 *             显式参数 用于构造函数或者调用工厂方法
 	 * @return a new instance of the bean
 	 * @throws BeanCreationException if the bean could not be created
 	 */
+	//开启 bean 的实例化进程
 	protected abstract Object createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
 			throws BeanCreationException;
 
