@@ -1678,6 +1678,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (object == null) {
 			// Return bean instance from factory.
 			//是factoryBean
+			//是FactoryBean类 不是 factory-bean属性。。。
 			FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
 			// Caches object obtained from FactoryBean if it is a singleton.
 			if (mbd == null && containsBeanDefinition(beanName)) {

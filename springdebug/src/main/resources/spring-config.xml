@@ -3,31 +3,36 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="loginService" class="com.john.LoginImpl"/>
+	<!--<bean id="loginService" class="com.john.LoginImpl"/>-->
 
-	<bean id="beanAbstract" abstract="true">
-		<property name="id" value="1"/>
-		<property name="name" value="Jack"/>
-	</bean>
+	<!--<bean id="beanAbstract" abstract="true">-->
+		<!--<property name="id" value="1"/>-->
+		<!--<property name="name" value="Jack"/>-->
+	<!--</bean>-->
 
-	<bean id="bean3" class="com.john.Bean1" parent="beanAbstract">
-		<!-- 可以覆盖父类赋予的值 -->
-		<property name="name" value="Tom"/>
-		<property name="password" value="123"/>
-	</bean>
-	<bean id="bean4" class="com.john.Bean2" parent="beanAbstract">
-		<property name="loginpass" value="123"/>
-	</bean>
+	<!--<bean id="bean3" class="com.john.Bean1" parent="beanAbstract">-->
+		<!--&lt;!&ndash; 可以覆盖父类赋予的值 &ndash;&gt;-->
+		<!--<property name="name" value="Tom"/>-->
+		<!--<property name="password" value="123"/>-->
+	<!--</bean>-->
+	<!--<bean id="bean4" class="com.john.Bean2" parent="beanAbstract">-->
+		<!--<property name="loginpass" value="123"/>-->
+	<!--</bean>-->
 
-	<bean id="car" class="com.john.factorybean.CarFactoryBean">
-		<property name="carInfo" value="超级跑车,400,2000000"/>
-	</bean>
+	<!--通过FactoryBean类来返回的bean -->
+	<!--<bean id="car" class="com.john.factorybean.CarFactoryBean">-->
+		<!--<property name="carInfo" value="超级跑车,400,2000000"/>-->
+	<!--</bean>-->
 
 	<!--https://www.iteye.com/problems/92270-->
-	<bean id="myBeanFactory" class="com.john.beanFactory.MyBeanFactory"></bean>
+	<!--<bean id="myBeanFactory" class="com.john.beanFactory.MyBeanFactory"></bean>-->
 	<!--https://www.cnblogs.com/sishang/p/6583057.html-->
-	<bean id="autowireTest1" class="com.john.autowire.AutowireTest1" autowire="byType"/>
+	<!--<bean id="autowireTest1" class="com.john.autowire.AutowireTest1" autowire="byType"/>-->
 
-	<bean id="autowireTest2" class="com.john.autowire.AutowireTest2">
+	<!--<bean id="autowireTest2" class="com.john.autowire.AutowireTest2">-->
+	<!--</bean>-->
+
+	<bean id="carFactory" class="com.john.factorybeanpro.CarFactory" />
+	<bean id="car5" factory-bean="carFactory" factory-method="createCar">
 	</bean>
 </beans>

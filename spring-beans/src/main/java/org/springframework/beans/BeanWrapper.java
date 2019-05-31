@@ -25,15 +25,15 @@ import java.beans.PropertyDescriptor;
  * {@link org.springframework.beans.factory.BeanFactory} or a
  * {@link org.springframework.validation.DataBinder}.
  *
- * <p>Provides operations to analyze and manipulate standard JavaBeans:
- * the ability to get and set property values (individually or in bulk),
+ * <p>Provides operations to analyze(分析) and manipulate(操纵) standard JavaBeans:
+ * the ability to get and set property values (individually(个别) or in bulk(成堆)),
  * get property descriptors, and query the readability/writability of properties.
  *
- * <p>This interface supports <b>nested properties</b> enabling the setting
+ * <p>This interface supports <b>nested properties(嵌套属性)</b> enabling the setting
  * of properties on subproperties to an unlimited depth.
  *
  * <p>A BeanWrapper's default for the "extractOldValueForEditor" setting
- * is "false", to avoid side effects caused by getter method invocations.
+ * is "false", to avoid side effects(副作用) caused by getter method invocations.
  * Turn this to "true" to expose present property values to custom editors.
  *
  * @author Rod Johnson
@@ -46,6 +46,13 @@ import java.beans.PropertyDescriptor;
  * @see org.springframework.validation.BeanPropertyBindingResult
  * @see org.springframework.validation.DataBinder#initBeanPropertyAccess()
  */
+//BeanWrapper还有两个顶级类接口，分别是PropertyAccessor和PropertyEditorRegistry。PropertyAccessor接口定义了各种访问Bean属性的方法，如setPropertyValue(String,Object)、setPropertyValues(PropertyValues pvs)等；而PropertyEditorRegistry是属性编辑器的注册表。所以BeanWrapper实现类BeanWrapperImpl具有三重身份：
+//
+//		Bean包裹器；
+//		属性访问器；
+//		属性编辑器注册表。
+//		一个BeanWrapperImpl实例内部封装了两类组件：被封装的待处理的Bean，以及一套用于设置Bean属性的属性编辑器。
+	//https://www.cnblogs.com/xiao2/p/7711850.html
 public interface BeanWrapper extends ConfigurablePropertyAccessor {
 
 	/**

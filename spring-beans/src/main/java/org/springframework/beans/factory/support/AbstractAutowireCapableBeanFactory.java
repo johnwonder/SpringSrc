@@ -539,6 +539,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
 			throws BeanCreationException {
 
+		//实例化bean
 		// Instantiate the bean.
 		// BeanWrapper是对Bean的包装，其接口中所定义的功能很简单包括设置获取被包装的对象，获取被包装bean的属性描述器
 		BeanWrapper instanceWrapper = null;
@@ -1148,6 +1149,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			return obtainFromSupplier(instanceSupplier, beanName);
 		}
 
+		//https://www.cnblogs.com/vickylinj/p/9474597.html
 		if (mbd.getFactoryMethodName() != null)  {
 			//工厂方法实例化
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
