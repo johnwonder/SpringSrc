@@ -1,0 +1,25 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+		"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- hierarchical bean factories -->
+	<bean id="target1" class="com.john.beanFactory.SimpleTarget">
+		<property name="val">
+			<ref bean="injectBeanParent"/>
+		</property>
+	</bean>
+	<bean id="target2" class="com.john.beanFactory.SimpleTarget">
+		<property name="val">
+			<ref bean="injectBean"/>
+		</property>
+	</bean>
+	<bean id="target3" class="com.john.beanFactory.SimpleTarget">
+		<property name="val">
+			<ref parent="injectBean"/>
+		</property>
+	</bean>
+	<bean id="injectBean" class="java.lang.String">
+		<constructor-arg>
+			<value>Bean In Child</value>
+		</constructor-arg>
+	</bean>
+</beans>

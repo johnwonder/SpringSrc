@@ -2,10 +2,17 @@ package com.john;
 
 import com.john.autowire.AutowireTest1;
 import com.john.beanFactory.MyBeanFactory;
+import com.john.beanFactory.SimpleTarget;
+import com.john.beanFactory.Singer;
 import com.john.factorybean.CarFactoryBean;
 import com.john.factorybeanpro.Car;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Hello world!
@@ -23,10 +30,40 @@ public class App
 		//AbstractBeanDefinitionReader
 		//XmlBeanDefinitionReader
 		////重点看  PathMatchingResourcePatternResolver .getResources
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
+//		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
+//
+//		Car car = (Car) applicationContext.getBean("car5");
+//		System.out.println(car.getBrand());
+//
+//
+//		Singer jane = (Singer)applicationContext.getBean("Jane");
+//		Singer bibi = (Singer)applicationContext.getBean("Bibi");
+//		System.out.println(jane);
+//		System.out.println(bibi);
 
-		Car car = (Car) applicationContext.getBean("car5");
-		System.out.println(car.getBrand());
+
+		//https://blog.csdn.net/sundenskyqq/article/details/44776699
+		//https://blog.csdn.net/iteye_14104/article/details/82672514
+		ClassPathResource resource = new ClassPathResource("parent.xml");
+		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+		reader.loadBeanDefinitions(resource);
+
+
+		ClassPathResource childRes = new ClassPathResource("beans.xml");
+		DefaultListableBeanFactory childFactory = new DefaultListableBeanFactory(factory);
+		XmlBeanDefinitionReader childReader = new XmlBeanDefinitionReader(childFactory);
+		childReader.loadBeanDefinitions(childRes);
+
+		SimpleTarget target1 = (SimpleTarget) childFactory.getBean("target1");
+		SimpleTarget target2 = (SimpleTarget) childFactory.getBean("target2");
+		SimpleTarget target3 = (SimpleTarget) childFactory.getBean("target3");
+
+		System.out.println(target1.getVal());
+		System.out.println(target2.getVal());
+		System.out.println(target3.getVal());
+
+
 
 		//		ILogin login = (ILogin) applicationContext.getBean("loginService");
 //		login.loginCheck("boy", "123");
