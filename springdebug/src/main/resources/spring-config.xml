@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!--<bean id="loginService" class="com.john.LoginImpl"/>-->
 
 	<!--<bean id="beanAbstract" abstract="true">-->
@@ -31,7 +37,10 @@
 
 	<!--<bean id="autowireTest2" class="com.john.autowire.AutowireTest2">-->
 	<!--</bean>-->
+	<context:component-scan base-package="com.john" />
+	<context:component-scan base-package="com.john" />
 
+	<aop:aspectj-autoproxy/>
 	<bean id="carFactory" class="com.john.factorybeanpro.CarFactory" />
 	<bean id="car5" factory-bean="carFactory" factory-method="createCar">
 	</bean>

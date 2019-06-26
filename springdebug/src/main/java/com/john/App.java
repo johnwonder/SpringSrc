@@ -1,5 +1,6 @@
 package com.john;
 
+import com.john.aop.Landlord;
 import com.john.autowire.AutowireTest1;
 import com.john.beanFactory.MyBeanFactory;
 import com.john.beanFactory.SimpleTarget;
@@ -30,8 +31,9 @@ public class App
 		//AbstractBeanDefinitionReader
 		//XmlBeanDefinitionReader
 		////重点看  PathMatchingResourcePatternResolver .getResources
-//		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
-//
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
+	Landlord landlord = (Landlord) applicationContext.getBean("landlord", Landlord.class);
+		landlord.service();
 //		Car car = (Car) applicationContext.getBean("car5");
 //		System.out.println(car.getBrand());
 //
@@ -62,6 +64,7 @@ public class App
 		System.out.println(target1.getVal());
 		System.out.println(target2.getVal());
 		System.out.println(target3.getVal());
+
 
 
 
