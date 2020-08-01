@@ -90,6 +90,7 @@ class ConditionEvaluator {
 			return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);
 		}
 
+		//获取条件列表
 		List<Condition> conditions = new ArrayList<>();
 		for (String[] conditionClasses : getConditionClasses(metadata)) {
 			for (String conditionClass : conditionClasses) {
@@ -98,13 +99,21 @@ class ConditionEvaluator {
 			}
 		}
 
+		//https://zhuanlan.zhihu.com/p/136706525
+		//todo Condition 实现 Orderd,PriorityOrdered, Order注解 调用排序
 		AnnotationAwareOrderComparator.sort(conditions);
 
+		//有一个condition满足就 skip
 		for (Condition condition : conditions) {
 			ConfigurationPhase requiredPhase = null;
 			if (condition instanceof ConfigurationCondition) {
 				requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();
 			}
+
+			//matches方法返回false 才会返回true 也就是 shouldSkip
+			// // 没有这个解析类不需要阶段的判断或者解析类和参数中的阶段一致才会继续进行
+			//https://www.jianshu.com/p/c4df7be75d6e
+			//https://blog.csdn.net/xcy1193068639/article/details/81589489
 			if ((requiredPhase == null || requiredPhase == phase) && !condition.matches(this.context, metadata)) {
 				return true;
 			}

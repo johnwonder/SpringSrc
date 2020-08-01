@@ -27,6 +27,7 @@ public class MyBeanFactory implements BeanFactoryAware {
 			myBeanFactory = (MyBeanFactory) beanFactory.getBean("myBeanFactory");
 		}
 
+
 		return myBeanFactory;
 
 	}

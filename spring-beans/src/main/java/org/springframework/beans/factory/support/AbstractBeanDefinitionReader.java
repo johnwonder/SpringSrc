@@ -185,6 +185,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		Assert.notNull(resources, "Resource array must not be null");
 		int count = 0;
 		for (Resource resource : resources) {
+			//由子类实现加载 比如XmlBeanDefinitionReader
 			count += loadBeanDefinitions(resource);
 		}
 		return count;
@@ -202,7 +203,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	 * @param location the resource location, to be loaded with the ResourceLoader
 	 * (or ResourcePatternResolver) of this bean definition reader
 	 * @param actualResources a Set to be filled with the actual Resource objects
-	 * that have been resolved during the loading process. May be {@code null}
+	 * that have been resolved during the loading process(要填充加载过程中已解析的实际资源对象*的集合). May be {@code null}
 	 * to indicate that the caller is not interested in those Resource objects.
 	 * @return the number of bean definitions found
 	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
@@ -211,16 +212,22 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	 * @see #loadBeanDefinitions(org.springframework.core.io.Resource[])
 	 */
 	public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
+
+		//AbstractXmlApplicationContext 也实现了resourceLoader
+		//应该说它的抽象父类AbstractApplicationContext继承了 DefaultResourceLoader
 		ResourceLoader resourceLoader = getResourceLoader();
 		if (resourceLoader == null) {
 			throw new BeanDefinitionStoreException(
 					"Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
 		}
-
+		//DefaultResourceLoader 没实现 ResourcePatternResolver
+		//但是 AbstractApplicationContext  实现了 ResourcePatternResolver
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+
+				//还是交给子类去加载bean
 				int count = loadBeanDefinitions(resources);
 				if (actualResources != null) {
 					//我们在编码时经常需要将一些元素添加到一个List中，此时我们一般有两种选择：Collections.addAll()或者是ArrayList.addAll()。在需添加元素比较少的情况下，并在List的size在万级以上时，一般建议Collections.addAll()，
@@ -240,6 +247,8 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		else {
 			// Can only load single resources by absolute URL.
 			Resource resource = resourceLoader.getResource(location);
+
+			//还是交给子类去实现加载bean
 			int count = loadBeanDefinitions(resource);
 			if (actualResources != null) {
 				actualResources.add(resource);

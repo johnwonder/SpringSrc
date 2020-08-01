@@ -85,11 +85,11 @@ import org.springframework.util.ReflectionUtils;
 /**
  * ApplicationContext
  * Abstract implementation of the {@link org.springframework.context.ApplicationContext}
- * interface. Doesn't mandate the type of storage used for configuration; simply
- * implements common context functionality. Uses the Template Method design pattern,
- * requiring concrete subclasses to implement abstract methods.
+ * interface. Doesn't mandate(授权) the type of storage used for configuration(用于配置的存储类型); simply
+ * implements common context functionality. Uses the Template Method design pattern,用了模板方法设计模式
+ * requiring concrete subclasses（子类) to implement abstract methods.
  *
- * <p>In contrast to a plain BeanFactory, an ApplicationContext is supposed
+ * <p>In contrast to a plain BeanFactory(与普通的Bean工厂相比), an ApplicationContext is supposed
  * to detect special beans defined in its internal bean factory:
  * Therefore, this class automatically registers
  * {@link org.springframework.beans.factory.config.BeanFactoryPostProcessor BeanFactoryPostProcessors},
@@ -98,19 +98,19 @@ import org.springframework.util.ReflectionUtils;
  * which are defined as beans in the context.
  *
  * <p>A {@link org.springframework.context.MessageSource} may also be supplied
- * as a bean in the context, with the name "messageSource"; otherwise, message
- * resolution is delegated to the parent context. Furthermore, a multicaster
+ * as a bean in the context, with the name "messageSource"; otherwise(否则), message
+ * resolution is delegated to the parent context(消息解析委托给父上下文). Furthermore, a multicaster
  * for application events can be supplied as "applicationEventMulticaster" bean
  * of type {@link org.springframework.context.event.ApplicationEventMulticaster}
  * in the context; otherwise, a default multicaster of type
  * {@link org.springframework.context.event.SimpleApplicationEventMulticaster} will be used.
  *
- * <p>Implements resource loading through extending
+ * <p>Implements resource loading through extending(通过扩展实现资源加载)
  * {@link org.springframework.core.io.DefaultResourceLoader}.
- * Consequently treats non-URL resource paths as class path resources
+ * Consequently treats non-URL resource paths as class path resources(因此，将非URL资源路径视为类路径资源)
  * (supporting full class path resource names that include the package path,
  * e.g. "mypackage/myresource.dat"), unless the {@link #getResourceByPath}
- * method is overwritten in a subclass.
+ * method is overwritten in a subclass(除非 getResourceByPath 方法在子类中被覆盖).
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -125,6 +125,7 @@ import org.springframework.util.ReflectionUtils;
  * @see org.springframework.context.ApplicationListener
  * @see org.springframework.context.MessageSource
  */
+//ApplicationContext的抽象实现
 public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		implements ConfigurableApplicationContext {
 
@@ -174,10 +175,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private ApplicationContext parent;
 
 	/** Environment used by this context. */
+	//上下文使用的环境
 	@Nullable
 	private ConfigurableEnvironment environment;
 
 	/** BeanFactoryPostProcessors to apply on refresh. */
+	//刷新时应用的
 	private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
 
 	/** System time in milliseconds when this context started. */
@@ -322,7 +325,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Subclasses may override this method in order to supply
 	 * a custom {@link ConfigurableEnvironment} implementation.
 	 */
+	//
 	protected ConfigurableEnvironment createEnvironment() {
+		//StandardEnvironment 构造函数 会 使他的抽象父类 也执行构造函数
 		return new StandardEnvironment();
 	}
 
@@ -482,6 +487,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 	}
 
+	//添加BeanFactoryPostProcessor
 	@Override
 	public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor) {
 		Assert.notNull(postProcessor, "BeanFactoryPostProcessor must not be null");
@@ -492,8 +498,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Return the list of BeanFactoryPostProcessors that will get applied
 	 * to the internal BeanFactory.
+	 * 将应用于内部BeanFactory
 	 */
 	public List<BeanFactoryPostProcessor> getBeanFactoryPostProcessors() {
+		//todo beanFactoryPostProcessors启动的时候为空
+
+		//ConfigurationClassPostProcessor 虽然也间接实现了BeanFactoryPostProcessor
+		//但是 不是通过这个方式来添加的 它是通过内部AnnotationConfigUtils来注册的
 		return this.beanFactoryPostProcessors;
 	}
 
@@ -522,6 +533,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			//告诉子类刷新 内部BeanFactory
+			//https://www.iteye.com/blog/rkdu2-163-com-2003638
+			//内部会加载bean定义
+			//把beanFactory 赋给 this.beanFactory 属性
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -529,12 +544,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				//允许context子类 处理 bean工厂 传入BeanPostProcessors
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
+				//在上下文中调用注册为bean的工厂处理器
+				//通过PostProcessorRegistrationDelegate
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				// 注册拦截bean创建的bean处理器
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
@@ -569,6 +588,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				cancelRefresh(ex);
 
 				// Propagate exception to caller.
+				//传播给调用者
 				throw ex;
 			}
 
@@ -607,6 +627,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Validate that all properties marked as required are resolvable
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		//必须的属性都被解析了
+		//
 		getEnvironment().validateRequiredProperties();
 
 		// Allow for the collection of early ApplicationEvents,
@@ -631,10 +653,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
 	 */
-	//得到beanFactory
+	//得到刷新过的beanFactory
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		//抽象类AbstractRefreshableApplicationContext
+		//里面会加载bean定义
+		//todo 加载bean定义
 		refreshBeanFactory();
+		//如果beanFactory为null 会报错
 		return getBeanFactory();
 	}
 
@@ -694,20 +719,34 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * BeanPostProcessors etc in certain ApplicationContext implementations.
 	 * @param beanFactory the bean factory used by the application context
 	 */
+	// 在标准的初始化后 再修改 应用上下文的内部beanFactory
+	//所有 bean定义 已经加载，但是还没有bean 被实例化
+	//在某些ApplicationContext中 这个函数可以 注册特殊的 BeanPostProcessors
+	//用于Web 的ApplicationContext
 	protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+
+		//beanFactory.addBeanPostProcessor();
 	}
 
 	/**
 	 * Instantiate and invoke all registered BeanFactoryPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before singleton instantiation.
+	 * 实例化并调用所有注册的beanfactorypostprocessor   bean
+	 * 必须在单例 实例化之前调用
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+
+
+		//这边 getBeanFactoryPostProcessors() 会拿到当前应用上下文中已经注册的 BeanFactoryPostProcessor
+		// ，在默认情况下，this.beanFactoryPostProcessors 是返回空的。
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
-		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
+		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime（如果同时发现）
 		// (e.g. through an @Bean method registered by ConfigurationClassPostProcessor)
 		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
+			//https://www.cnblogs.com/wade-luffy/p/6078446.html
+			//https://segmentfault.com/a/1190000006918229
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
 			beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
 		}
@@ -1331,6 +1370,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
+
+		//调用 resourcePatternResolver去 getResources
 		return this.resourcePatternResolver.getResources(locationPattern);
 	}
 

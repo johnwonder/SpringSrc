@@ -1,4 +1,4 @@
-package com.john.aop;
+package com.john.aop.test;
 
 import org.springframework.stereotype.Component;
 
@@ -9,5 +9,11 @@ public class Landlord {
 		// 仅仅只是实现了核心的业务功能
 		System.out.println("签合同");
 		System.out.println("收房租");
+	}
+
+	private  int  id;
+	public void setId(int id) { this.id = id; }
+	public int getId(){
+		return  id;
 	}
 }

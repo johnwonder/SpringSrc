@@ -37,6 +37,9 @@ public interface Profiles {
 	 * @param activeProfiles predicate that tests whether a given profile is
 	 * currently active
 	 */
+	//输入一个Predicate
+	//输出BOOLEAN
+	//activeProfile -> activeProfile.test(profile);
 	boolean matches(Predicate<String> activeProfiles);
 
 

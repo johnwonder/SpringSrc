@@ -29,6 +29,7 @@ import org.springframework.lang.Nullable;
  * @see PropertySources
  * @see AbstractEnvironment
  */
+//属性值分解器
 public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 
 	@Nullable
@@ -68,6 +69,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		return getProperty(key, targetValueType, true);
 	}
 
+	//提供给函数接口 PlaceholderResolver
 	@Override
 	@Nullable
 	protected String getPropertyAsRawString(String key) {
@@ -77,6 +79,8 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 	@Nullable
 	protected <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {
 		if (this.propertySources != null) {
+
+			//例如遍历的是MutablePropertySources 的propertySourceList
 			for (PropertySource<?> propertySource : this.propertySources) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Searching for key '" + key + "' in PropertySource '" +
@@ -88,6 +92,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 						value = resolveNestedPlaceholders((String) value);
 					}
 					logKeyFound(key, propertySource, value);
+					//跳出for 循环
 					return convertValueIfNecessary(value, targetValueType);
 				}
 			}

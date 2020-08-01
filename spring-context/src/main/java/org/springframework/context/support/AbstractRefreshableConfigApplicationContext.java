@@ -38,7 +38,7 @@ import org.springframework.util.StringUtils;
  */
 
 //https://blog.csdn.net/qq_33567641/article/details/80986235
-
+//给 ClassPathXmlApplicationContext  和 FileSystemXmlApplicationContext 还有XmlWebApplicationContext 提供服务的
 public abstract class AbstractRefreshableConfigApplicationContext extends AbstractRefreshableApplicationContext
 		implements BeanNameAware, InitializingBean {
 
@@ -65,7 +65,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 
 	/**
 	 * Set the config locations for this application context in init-param style,
-	 * i.e. with distinct locations separated by commas, semicolons or whitespace.
+	 * i.e. with distinct locations separated by commas, semicolons or whitespace.（分号或者空格)
 	 * <p>If not set, the implementation may use a default as appropriate.
 	 */
 	public void setConfigLocation(String location) {
@@ -79,6 +79,8 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	public void setConfigLocations(@Nullable String... locations) {
 		if (locations != null) {
 			Assert.noNullElements(locations, "Config locations must not be null");
+
+
 			this.configLocations = new String[locations.length];
 			for (int i = 0; i < locations.length; i++) {
 				this.configLocations[i] = resolvePath(locations[i]).trim();

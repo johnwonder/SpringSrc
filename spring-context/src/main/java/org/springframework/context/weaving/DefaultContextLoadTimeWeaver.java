@@ -43,6 +43,7 @@ import org.springframework.util.Assert;
  * "{@code loadTimeWeaver}"; the most convenient way to achieve this is
  * Spring's {@code <context:load-time-weaver>} XML tag.
  *
+ * 此类实现运行时环境检查，以获取适当的weaver实现
  * <p>This class implements a runtime environment check for obtaining the
  * appropriate weaver implementation: As of Spring Framework 5.0, it detects
  * Oracle WebLogic 10+, GlassFish 4+, Tomcat 8+, WildFly 8+, IBM WebSphere 8.5+,

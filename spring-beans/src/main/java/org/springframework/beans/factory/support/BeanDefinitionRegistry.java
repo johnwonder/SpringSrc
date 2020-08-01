@@ -24,15 +24,17 @@ import org.springframework.core.AliasRegistry;
 /**
  * Interface for registries that hold bean definitions, for example RootBeanDefinition
  * and ChildBeanDefinition instances. Typically implemented by BeanFactories that
- * internally work with the AbstractBeanDefinition hierarchy.
+ * internally work with the AbstractBeanDefinition hierarchy(通常由BeanFactories实现，在内部使用AbstractBeanDefinition层次结构).
  *
- * <p>This is the only interface in Spring's bean factory packages that encapsulates
+ * <p>This is the only interface in Spring's bean factory packages that encapsulates(封装)
  * <i>registration</i> of bean definitions. The standard BeanFactory interfaces
  * only cover access to a <i>fully configured factory instance</i>.
  *
+ * 只封装bean定义的注册
+ *
  * <p>Spring's bean definition readers expect to work on an implementation of this
  * interface. Known implementors within the Spring core are DefaultListableBeanFactory
- * and GenericApplicationContext.
+ * and GenericApplicationContext. spring核心内部已知的实现为 (DefaultListableBeanFactory 和GenericApplicationContext
  *
  * @author Juergen Hoeller
  * @since 26.11.2003
@@ -45,11 +47,13 @@ import org.springframework.core.AliasRegistry;
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  * @see PropertiesBeanDefinitionReader
  */
+//https://www.cnblogs.com/moxiaotao/p/9349549.html
 public interface BeanDefinitionRegistry extends AliasRegistry {
 
 	/**
 	 * Register a new bean definition with this registry.
 	 * Must support RootBeanDefinition and ChildBeanDefinition.
+	 * 注册一个新的bean定义  必须支持 RootBeanDefinition 和 ChildBeanDefinition
 	 * @param beanName the name of the bean instance to register
 	 * @param beanDefinition definition of the bean instance to register
 	 * @throws BeanDefinitionStoreException if the BeanDefinition is invalid

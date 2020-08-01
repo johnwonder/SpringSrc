@@ -41,14 +41,14 @@ import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of the {@link BeanDefinitionDocumentReader} interface that
- * reads bean definitions according to the "spring-beans" DTD and XSD format
+ * reads bean definitions according to(根据) the "spring-beans" DTD and XSD format
  * (Spring's default XML bean definition format).
  *
  * <p>The structure, elements, and attribute names of the required XML document
- * are hard-coded in this class. (Of course a transform could be run if necessary
+ * are hard-coded in this class(结构，元素和属性名称 在这个类中硬编码). (Of course a transform could be run if necessary
  * to produce this format). {@code <beans>} does not need to be the root
  * element of the XML document: this class will parse all bean definition elements
- * in the XML file, regardless of the actual root element.
+ * in the XML file, regardless of the actual root element(不考虑实际的根元素).
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -58,6 +58,7 @@ import org.springframework.util.StringUtils;
  */
 public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocumentReader {
 
+	//"bean"
 	public static final String BEAN_ELEMENT = BeanDefinitionParserDelegate.BEAN_ELEMENT;
 
 	public static final String NESTED_BEANS_ELEMENT = "beans";
@@ -80,12 +81,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	@Nullable
 	private XmlReaderContext readerContext;
 
+	//解析代理
 	@Nullable
 	private BeanDefinitionParserDelegate delegate;
 
 
 	/**
-	 * This implementation parses bean definitions according to the "spring-beans" XSD
+	 * This implementation parses bean definitions according to(根据) the "spring-beans" XSD
 	 * (or DTD, historically).
 	 * <p>Opens a DOM Document; then initializes the default settings
 	 * specified at the {@code <beans/>} level; then parses the contained bean definitions.
@@ -117,6 +119,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	/**
 	 * Register each bean definition within the given root {@code <beans/>} element.
 	 */
+	//todo doRegisterBeanDefinitions
+	//抑制编译器产生警告信息
 	@SuppressWarnings("deprecation")  // for Environment.acceptsProfiles(String...)
 	protected void doRegisterBeanDefinitions(Element root) {
 		// Any nested <beans> elements will cause recursion in this method. In
@@ -126,10 +130,14 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// then ultimately reset this.delegate back to its original (parent) reference.
 		// this behavior emulates a stack of delegates without actually necessitating one.
 		BeanDefinitionParserDelegate parent = this.delegate;
+		//todo 为啥又创建一个代理呢
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
+		//判断root是否是默认命名空间
 		if (this.delegate.isDefaultNamespace(root)) {
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
+
+			//StringUtils.isEmpty()
 			if (StringUtils.hasText(profileSpec)) {
 				String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
 						profileSpec, BeanDefinitionParserDelegate.MULTI_VALUE_ATTRIBUTE_DELIMITERS);
@@ -145,8 +153,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		//预处理 //默认实现为空
 		preProcessXml(root);
+
+		//传入delegate 解析bean definitions
 		parseBeanDefinitions(root, this.delegate);
+
+		//默认实现为空
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -165,6 +178,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * "import", "alias", "bean".
 	 * @param root the DOM root element of the document
 	 */
+	//todo doRegisterBeanDefinitions ->  parseBeanDefinitions -> parseDefaultElement
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
 		if (delegate.isDefaultNamespace(root)) {
 			NodeList nl = root.getChildNodes();
@@ -198,6 +212,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			processAliasRegistration(ele);
 		}
 		//bean节点
+		//todo 很重要解析Bean 节点
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			processBeanDefinition(ele, delegate);
 		}
@@ -205,6 +220,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		//递归
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 			// recurse
+			//递归注册
 			doRegisterBeanDefinitions(ele);
 		}
 	}
@@ -260,6 +276,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			try {
 				int importCount;
 				Resource relativeResource = getReaderContext().getResource().createRelative(location);
+
+				//如果相对路径 这个资源存在 那么就加载这个bean 定义
 				if (relativeResource.exists()) {
 					importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource);
 					actualResources.add(relativeResource);
@@ -281,7 +299,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						"Failed to import bean definitions from relative location [" + location + "]", ele, ex);
 			}
 		}
+		//把Set<Resource> 转换成 toArray
 		Resource[] actResArray = actualResources.toArray(new Resource[0]);
+		//
 		getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 	}
 
@@ -315,15 +335,18 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	/**
 	 * Process the given bean element, parsing the bean definition
 	 * and registering it with the registry.
+	 *  处理 bean元素，解析 bean定义  用registry注册它
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
-		//解析默认标签
+		//通过代理 解析默认标签
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
 			//解析自定义标签
+			//如果需要装饰 就用代理装饰
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.
+				//通过readerContext 获取registry
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			}
 			catch (BeanDefinitionStoreException ex) {
@@ -331,6 +354,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						bdHolder.getBeanName() + "'", ele, ex);
 			}
 			// Send registration event.
+			//发送注册事件
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
 	}

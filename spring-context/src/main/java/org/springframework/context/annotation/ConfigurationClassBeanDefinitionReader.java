@@ -112,7 +112,14 @@ class ConfigurationClassBeanDefinitionReader {
 	 * with the registry based on its contents.
 	 */
 	public void loadBeanDefinitions(Set<ConfigurationClass> configurationModel) {
+
+		//todo TrackedConditionEvaluator
+
+		//https://zhuanlan.zhihu.com/p/136706525
+		//todo bean注册阶段 去判断
 		TrackedConditionEvaluator trackedConditionEvaluator = new TrackedConditionEvaluator();
+
+		//遍历configurationModel中的每一个配置类
 		for (ConfigurationClass configClass : configurationModel) {
 			loadBeanDefinitionsForConfigurationClass(configClass, trackedConditionEvaluator);
 		}
@@ -125,6 +132,7 @@ class ConfigurationClassBeanDefinitionReader {
 	private void loadBeanDefinitionsForConfigurationClass(
 			ConfigurationClass configClass, TrackedConditionEvaluator trackedConditionEvaluator) {
 
+		//todo 实例化@Conditional()中的类 调用其matches方法
 		if (trackedConditionEvaluator.shouldSkip(configClass)) {
 			String beanName = configClass.getBeanName();
 			if (StringUtils.hasLength(beanName) && this.registry.containsBeanDefinition(beanName)) {
@@ -371,6 +379,15 @@ class ConfigurationClassBeanDefinitionReader {
 	 * Used in bean overriding cases where it's necessary to determine whether the bean
 	 * definition was created externally.
 	 */
+	//标记子类，用于表示bean定义是从配置类创建的，而不是从任何其他配置源创建的。
+	// 在需要确定bean定义是否是在外部创建的bean重写情况下使用
+
+		//https://blog.csdn.net/dhaiuda/article/details/83340888
+		//在@Configuration注解的类中，
+	// 使用@Bean注解实例化的Bean，其定义会用ConfigurationClassBeanDefinition存储
+
+		//@Configuration注解的类会成为一个工厂类，
+	// 而所有的@Bean注解的方法会成为工厂方法，通过工厂方法实例化Bean，而不是直接通过构造函数初始化
 	@SuppressWarnings("serial")
 	private static class ConfigurationClassBeanDefinition extends RootBeanDefinition implements AnnotatedBeanDefinition {
 
@@ -428,10 +445,15 @@ class ConfigurationClassBeanDefinitionReader {
 		private final Map<ConfigurationClass, Boolean> skipped = new HashMap<>();
 
 		public boolean shouldSkip(ConfigurationClass configClass) {
+
+			//https://www.jianshu.com/p/566f22bda03c
+			////检查当前的配置类是否需要调过，因为这里是前面的直接获取到的配置类，如果当前类需要跳过那么，内部的也必定需要跳过
+			//如果是null则说明这个类不是需要跳过的，但是也不代表是不需要跳过的，因为如果是被引入的则决定于最外面的一层bean是否需要跳过
 			Boolean skip = this.skipped.get(configClass);
 			if (skip == null) {
 				if (configClass.isImported()) {
 					boolean allSkipped = true;
+					//只要一个导入该类的类不应该skip，那就不跳过该类
 					for (ConfigurationClass importedBy : configClass.getImportedBy()) {
 						if (!shouldSkip(importedBy)) {
 							allSkipped = false;
@@ -444,6 +466,7 @@ class ConfigurationClassBeanDefinitionReader {
 					}
 				}
 				if (skip == null) {
+					//bean注册阶段
 					skip = conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN);
 				}
 				this.skipped.put(configClass, skip);

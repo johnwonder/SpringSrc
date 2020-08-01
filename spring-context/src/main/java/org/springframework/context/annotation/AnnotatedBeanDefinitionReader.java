@@ -34,9 +34,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Convenient adapter for programmatic registration of annotated bean classes.
+ * Convenient adapter(方便的适配器) for programmatic registration of annotated bean classes.
  * This is an alternative to {@link ClassPathBeanDefinitionScanner}, applying
- * the same resolution of annotations but for explicitly registered classes only.
+ * the same resolution of annotations but for explicitly registered classes only（仅用于显式注册的类）.
  *
  * @author Juergen Hoeller
  * @author Chris Beams
@@ -45,6 +45,7 @@ import org.springframework.util.Assert;
  * @since 3.0
  * @see AnnotationConfigApplicationContext#register
  */
+//https://blog.csdn.net/f641385712/article/details/88059145
 public class AnnotatedBeanDefinitionReader {
 
 	private final BeanDefinitionRegistry registry;

@@ -61,7 +61,7 @@ public class StandardEnvironment extends AbstractEnvironment {
 
 
 	/**
-	 * Customize the set of property sources with those appropriate for any standard
+	 * Customize the set of property sources with those appropriate for any standard（适用于任何标准的）
 	 * Java environment:
 	 * <ul>
 	 * <li>{@value #SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME}
@@ -75,7 +75,14 @@ public class StandardEnvironment extends AbstractEnvironment {
 	 */
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {
+
+		//https://blog.csdn.net/rtuujnncc/article/details/78248733
+		// MapPropertySource 是 System.getProperties()
+		//addLast最低优先级
+		//https://www.cnblogs.com/Baronboy/p/6030443.html
 		propertySources.addLast(new MapPropertySource(SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, getSystemProperties()));
+
+		//SystemEnvironmentPropertySource 是System.getenv()
 		propertySources.addLast(new SystemEnvironmentPropertySource(SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, getSystemEnvironment()));
 	}
 

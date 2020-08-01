@@ -57,6 +57,7 @@ public class AspectJWeavingEnabler
 	private LoadTimeWeaver loadTimeWeaver;
 
 
+	//BeanClassLoaderAware接口
 	@Override
 	public void setBeanClassLoader(ClassLoader classLoader) {
 		this.beanClassLoader = classLoader;
@@ -67,6 +68,7 @@ public class AspectJWeavingEnabler
 		this.loadTimeWeaver = loadTimeWeaver;
 	}
 
+	//最高优先级
 	@Override
 	public int getOrder() {
 		return HIGHEST_PRECEDENCE;

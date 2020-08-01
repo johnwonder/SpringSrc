@@ -23,6 +23,8 @@ package org.springframework.core.env;
  * for performing {@code instanceof} checks in framework methods that accept BeanFactory
  * instances that may or may not actually be ApplicationContext instances in order to interact
  * with the environment if indeed it is available.
+ *（在框架方法中执行{@code instanceof}检查，这些方法接受BeanFactory实例，
+ * 这些实例可能是ApplicationContext实例，也可能不是，以便在环境确实可用的情况下与之交互）
  *
  * <p>As mentioned, {@link org.springframework.context.ApplicationContext ApplicationContext}
  * extends EnvironmentCapable, and thus exposes a {@link #getEnvironment()} method; however,

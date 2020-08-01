@@ -39,7 +39,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
- * Utility class that allows for convenient registration of common
+ * Utility class that allows for convenient registration（方便注册） of common
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} and
  * {@link org.springframework.beans.factory.config.BeanFactoryPostProcessor}
  * definitions for annotation-based configuration. Also registers a common
@@ -61,6 +61,7 @@ public abstract class AnnotationConfigUtils {
 
 	/**
 	 * The bean name of the internally managed Configuration annotation processor.
+	 * 内部管理的配置注解处理器 的bean名字
 	 */
 	public static final String CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME =
 			"org.springframework.context.annotation.internalConfigurationAnnotationProcessor";
@@ -132,6 +133,10 @@ public abstract class AnnotationConfigUtils {
 	/**
 	 * Register all relevant annotation post processors in the given registry.
 	 * @param registry the registry to operate on
+	 *  todo AnnotateBeanDefinitionReader 构造函数里调用
+	 *  todo ClassPathBeanDefinitionScanner   扫描(scan)的时候 调用
+	 *
+	 *  todo AnnotationConfigApplicationContext 实例化的时候 会 同时 实例化 AnnotateBeanDefinitionReader 和   ClassPathBeanDefinitionScanner
 	 */
 	public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
 		registerAnnotationConfigProcessors(registry, null);
@@ -139,8 +144,9 @@ public abstract class AnnotationConfigUtils {
 
 	/**
 	 * Register all relevant annotation post processors in the given registry.
+	 * 在给定的注册器里注册所有相关的注解后处理器
 	 * @param registry the registry to operate on
-	 * @param source the configuration source element (already extracted)
+	 * @param source the configuration source element (already extracted) 已经提取的 触发配置源
 	 * that this registration was triggered from. May be {@code null}.
 	 * @return a Set of BeanDefinitionHolders, containing all bean definitions
 	 * that have actually been registered by this call
@@ -160,12 +166,15 @@ public abstract class AnnotationConfigUtils {
 
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
 
+		//登记处注册配置处理类
+		//todo ConfigurationClassPostProcessor
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
+		//AutowiredAnnotationProcessor
 		if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
 			def.setSource(source);
@@ -209,16 +218,21 @@ public abstract class AnnotationConfigUtils {
 		return beanDefs;
 	}
 
+	//todo  BeanDefinitionHolder
 	private static BeanDefinitionHolder registerPostProcessor(
 			BeanDefinitionRegistry registry, RootBeanDefinition definition, String beanName) {
 
 		definition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		//接口注册方法
+
+		//DefaultListableBeanFactory 调用 放入beanDefinitionMap中
 		registry.registerBeanDefinition(beanName, definition);
 		return new BeanDefinitionHolder(definition, beanName);
 	}
 
 	@Nullable
 	private static DefaultListableBeanFactory unwrapDefaultListableBeanFactory(BeanDefinitionRegistry registry) {
+		//判断是否是默认的 DefaultListableBeanFactory
 		if (registry instanceof DefaultListableBeanFactory) {
 			return (DefaultListableBeanFactory) registry;
 		}

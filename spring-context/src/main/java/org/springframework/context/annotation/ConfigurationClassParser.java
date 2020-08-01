@@ -20,20 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.UnknownHostException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -162,6 +149,15 @@ class ConfigurationClassParser {
 
 
 	public void parse(Set<BeanDefinitionHolder> configCandidates) {
+
+		//todo LinkedList
+
+		//https://zhuanlan.zhihu.com/p/34361490
+		//对于随机访问（get/set方法），ArrayList通过index直接定位到数组对应位置的节点，
+		// 而LinkedList需要从头结点或尾节点开始遍历，直到寻找到目标节点，因此在效率上ArrayList优于LinkedList
+
+		//对于插入和删除（add/remove方法），ArrayList需要移动目标节点后面的节点（使用System.arraycopy方法移动节点），
+		// 而LinkedList只需修改目标节点前后节点的next或prev属性即可，因此在效率上LinkedList优于ArrayList。
 		this.deferredImportSelectors = new LinkedList<>();
 
 		for (BeanDefinitionHolder holder : configCandidates) {
@@ -188,6 +184,7 @@ class ConfigurationClassParser {
 
 		processDeferredImportSelectors();
 	}
+
 
 	protected final void parse(@Nullable String className, String beanName) throws IOException {
 		Assert.notNull(className, "No bean class name for configuration class bean definition");
@@ -219,13 +216,18 @@ class ConfigurationClassParser {
 
 
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
+
+		//先判断Conditional注解
+		//配置阶段是PARSE_CONFIGURATION ，所以如果配置类上加上 REGISTER_BEAN 就 不会去调用 condition的match方法
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
 
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
+			//是被其他类导入的
 			if (configClass.isImported()) {
+				//已经存在的类也是被 导入的 那就合并
 				if (existingClass.isImported()) {
 					existingClass.mergeImportedBy(configClass);
 				}
@@ -233,14 +235,16 @@ class ConfigurationClassParser {
 				return;
 			}
 			else {
-				// Explicit bean definition found, probably replacing an import.
+				// Explicit bean definition found, probably replacing(可能会取代) an import.
 				// Let's remove the old one and go with the new one.
+				//移除现有的类
 				this.configurationClasses.remove(configClass);
 				this.knownSuperclasses.values().removeIf(configClass::equals);
 			}
 		}
 
 		// Recursively process the configuration class and its superclass hierarchy.
+		//递归处理它的父类
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
@@ -553,6 +557,8 @@ class ConfigurationClassParser {
 		deferredImports.sort(DEFERRED_IMPORT_COMPARATOR);
 		Map<Object, DeferredImportSelectorGrouping> groupings = new LinkedHashMap<>();
 		Map<AnnotationMetadata, ConfigurationClass> configurationClasses = new HashMap<>();
+
+		//todo 访问LinkedList
 		for (DeferredImportSelectorHolder deferredImport : deferredImports) {
 			Class<? extends Group> group = deferredImport.getImportSelector().getImportGroup();
 			DeferredImportSelectorGrouping grouping = groupings.computeIfAbsent(
@@ -605,6 +611,9 @@ class ConfigurationClassParser {
 			this.importStack.push(configClass);
 			try {
 				for (SourceClass candidate : importCandidates) {
+
+					//https://blog.csdn.net/everyok/article/details/81350905
+					//todo @ImportSelector 注解
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
@@ -612,6 +621,7 @@ class ConfigurationClassParser {
 						ParserStrategyUtils.invokeAwareMethods(
 								selector, this.environment, this.resourceLoader, this.registry);
 						if (this.deferredImportSelectors != null && selector instanceof DeferredImportSelector) {
+							//向LinkedList 中添加元素
 							this.deferredImportSelectors.add(
 									new DeferredImportSelectorHolder(configClass, (DeferredImportSelector) selector));
 						}

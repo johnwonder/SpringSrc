@@ -154,7 +154,7 @@ public abstract class BeanDefinitionReaderUtils {
 	/**
 	 * Register the given bean definition with the given bean factory.
 	 * @param definitionHolder the bean definition including name and aliases
-	 * @param registry the bean factory to register with
+	 * @param registry the bean factory to register with //registry接口
 	 * @throws BeanDefinitionStoreException if registration failed
 	 */
 	public static void registerBeanDefinition(

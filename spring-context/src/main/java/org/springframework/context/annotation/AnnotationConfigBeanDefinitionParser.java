@@ -30,6 +30,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Parser for the &lt;context:annotation-config/&gt; element.
+ * <annotation-config>标签的解析器
  *
  * @author Mark Fisher
  * @author Juergen Hoeller
@@ -44,20 +45,24 @@ public class AnnotationConfigBeanDefinitionParser implements BeanDefinitionParse
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 		Object source = parserContext.extractSource(element);
 
-		// Obtain bean definitions for all relevant BeanPostProcessors.
+		// Obtain(获得) bean definitions for all relevant(相关的) BeanPostProcessors.
 		Set<BeanDefinitionHolder> processorDefinitions =
 				AnnotationConfigUtils.registerAnnotationConfigProcessors(parserContext.getRegistry(), source);
 
 		// Register component for the surrounding <context:annotation-config> element.
+		//混合组件
 		CompositeComponentDefinition compDefinition = new CompositeComponentDefinition(element.getTagName(), source);
 		parserContext.pushContainingComponent(compDefinition);
 
 		// Nest the concrete beans in the surrounding component.
+		//将混凝bean嵌套在周围构件中
+		//parserContext里有containingComponents
 		for (BeanDefinitionHolder processorDefinition : processorDefinitions) {
 			parserContext.registerComponent(new BeanComponentDefinition(processorDefinition));
 		}
 
-		// Finally register the composite component.
+		// Finally register the composite(混合成的) component.
+		//先弹出 再注册
 		parserContext.popAndRegisterContainingComponent();
 
 		return null;

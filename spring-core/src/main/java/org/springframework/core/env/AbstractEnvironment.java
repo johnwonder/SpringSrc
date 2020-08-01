@@ -38,9 +38,11 @@ import org.springframework.util.StringUtils;
  * reserved default profile names and enables specifying active and default profiles
  * through the {@link #ACTIVE_PROFILES_PROPERTY_NAME} and
  * {@link #DEFAULT_PROFILES_PROPERTY_NAME} properties.
+ * 支持保留默认配置文件名的概念，
+ * 并允许通过ACTIVE_PROFILES_PROPERTY_NAME和DEFAULT_PROFILES_PROPERTY_NAME属性指定活动和默认配置文件
  *
  * <p>Concrete subclasses differ primarily on which {@link PropertySource} objects they
- * add by default. {@code AbstractEnvironment} adds none. Subclasses should contribute
+ * add by default. (具体的子类主要不同于默认添加的PropertySource对象){@code AbstractEnvironment} adds none. Subclasses should contribute
  * property sources through the protected {@link #customizePropertySources(MutablePropertySources)}
  * hook, while clients should customize using {@link ConfigurableEnvironment#getPropertySources()}
  * and working against the {@link MutablePropertySources} API.
@@ -56,10 +58,14 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 
 	/**
 	 * System property that instructs Spring to ignore system environment variables,
+	 * 指示Spring忽略系统环境变量
 	 * i.e. to never attempt to retrieve such a variable via {@link System#getenv()}.
 	 * <p>The default is "false", falling back to system environment variable checks if a
 	 * Spring environment property (e.g. a placeholder in a configuration String) isn't
-	 * resolvable otherwise. Consider switching this flag to "true" if you experience
+	 * resolvable otherwise.
+	 * 永远不要试图通过{@link System#getenv（）}检索这样的变量。
+	 * 默认值为“false”，返回系统环境变量 如果检查Spring环境属性不可解析（例如配置字符串中的占位符）
+	 * Consider switching this flag to "true" if you experience
 	 * log warnings from {@code getenv} calls coming from Spring, e.g. on WebSphere
 	 * with strict SecurityManager settings and AccessControlExceptions warnings.
 	 * @see #suppressGetenvAccess()
@@ -107,8 +113,10 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 
 	private final Set<String> defaultProfiles = new LinkedHashSet<>(getReservedDefaultProfiles());
 
+	//可变的属性源集合，内部包含一个CopyOnWriteArrayList对象
 	private final MutablePropertySources propertySources = new MutablePropertySources();
 
+	//把propertySources放入 Resolver中
 	private final ConfigurablePropertyResolver propertyResolver =
 			new PropertySourcesPropertyResolver(this.propertySources);
 
@@ -116,10 +124,11 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	/**
 	 * Create a new {@code Environment} instance, calling back to
 	 * {@link #customizePropertySources(MutablePropertySources)} during construction to
-	 * allow subclasses to contribute or manipulate {@link PropertySource} instances as
+	 * allow subclasses to contribute or manipulate(操作) {@link PropertySource} instances as
 	 * appropriate.
 	 * @see #customizePropertySources(MutablePropertySources)
 	 */
+	//调用 子类的customizePropertySources
 	public AbstractEnvironment() {
 		customizePropertySources(this.propertySources);
 	}
@@ -130,15 +139,15 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * {@code Environment} during calls to {@link #getProperty(String)} and related
 	 * methods.
 	 *
-	 * <p>Subclasses that override this method are encouraged to add property
+	 * <p>Subclasses that override this method are encouraged(鼓励) to add property
 	 * sources using {@link MutablePropertySources#addLast(PropertySource)} such that
 	 * further subclasses may call {@code super.customizePropertySources()} with
-	 * predictable results. For example:
+	 * predictable(可预测的) results. For example:
 	 * <pre class="code">
 	 * public class Level1Environment extends AbstractEnvironment {
 	 *     &#064;Override
 	 *     protected void customizePropertySources(MutablePropertySources propertySources) {
-	 *         super.customizePropertySources(propertySources); // no-op from base class
+	 *         super.customizePropertySources(propertySources); //没有来自基类的操作 no-op from base class
 	 *         propertySources.addLast(new PropertySourceA(...));
 	 *         propertySources.addLast(new PropertySourceB(...));
 	 *     }
@@ -147,7 +156,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * public class Level2Environment extends Level1Environment {
 	 *     &#064;Override
 	 *     protected void customizePropertySources(MutablePropertySources propertySources) {
-	 *         super.customizePropertySources(propertySources); // add all from superclass
+	 *         super.customizePropertySources(propertySources); //从超类中全部添加 add all from superclass
 	 *         propertySources.addLast(new PropertySourceC(...));
 	 *         propertySources.addLast(new PropertySourceD(...));
 	 *     }
@@ -180,6 +189,8 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * property sources via the {@link #getPropertySources()} accessor, typically within
 	 * an {@link org.springframework.context.ApplicationContextInitializer
 	 * ApplicationContextInitializer}. For example:
+	 *
+	 * //通过getPropertySources() 来访问 属性集合
 	 * <pre class="code">
 	 * ConfigurableEnvironment env = new StandardEnvironment();
 	 * env.getPropertySources().addLast(new PropertySourceX(...));
@@ -188,14 +199,15 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * <h2>A warning about instance variable access</h2>
 	 * Instance variables declared in subclasses and having default initial values should
 	 * <em>not</em> be accessed from within this method. Due to Java object creation
-	 * lifecycle constraints, any initial value will not yet be assigned when this
+	 * lifecycle constraints(生命周期约束), any initial value will not yet be assigned when this
+	 * 当这个回调被AbstractEnvironment构造函数调用时 初始化值 不会被赋值
 	 * callback is invoked by the {@link #AbstractEnvironment()} constructor, which may
 	 * lead to a {@code NullPointerException} or other problems. If you need to access
 	 * default values of instance variables, leave this method as a no-op and perform
 	 * property source manipulation and instance variable access directly within the
 	 * subclass constructor. Note that <em>assigning</em> values to instance variables is
 	 * not problematic; it is only attempting to read default values that must be avoided.
-	 *
+	 * 调用这个函数的时候 子类实例中的成员还没赋值
 	 * @see MutablePropertySources
 	 * @see PropertySourcesPropertyResolver
 	 * @see org.springframework.context.ApplicationContextInitializer
@@ -290,6 +302,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #DEFAULT_PROFILES_PROPERTY_NAME
 	 * @see #getReservedDefaultProfiles()
 	 */
+	//https://blog.csdn.net/jamet/article/details/77508182
 	protected Set<String> doGetDefaultProfiles() {
 		synchronized (this.defaultProfiles) {
 			if (this.defaultProfiles.equals(getReservedDefaultProfiles())) {
@@ -311,6 +324,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #AbstractEnvironment()
 	 * @see #getReservedDefaultProfiles()
 	 */
+	//https://blog.csdn.net/jamet/article/details/77508182
 	@Override
 	public void setDefaultProfiles(String... profiles) {
 		Assert.notNull(profiles, "Profile array must not be null");
@@ -386,6 +400,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Map<String, Object> getSystemProperties() {
 		try {
+			//Hashtable
 			return (Map) System.getProperties();
 		}
 		catch (AccessControlException ex) {
@@ -411,6 +426,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public Map<String, Object> getSystemEnvironment() {
+		//如果抑制调用System.getenv 那么返回一个空map
 		if (suppressGetenvAccess()) {
 			return Collections.emptyMap();
 		}
@@ -448,6 +464,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #IGNORE_GETENV_PROPERTY_NAME
 	 * @see SpringProperties#getFlag
 	 */
+	//https://www.cnblogs.com/clarke157/p/6609761.html
 	protected boolean suppressGetenvAccess() {
 		return SpringProperties.getFlag(IGNORE_GETENV_PROPERTY_NAME);
 	}

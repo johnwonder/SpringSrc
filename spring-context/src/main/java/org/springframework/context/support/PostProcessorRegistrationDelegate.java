@@ -67,6 +67,8 @@ final class PostProcessorRegistrationDelegate {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
+
+					//直接调用postProcessBeanDefinitionRegistry
 					registryProcessor.postProcessBeanDefinitionRegistry(registry);
 					registryProcessors.add(registryProcessor);
 				}
@@ -79,9 +81,12 @@ final class PostProcessorRegistrationDelegate {
 			// uninitialized to let the bean factory post-processors apply to them!
 			// Separate between BeanDefinitionRegistryPostProcessors that implement
 			// PriorityOrdered, Ordered, and the rest.
+			// 此处不初始化FactoryBeans  让beanfactory post-processors 来适用
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
+			//todo MyMatis下的MapperScannerConfigurer就实现了BeanDefinitionRegistryPostProcessor接口 来扫描Mapper接口
+			//todo ConfigurationClassPostProcessor 实现了 PriorityOrdered  所以会优先调用
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
@@ -92,7 +97,11 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+
+			//todo 此处会调用ConfigurationClassPostProcessor 的 postProcessBeanDefinitionRegistry 方法
+			//去 解析 configuration注解 并且 加载beandefinition
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+			//会清空currentRegistryProcessors  包括ConfigurationClassPostProcessor
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
@@ -127,7 +136,10 @@ final class PostProcessorRegistrationDelegate {
 			}
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
+			//todo ConfigurationClassPostProcessor 实现了 BeanFactoryPostProcessor 接口
+			//内部又加入了 ImportAwareBeanPostProcessor
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
@@ -267,6 +279,10 @@ final class PostProcessorRegistrationDelegate {
 
 	/**
 	 * Invoke the given BeanDefinitionRegistryPostProcessor beans.
+	 *
+	 *  通过遍历 调用 实现BeanDefinitionRegistryPostProcessor的bean
+	 *
+	 * 也就是调用他们的postProcessBeanDefinitionRegistry方法
 	 */
 	private static void invokeBeanDefinitionRegistryPostProcessors(
 			Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
@@ -279,6 +295,7 @@ final class PostProcessorRegistrationDelegate {
 	/**
 	 * Invoke the given BeanFactoryPostProcessor beans.
 	 */
+	//私有静态 方法 供 公有 静态方法 invokeBeanFactoryPostProcessors 使用
 	private static void invokeBeanFactoryPostProcessors(
 			Collection<? extends BeanFactoryPostProcessor> postProcessors, ConfigurableListableBeanFactory beanFactory) {
 

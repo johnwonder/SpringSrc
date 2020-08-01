@@ -20,8 +20,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
 /**
- * Context that gets passed along a bean definition reading process,
- * encapsulating all relevant configuration as well as state.
+ * Context that gets passed along a bean definition reading process(传递一个bean定义读取过程),
+ * encapsulating all relevant configuration as well as state(封装所有相关配置和状态).
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -35,6 +35,7 @@ public class ReaderContext {
 
 	private final ReaderEventListener eventListener;
 
+	//提取器
 	private final SourceExtractor sourceExtractor;
 
 
@@ -198,13 +199,14 @@ public class ReaderContext {
 
 	/**
 	 * Call the source extractor for the given source object.
-	 * @param sourceCandidate the original source object
+	 * @param sourceCandidate the original source object //源候选
 	 * @return the source object to store, or {@code null} for none.
 	 * @see #getSourceExtractor()
 	 * @see SourceExtractor#extractSource
-	 */
+	 */ //提取源的候选
 	@Nullable
 	public Object extractSource(Object sourceCandidate) {
+
 		return this.sourceExtractor.extractSource(sourceCandidate, this.resource);
 	}
 

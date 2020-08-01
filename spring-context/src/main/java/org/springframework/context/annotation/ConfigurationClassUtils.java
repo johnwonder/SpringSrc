@@ -39,7 +39,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * Utilities for identifying {@link Configuration} classes.
+ * Utilities for identifying(识别) {@link Configuration} classes.
  *
  * @author Chris Beams
  * @author Juergen Hoeller
@@ -72,6 +72,7 @@ abstract class ConfigurationClassUtils {
 
 	/**
 	 * Check whether the given bean definition is a candidate for a configuration class
+	 * 检查给定的bean定义 是否是候选者
 	 * (or a nested component class declared within a configuration/component class,
 	 * to be auto-registered as well), and mark it accordingly.
 	 * @param beanDef the bean definition to check
@@ -81,15 +82,21 @@ abstract class ConfigurationClassUtils {
 	public static boolean checkConfigurationClassCandidate(
 			BeanDefinition beanDef, MetadataReaderFactory metadataReaderFactory) {
 
+		//判断 className 是否为null 或者 它的factoryMethodName 是否为空
 		String className = beanDef.getBeanClassName();
 		if (className == null || beanDef.getFactoryMethodName() != null) {
 			return false;
 		}
 
+
 		AnnotationMetadata metadata;
+
+		//判断是否实现了AnnotatedBeanDefinition
+		//关于AnnotatedBeanDefinition 可以参看 ConfigurationClassBeanDefinition
 		if (beanDef instanceof AnnotatedBeanDefinition &&
 				className.equals(((AnnotatedBeanDefinition) beanDef).getMetadata().getClassName())) {
 			// Can reuse the pre-parsed metadata from the given BeanDefinition...
+			//可以重用给定BeanDefinition中的预分析元数据
 			metadata = ((AnnotatedBeanDefinition) beanDef).getMetadata();
 		}
 		else if (beanDef instanceof AbstractBeanDefinition && ((AbstractBeanDefinition) beanDef).hasBeanClass()) {
@@ -112,6 +119,7 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
+		//判断有没有@Configuration注解
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
@@ -160,6 +168,8 @@ abstract class ConfigurationClassUtils {
 	 * @param metadata the metadata of the annotated class
 	 * @return {@code true} if the given class is to be processed as a lite
 	 * configuration class, just registering it and scanning it for {@code @Bean} methods
+	 *
+	 * 返回true 代表 要被当成lite模式的configuration 类 ，去注册它 并且 扫描它下面的@Bean方法
 	 */
 	public static boolean isLiteConfigurationCandidate(AnnotationMetadata metadata) {
 		// Do not consider an interface or an annotation...
@@ -168,6 +178,8 @@ abstract class ConfigurationClassUtils {
 		}
 
 		// Any of the typical annotations found?
+		// @Component  @ComponentScan 注解
+		// @Import @ImportResource 注解
 		for (String indicator : candidateIndicators) {
 			if (metadata.isAnnotated(indicator)) {
 				return true;

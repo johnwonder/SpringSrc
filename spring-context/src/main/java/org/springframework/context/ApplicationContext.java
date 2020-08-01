@@ -27,11 +27,13 @@ import org.springframework.lang.Nullable;
  * Central interface to provide configuration for an application.
  * This is read-only while the application is running, but may be
  * reloaded if the implementation supports this.
+ * 给应用提供配置的核心接口， 当应用运行的时候这个接口是只读的，但是接口实现支持的话 有可能重新加载。
  *
  * <p>An ApplicationContext provides:
  * <ul>
  * <li>Bean factory methods for accessing application components.
  * Inherited from {@link org.springframework.beans.factory.ListableBeanFactory}.
+ * 继承自ListableBeanFactory 访问应用组件的bean工厂方法
  * <li>The ability to load file resources in a generic fashion.
  * Inherited from the {@link org.springframework.core.io.ResourceLoader} interface.
  * <li>The ability to publish events to registered listeners.
@@ -42,12 +44,14 @@ import org.springframework.lang.Nullable;
  * will always take priority. This means, for example, that a single parent
  * context can be used by an entire web application, while each servlet has
  * its own child context that is independent of that of any other servlet.
+ * 每一个servlet都有自己都子上下文 独立于其他的servlet
  * </ul>
  *
  * <p>In addition to standard {@link org.springframework.beans.factory.BeanFactory}
  * lifecycle capabilities, ApplicationContext implementations detect and invoke
  * {@link ApplicationContextAware} beans as well as {@link ResourceLoaderAware},
  * {@link ApplicationEventPublisherAware} and {@link MessageSourceAware} beans.
+ * 除了标准的生命周期能力，应用上下文的实现 发现和调用 resourceLoaderAware
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -91,7 +95,9 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	@Nullable
 	ApplicationContext getParent();
 
+	//导出AutowireCapableBeanFactory
 	/**
+	 * 对正在初始化的bean实例应用Spring bean生命周期（全部或部分）
 	 * Expose AutowireCapableBeanFactory functionality for this context.
 	 * <p>This is not typically used by application code, except for the purpose of
 	 * initializing bean instances that live outside of the application context,

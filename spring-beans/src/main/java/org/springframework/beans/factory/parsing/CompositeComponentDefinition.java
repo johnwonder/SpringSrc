@@ -78,6 +78,7 @@ public class CompositeComponentDefinition extends AbstractComponentDefinition {
 	 * Return the nested components that this composite component holds.
 	 * @return the array of nested components, or an empty array if none
 	 */
+	//https://www.cnblogs.com/chaoaishow/p/11611526.html
 	public ComponentDefinition[] getNestedComponents() {
 		return this.nestedComponents.toArray(new ComponentDefinition[0]);
 	}

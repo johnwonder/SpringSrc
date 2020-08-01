@@ -106,6 +106,7 @@ public final class SpringProperties {
 	 */
 	@Nullable
 	public static String getProperty(String key) {
+		//先检查本地属性集合
 		String value = localProperties.getProperty(key);
 		if (value == null) {
 			try {

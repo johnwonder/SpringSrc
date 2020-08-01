@@ -36,6 +36,7 @@ public class MapPropertySource extends EnumerablePropertySource<Map<String, Obje
 	}
 
 
+	//从source中取得属性
 	@Override
 	@Nullable
 	public Object getProperty(String name) {

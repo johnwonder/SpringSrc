@@ -31,10 +31,12 @@ import org.springframework.lang.Nullable;
  * Provides facilities to configure an application context in addition
  * to the application context client methods in the
  * {@link org.springframework.context.ApplicationContext} interface.
+ * 除了ApplicationContext中的应用程序上下文客户端方法之外，还提供配置应用程序上下文的工具
  *
  * <p>Configuration and lifecycle methods are encapsulated here to avoid
- * making them obvious to ApplicationContext client code. The present
- * methods should only be used by startup and shutdown code.
+ * making them obvious to ApplicationContext client code(这里封装了配置和生命周期方法，
+ * 以避免使它们对ApplicationContext客户端代码显而易见). The present
+ * methods should only be used by startup and shutdown code(当前方法只能由启动和关闭代码使用).
  *
  * @author Juergen Hoeller
  * @author Chris Beams

@@ -110,6 +110,7 @@ final class ProfilesParser {
 		return activeProfile -> Arrays.stream(profiles).allMatch(isMatch(activeProfile));
 	}
 
+	//profiles 就是一个 activeProfile -> activeProfile.test(profile)
 	private static Profiles not(Profiles profiles) {
 		return activeProfile -> !profiles.matches(activeProfile);
 	}

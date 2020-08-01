@@ -68,7 +68,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
 /**
- * Stateful delegate class used to parse XML bean definitions.
+ * Stateful delegate class used to parse XML bean definitions(用于解析XML bean定义的有状态委托类).
  * Intended for use by both the main parser and any extension
  * {@link BeanDefinitionParser BeanDefinitionParsers} or
  * {@link BeanDefinitionDecorator BeanDefinitionDecorators}.
@@ -802,6 +802,7 @@ public class BeanDefinitionParserDelegate {
 		//如果有index 属性
 		if (StringUtils.hasLength(indexAttr)) {
 			try {
+				//用Integer类解析int
 				int index = Integer.parseInt(indexAttr);
 				if (index < 0) {
 					error("'index' cannot be lower than 0", ele);
@@ -809,6 +810,8 @@ public class BeanDefinitionParserDelegate {
 				else {
 					try {
 						this.parseState.push(new ConstructorArgumentEntry(index));
+
+						//解析属性值
 						Object value = parsePropertyValue(ele, bd, null);
 						//内部公共静态类ValueHolder
 						ConstructorArgumentValues.ValueHolder valueHolder = new ConstructorArgumentValues.ValueHolder(value);
@@ -1391,6 +1394,8 @@ public class BeanDefinitionParserDelegate {
 		if (namespaceUri == null) {
 			return null;
 		}
+		//resolve里有初始化过程
+		//根据命名空间uri获取 NamesoaceHandler
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 		if (handler == null) {
 			error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);
@@ -1398,6 +1403,7 @@ public class BeanDefinitionParserDelegate {
 		}
 		//调用parse方法
 		//这里ParserContext注入registry
+		//readerContext里 reader->XmlBeanDefinitionReader 里包含了 registry
 		return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
 	}
 

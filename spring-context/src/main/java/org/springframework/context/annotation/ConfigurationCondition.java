@@ -38,6 +38,9 @@ public interface ConfigurationCondition extends Condition {
 	/**
 	 * The various configuration phases where the condition could be evaluated.
 	 */
+	/**
+	 * 条件判断的阶段，是在解析配置类的时候过滤还是在创建bean的时候过滤
+	 */
 	enum ConfigurationPhase {
 
 		/**
@@ -45,6 +48,9 @@ public interface ConfigurationCondition extends Condition {
 		 * class is being parsed.
 		 * <p>If the condition does not match at this point, the {@code @Configuration}
 		 * class will not be added.
+		 */
+		/**
+		 * 配置类解析阶段，如果条件为false，配置类将不会被解析
 		 */
 		PARSE_CONFIGURATION,
 
@@ -54,6 +60,9 @@ public interface ConfigurationCondition extends Condition {
 		 * {@code @Configuration} classes from being added.
 		 * <p>At the time that the condition is evaluated, all {@code @Configuration}s
 		 * will have been parsed.
+		 */
+		/**
+		 * bean注册阶段，如果为false，bean将不会被注册
 		 */
 		REGISTER_BEAN
 	}

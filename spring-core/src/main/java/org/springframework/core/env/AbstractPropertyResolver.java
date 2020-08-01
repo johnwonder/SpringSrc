@@ -45,6 +45,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	@Nullable
 	private volatile ConfigurableConversionService conversionService;
 
+	//不严格的，可以忽略的
 	@Nullable
 	private PropertyPlaceholderHelper nonStrictHelper;
 
@@ -206,9 +207,11 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 		return doResolvePlaceholders(text, this.nonStrictHelper);
 	}
 
+
 	@Override
 	public String resolveRequiredPlaceholders(String text) throws IllegalArgumentException {
 		if (this.strictHelper == null) {
+			//不忽略
 			this.strictHelper = createPlaceholderHelper(false);
 		}
 		return doResolvePlaceholders(text, this.strictHelper);
@@ -232,7 +235,10 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 	//私有方法
+	//是否忽略 无法解决的占位符
 	private PropertyPlaceholderHelper createPlaceholderHelper(boolean ignoreUnresolvablePlaceholders) {
+
+		//默认使用${ placeholderPrefix
 		return new PropertyPlaceholderHelper(this.placeholderPrefix, this.placeholderSuffix,
 				this.valueSeparator, ignoreUnresolvablePlaceholders);
 	}

@@ -25,6 +25,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Extension of the {@link BeanFactory} interface to be implemented by bean factories
+ * 实现这个扩展接口 列举出所有bean实例
  * that can enumerate all their bean instances, rather than attempting bean lookup
  * by name one by one as requested by clients. BeanFactory implementations that
  * preload all their bean definitions (such as XML-based factories) may implement
@@ -55,13 +56,17 @@ import org.springframework.lang.Nullable;
  * @see HierarchicalBeanFactory
  * @see BeanFactoryUtils
  */
+//正如这个工厂接口的名字所示，这个工厂接口最大的特点就是可以列出工厂可以生产的所有实例
 public interface ListableBeanFactory extends BeanFactory {
 
 	/**
 	 * Check if this bean factory contains a bean definition with the given name.
+	 * 检查这个工厂是否包含给定名称的bean定义
 	 * <p>Does not consider any hierarchy this factory may participate in,
+	 * 不考虑这个工厂参与任何层次结构
 	 * and ignores any singleton beans that have been registered by
 	 * other means than bean definitions.
+	 * 忽略任何被其他意义注册的单例bean
 	 * @param beanName the name of the bean to look for
 	 * @return if this bean factory contains a bean definition with the given name
 	 * @see #containsBean

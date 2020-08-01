@@ -139,6 +139,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 		catch (ClassNotFoundException ex) {
 			// JSR-330 API not available - Provider interface simply not supported then.
+			//https://www.cnblogs.com/toutou/p/9907381.html
+			//https://stackoverflow.com/questions/16435117/when-to-use-javax-inject-provider-in-spring
 			javaxInjectProviderClass = null;
 		}
 	}
@@ -179,12 +181,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	private final Map<Class<?>, String[]> singletonBeanNamesByType = new ConcurrentHashMap<>(64);
 
 	/** List of bean definition names, in registration order. */
+	//bean定义的名字，按照登记顺序
 	private volatile List<String> beanDefinitionNames = new ArrayList<>(256);
 
 	/** List of names of manually registered singletons, in registration order. */
 	private volatile Set<String> manualSingletonNames = new LinkedHashSet<>(16);
 
 	/** Cached array of bean definition names in case of frozen configuration. */
+	//如果启用冻结配置 那么就有这个缓存的bean名字 数组
 	@Nullable
 	private volatile String[] frozenBeanDefinitionNames;
 
@@ -239,6 +243,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * If not, an exception will be thrown. This also applies to overriding aliases.
 	 * <p>Default is "true".
 	 * @see #registerBeanDefinition
+	 * //是否允许通过相同的名称替换不同的bean
 	 */
 	public void setAllowBeanDefinitionOverriding(boolean allowBeanDefinitionOverriding) {
 		this.allowBeanDefinitionOverriding = allowBeanDefinitionOverriding;
@@ -254,13 +259,15 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	/**
+	 * https://blog.csdn.net/iteye_15549/article/details/82648054
 	 * Set whether the factory is allowed to eagerly load bean classes
 	 * even for bean definitions that are marked as "lazy-init".
 	 * <p>Default is "true". Turn this flag off to suppress class loading
 	 * for lazy-init beans unless such a bean is explicitly requested.
 	 * In particular, by-type lookups will then simply ignore bean definitions
-	 * without resolved class name, instead of loading the bean classes on
-	 * demand just to perform a type check.
+	 * without resolved class name(特别是，按类型查找只会忽略没有解析类名的bean定义),
+	 * instead of loading the bean classes on
+	 * demand just to perform a type check(而不是按需加载bean类来执行类型检查).
 	 * @see AbstractBeanDefinition#setLazyInit
 	 */
 	public void setAllowEagerClassLoading(boolean allowEagerClassLoading) {
@@ -272,6 +279,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * even for bean definitions that are marked as "lazy-init".
 	 * @since 4.1.2
 	 */
+	//返回是否允许工厂急切地加载bean类 即使对于标记为“lazy init”的bean定义也是如此
 	public boolean isAllowEagerClassLoading() {
 		return this.allowEagerClassLoading;
 	}
@@ -299,6 +307,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * Set a custom autowire candidate resolver for this BeanFactory to use
 	 * when deciding whether a bean definition should be considered as a
 	 * candidate for autowiring.
+	 * 决定是否应将bean定义视为自动连接的 候选项
 	 */
 	public void setAutowireCandidateResolver(final AutowireCandidateResolver autowireCandidateResolver) {
 		Assert.notNull(autowireCandidateResolver, "AutowireCandidateResolver must not be null");
@@ -887,7 +896,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 
 	//---------------------------------------------------------------------
-	// Implementation of BeanDefinitionRegistry interface
+	// Implementation of BeanDefinitionRegistry(登记处) interface
 	//---------------------------------------------------------------------
 	// BeanDefinitionRegistry 的 接口实现
 	@Override
@@ -909,6 +918,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		if (existingDefinition != null) {
+			//不允许被覆盖的话就抛出错误
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
@@ -921,6 +931,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else if (!beanDefinition.equals(existingDefinition)) {
+				//bean定义不同的话
 				if (logger.isDebugEnabled()) {
 					logger.debug("Overriding bean definition for bean '" + beanName +
 							"' with a different definition: replacing [" + existingDefinition +

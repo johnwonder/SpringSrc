@@ -77,22 +77,27 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #initBeanDefinitionReader
 	 * @see #loadBeanDefinitions
 	 */
+	//todo 重载了 AbstractRefreshableApplicationContext
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
 
-
+		//传入bean工厂
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
 		beanDefinitionReader.setEnvironment(this.getEnvironment());
+
+		//设置DefaultResourceLoader
 		beanDefinitionReader.setResourceLoader(this);
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader,
 		// then proceed with actually loading the bean definitions.
+		//初始化beanReader
 		initBeanDefinitionReader(beanDefinitionReader);
+		//加载bean定义
 		loadBeanDefinitions(beanDefinitionReader);
 	}
 
@@ -105,6 +110,9 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader#setDocumentReaderClass
 	 */
 	protected void initBeanDefinitionReader(XmlBeanDefinitionReader reader) {
+
+		//设置验证xml文档
+		//可以使用不同的 xmlBeanDefinitionParser 实现
 		reader.setValidating(this.validating);
 	}
 
@@ -120,6 +128,8 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #getResources
 	 * @see #getResourcePatternResolver
 	 */
+	//bean工厂的生命周期由 refreshBeanFactory 方法来处理
+	//这个方法只是 去加载和注册 bean定义
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
 		//ClassPathXmlApplicationContext
 		Resource[] configResources = getConfigResources();
@@ -128,6 +138,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		}
 		String[] configLocations = getConfigLocations();
 		if (configLocations != null) {
+			//抽象AbstractBeanDefinitionReader里去加载
 			reader.loadBeanDefinitions(configLocations);
 		}
 	}

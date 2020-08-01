@@ -38,18 +38,20 @@ import org.springframework.lang.Nullable;
  */
 public interface BeanDefinitionParser {
 
+	//解析特定的元素和注册最后的beandefinition
 	/**
 	 * Parse the specified {@link Element} and register the resulting
 	 * {@link BeanDefinition BeanDefinition(s)} with the
 	 * {@link org.springframework.beans.factory.xml.ParserContext#getRegistry() BeanDefinitionRegistry}
 	 * embedded in the supplied {@link ParserContext}.
 	 * <p>Implementations must return the primary {@link BeanDefinition} that results
-	 * from the parse if they will ever be used in a nested fashion (for example as
+	 * from the parse if they will ever be used in a nested fashion(它们将以嵌套的方式使用) (for example as
 	 * an inner tag in a {@code <property/>} tag). Implementations may return
 	 * {@code null} if they will <strong>not</strong> be used in a nested fashion.
 	 * @param element the element that is to be parsed into one or more {@link BeanDefinition BeanDefinitions}
-	 * @param parserContext the object encapsulating the current state of the parsing process;
+	 * @param parserContext the object encapsulating(封装) the current state of the parsing process;
 	 * provides access to a {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}
+	 * 提供BeanDefinitionRegistry的访问 --getRegistry方法
 	 * @return the primary {@link BeanDefinition}
 	 */
 	@Nullable

@@ -61,11 +61,13 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	 * @see #setConfigLocation
 	 * @see #setConfigLocations
 	 * @see #afterPropertiesSet()
+	 * //为bean样式配置 创建一个新的ClassPathXml应用程序上下文
 	 */
 	public ClassPathXmlApplicationContext() {
 	}
 
 	/**
+	 *  传入一个 父 上下文
 	 * Create a new ClassPathXmlApplicationContext for bean-style configuration.
 	 * @param parent the parent context
 	 * @see #setConfigLocation
@@ -106,6 +108,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	 * @param configLocations array of resource locations
 	 * @param parent the parent context
 	 * @throws BeansException if context creation failed
+	 *  根据给定的xml 加载bean   自动刷新  上下文
 	 */
 	public ClassPathXmlApplicationContext(String[] configLocations, @Nullable ApplicationContext parent)
 			throws BeansException {
@@ -120,8 +123,10 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	 * @param refresh whether to automatically refresh the context,
 	 * loading all bean definitions and creating all singletons.
 	 * Alternatively, call refresh manually after further configuring the context.
+	 *
+	 *                在进一步配置上下文后  可以手动调用refresh
 	 * @throws BeansException if context creation failed
-	 * @see #refresh()
+	 * @see #refresh() 参考refresh方法
 	 */
 	public ClassPathXmlApplicationContext(String[] configLocations, boolean refresh) throws BeansException {
 		this(configLocations, refresh, null);
@@ -144,6 +149,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 
 		super(parent);
 		System.out.println("进入源码...");
+
+		//AbstractRefreshableConfigApplicationContext的setConfigLocations方法
 		setConfigLocations(configLocations);
 		//默认为true
 		if (refresh) {

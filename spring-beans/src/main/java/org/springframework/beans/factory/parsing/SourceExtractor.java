@@ -38,7 +38,7 @@ import org.springframework.lang.Nullable;
 public interface SourceExtractor {
 
 	/**
-	 * Extract the source metadata from the candidate object supplied
+	 * Extract the source metadata from the candidate object supplied(从提供的候选对象中提取源元数据)
 	 * by the configuration parser.
 	 * @param sourceCandidate the original source metadata (never {@code null})
 	 * @param definingResource the resource that defines the given source object

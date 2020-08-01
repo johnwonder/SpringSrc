@@ -36,6 +36,8 @@ class ProfileCondition implements Condition {
 		MultiValueMap<String, Object> attrs = metadata.getAllAnnotationAttributes(Profile.class.getName());
 		if (attrs != null) {
 			for (Object value : attrs.get("value")) {
+				//获取到的value是个数组
+				// AbstractEnvironment propertyResolver 去doGetActiveProfiles -> getProperty
 				if (context.getEnvironment().acceptsProfiles(Profiles.of((String[]) value))) {
 					return true;
 				}

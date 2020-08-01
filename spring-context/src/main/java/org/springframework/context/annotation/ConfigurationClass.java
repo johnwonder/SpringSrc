@@ -56,6 +56,7 @@ final class ConfigurationClass {
 	@Nullable
 	private String beanName;
 
+	//初始化容量只有1个
 	private final Set<ConfigurationClass> importedBy = new LinkedHashSet<>(1);
 
 	private final Set<BeanMethod> beanMethods = new LinkedHashSet<>();
@@ -164,6 +165,7 @@ final class ConfigurationClass {
 	 * @since 3.1.1
 	 * @see #getImportedBy()
 	 */
+	//判断这个配置类是否是通过Import标记注册 或者 嵌套在其他配置类里自动注册的
 	public boolean isImported() {
 		return !this.importedBy.isEmpty();
 	}

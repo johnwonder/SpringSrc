@@ -445,6 +445,8 @@ public class ContextLoader {
 	 * if any have been specified by {@link #CONTEXT_INITIALIZER_CLASSES_PARAM}.
 	 * @param servletContext current servlet context
 	 * @see #CONTEXT_INITIALIZER_CLASSES_PARAM
+	 *
+	 * todo 返回 任何 被CONTEXT_INITIALIZER_CLASSES_PARAM指定的实现ApplicationContextInitializer接口 类
 	 */
 	protected List<Class<ApplicationContextInitializer<ConfigurableApplicationContext>>>
 			determineContextInitializerClasses(ServletContext servletContext) {

@@ -435,4 +435,6 @@ public @interface Configuration {
 	@AliasFor(annotation = Component.class)
 	String value() default "";
 
+	//5.2以后 运行时会给该类生成一个CGLIB子类放进容器，有一定的性能、时间开销（这个开销在Spring Boot这种拥有大量配置类的情况下是不容忽视的，
+	// 这也是为何Spring 5.2新增了proxyBeanMethods属性的最直接原因）
 }

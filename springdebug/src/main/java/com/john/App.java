@@ -1,10 +1,12 @@
 package com.john;
 
-import com.john.aop.Landlord;
+import com.john.aop.test.Landlord;
+import com.john.aop.Person;
 import com.john.autowire.AutowireTest1;
 import com.john.beanFactory.MyBeanFactory;
 import com.john.beanFactory.SimpleTarget;
 import com.john.beanFactory.Singer;
+import com.john.construct.StandardEnv;
 import com.john.factorybean.CarFactoryBean;
 import com.john.factorybeanpro.Car;
 import org.springframework.beans.factory.BeanFactory;
@@ -14,6 +16,11 @@ import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.PropertyPlaceholderHelper;
+
+import java.io.*;
+import java.util.HashSet;
+import java.util.Properties;
 
 /**
  * Hello world!
@@ -23,6 +30,22 @@ public class App
 {
     public static void main( String[] args )
     {
+
+//		StandardEnv standardEnv = new StandardEnv();
+//
+//
+//    	try
+//		{
+//			replaceProperty();
+//		}
+//		catch (IOException e){
+//
+//		}
+
+
+
+
+
 		String XMLPath = "spring-config.xml";
 		//https://www.cnblogs.com/wade-luffy/p/6072460.html
 		//https://blog.csdn.net/arjelarxfc/article/details/78223983
@@ -31,9 +54,38 @@ public class App
 		//AbstractBeanDefinitionReader
 		//XmlBeanDefinitionReader
 		////重点看  PathMatchingResourcePatternResolver .getResources
+
+		//1.8.0_144spring-config.xml 从System.getProperties解析占位符
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
-	Landlord landlord = (Landlord) applicationContext.getBean("landlord", Landlord.class);
+
+
+//		applicationContext
+		Landlord landlord = (Landlord) applicationContext.getBean("landlord", Landlord.class);
 		landlord.service();
+		landlord.setId(5);
+		Person albert = (Person) applicationContext.getBean("person", Person.class);
+		//Person albert = new Person(1, "Albert", "Camus");
+		//Person audrey = new Person(2, "Audrey", "Hepburn");
+		//System.out.println(albert);
+		//System.out.println(audrey);
+		//System.out.println();
+		albert.setId(8);
+		albert.setLastName("Einstein");
+		//audrey.setId(9);
+		//audrey.setLastName("Tautou");
+		System.out.println();
+		System.out.println(albert);
+		//System.out.println(audrey);
+
+
+		//竟然输出14
+		System.out.println(applicationContext.getBeanDefinitionCount());
+
+		String[] beanDefinitions = applicationContext.getBeanDefinitionNames();
+
+		for(String bean : beanDefinitions){
+			System.out.println(bean);
+		}
 //		Car car = (Car) applicationContext.getBean("car5");
 //		System.out.println(car.getBrand());
 //
@@ -113,4 +165,6 @@ public class App
 		//System.out.println(System.getProperty("user.dir"));//用户的当前路径
 
     }
+
+
 }

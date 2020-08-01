@@ -133,10 +133,12 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		try {
 			//创建beanFactory 默认为DefaultListableBeanFactory
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+
 			beanFactory.setSerializationId(getId());
 			customizeBeanFactory(beanFactory);
 
 			//加载Bean定义
+			//子类实现AbstractXmlApplicationContext
 			loadBeanDefinitions(beanFactory);
 
 			//beanFactory
@@ -234,7 +236,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
 
-		//
+		//允许bean定义覆盖
 		if (this.allowBeanDefinitionOverriding != null) {
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}

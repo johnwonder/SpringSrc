@@ -30,7 +30,7 @@ import org.springframework.lang.Nullable;
 /**
  * Utility class for working with Strings that have placeholder values in them. A placeholder takes the form
  * {@code ${name}}. Using {@code PropertyPlaceholderHelper} these placeholders can be substituted for
- * user-supplied values. <p> Values for substitution can be supplied using a {@link Properties} instance or
+ * user-supplied(用户提供的) values. <p> Values for substitution(替代) can be supplied(提供) using a {@link Properties} instance or
  * using a {@link PlaceholderResolver}.
  *
  * @author Juergen Hoeller
@@ -88,7 +88,7 @@ public class PropertyPlaceholderHelper {
 		Assert.notNull(placeholderSuffix, "'placeholderSuffix' must not be null");
 		this.placeholderPrefix = placeholderPrefix;
 		this.placeholderSuffix = placeholderSuffix;
-		//
+		// 根据传入的占位符后缀 获取 占位符 前缀
 		String simplePrefixForSuffix = wellKnownSimplePrefixes.get(this.placeholderSuffix);
 		//
 		if (simplePrefixForSuffix != null && this.placeholderPrefix.endsWith(simplePrefixForSuffix)) {
@@ -123,17 +123,21 @@ public class PropertyPlaceholderHelper {
 	 */
 	public String replacePlaceholders(String value, PlaceholderResolver placeholderResolver) {
 		Assert.notNull(value, "'value' must not be null");
+
+		//placeholderResolver 是 函数式接口
 		return parseStringValue(value, placeholderResolver, new HashSet<>());
 	}
 
+	//protected 范围
 	protected String parseStringValue(
 			String value, PlaceholderResolver placeholderResolver, Set<String> visitedPlaceholders) {
 
 		StringBuilder result = new StringBuilder(value);
 
-		//如果没有{ 前缀 那直接返回result
+		//如果value中没有占位符前缀 那直接返回result
 		int startIndex = value.indexOf(this.placeholderPrefix);
 		while (startIndex != -1) {
+			//找到占位符的最后一个索引
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
@@ -145,6 +149,7 @@ public class PropertyPlaceholderHelper {
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
+				//获取实际值
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
 				if (propVal == null && this.valueSeparator != null) {
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);
@@ -161,7 +166,9 @@ public class PropertyPlaceholderHelper {
 					// Recursive invocation, parsing placeholders contained in the
 					// previously resolved placeholder value.
 					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);
-					result.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);
+
+					//替换占位符 为 实际值
+ 					result.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);
 					if (logger.isTraceEnabled()) {
 						logger.trace("Resolved placeholder '" + placeholder + "'");
 					}
@@ -172,6 +179,7 @@ public class PropertyPlaceholderHelper {
 					startIndex = result.indexOf(this.placeholderPrefix, endIndex + this.placeholderSuffix.length());
 				}
 				else {
+					//ignoreUnresolvablePlaceholders 为false 会报这个错 无法解析
 					throw new IllegalArgumentException("Could not resolve placeholder '" +
 							placeholder + "'" + " in value \"" + value + "\"");
 				}
@@ -185,10 +193,14 @@ public class PropertyPlaceholderHelper {
 		return result.toString();
 	}
 
+	//找到占位符的最后一个索引
 	private int findPlaceholderEndIndex(CharSequence buf, int startIndex) {
 		int index = startIndex + this.placeholderPrefix.length();
+
+		//这个变量貌似没啥用
 		int withinNestedPlaceholder = 0;
 		while (index < buf.length()) {
+			//索引和 占位符后缀 能不能匹配
 			if (StringUtils.substringMatch(buf, index, this.placeholderSuffix)) {
 				if (withinNestedPlaceholder > 0) {
 					withinNestedPlaceholder--;
@@ -212,9 +224,12 @@ public class PropertyPlaceholderHelper {
 
 	//
 	//https://blog.csdn.net/aitangyong/article/details/54137067
+	//https://blog.csdn.net/blueheart20/article/details/80403735
 	/**
-	 * Strategy interface used to resolve replacement values for placeholders contained in Strings.
+	 * Strategy interface(函数策略)接口 used to resolve replacement values for placeholders(解析占位符的替换值) contained in Strings.
 	 */
+	//https://blog.csdn.net/zhoufanyang_china/article/details/88040969
+		//todo FunctionalInterface的原理是什么
 	@FunctionalInterface
 	public interface PlaceholderResolver {
 
