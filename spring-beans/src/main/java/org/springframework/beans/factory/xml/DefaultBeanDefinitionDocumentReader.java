@@ -119,7 +119,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	/**
 	 * Register each bean definition within the given root {@code <beans/>} element.
 	 */
-	//todo doRegisterBeanDefinitions
+	//todo doRegisterBeanDefinitions 2020-08-31
 	//抑制编译器产生警告信息
 	@SuppressWarnings("deprecation")  // for Environment.acceptsProfiles(String...)
 	protected void doRegisterBeanDefinitions(Element root) {
@@ -135,6 +135,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 		//判断root是否是默认命名空间
 		if (this.delegate.isDefaultNamespace(root)) {
+
+			//todo 注册profile 2020-09-11
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 
 			//StringUtils.isEmpty()
@@ -148,6 +150,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						logger.debug("Skipped XML bean definition file due to specified profiles [" + profileSpec +
 								"] not matching: " + getReaderContext().getResource());
 					}
+					//TODO 如果当前配置文件的profile 不匹配 当前环境的profile 就直接返回 2020-09-11
 					return;
 				}
 			}
@@ -208,11 +211,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			importBeanDefinitionResource(ele);
 		}
 		// 对 alias 标签的解析
+		//todo 对应文档中的 Aliasing a Bean outside the Bean Definition 2020-08-31
 		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
 			processAliasRegistration(ele);
 		}
 		//bean节点
-		//todo 很重要解析Bean 节点
+		//todo 很重要解析Bean 节点 2020-08-31
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			processBeanDefinition(ele, delegate);
 		}

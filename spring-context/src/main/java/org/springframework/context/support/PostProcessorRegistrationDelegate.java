@@ -100,9 +100,11 @@ final class PostProcessorRegistrationDelegate {
 
 			//todo 此处会调用ConfigurationClassPostProcessor 的 postProcessBeanDefinitionRegistry 方法
 			//去 解析 configuration注解 并且 加载beandefinition
+			//此步骤执行完成后 beandefinition map中多出了我们自定义的类
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			//会清空currentRegistryProcessors  包括ConfigurationClassPostProcessor
 			currentRegistryProcessors.clear();
+
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
@@ -114,6 +116,8 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
+
+
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
@@ -138,6 +142,7 @@ final class PostProcessorRegistrationDelegate {
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
 			//todo ConfigurationClassPostProcessor 实现了 BeanFactoryPostProcessor 接口
 			//内部又加入了 ImportAwareBeanPostProcessor
+			//完成cglib代理
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);

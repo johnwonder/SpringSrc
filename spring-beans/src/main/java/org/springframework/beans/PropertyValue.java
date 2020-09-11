@@ -26,7 +26,7 @@ import org.springframework.util.ObjectUtils;
  * Object to hold information and value for an individual bean property.
  * Using an object here, rather than just storing all properties in
  * a map keyed by property name, allows for more flexibility, and the
- * ability to handle indexed properties etc in an optimized way.
+ * ability to handle indexed properties etc in an optimized way(以优化的方式处理索引属性等。).
  *
  * <p>Note that the value doesn't need to be the final required type:
  * A {@link BeanWrapper} implementation should handle any necessary conversion,

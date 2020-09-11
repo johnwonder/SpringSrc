@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class RootConfig {
 
-	@Profile("!default1") // 显示的指出defualt~~~
+	@Profile("default1") // 显示的指出defualt~~~
 	@Bean("person")
 	public ProfilePerson personDefault() {
 		return new ProfilePerson("我代表defualt数据源", 0);

@@ -57,6 +57,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		return false;
 	}
 
+	//todo doGetActiveProfiles 直接调用 2020-09-11
 	@Override
 	@Nullable
 	public String getProperty(String key) {
@@ -70,6 +71,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 	}
 
 	//提供给函数接口 PlaceholderResolver
+	//todo 解析 xml配置文件路径占位符的时候调用的是这个 2020-09-11
 	@Override
 	@Nullable
 	protected String getPropertyAsRawString(String key) {
@@ -88,6 +90,8 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 				}
 				Object value = propertySource.getProperty(key);
 				if (value != null) {
+					//todo 解析 profile变量的时候 会去 解析 变量中的占位符 2020-09-11
+					//TODO 解析xml配置文件路径字符串的时候  如果占位符 变量 的值 包含占位符 在这里 不会去解析  通过Helper 去解析 PropertyPlaceholderHelper
 					if (resolveNestedPlaceholders && value instanceof String) {
 						value = resolveNestedPlaceholders((String) value);
 					}

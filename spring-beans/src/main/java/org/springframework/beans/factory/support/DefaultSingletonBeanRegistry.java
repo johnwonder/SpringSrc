@@ -180,6 +180,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			synchronized (this.singletonObjects) {
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
+
+					//todo 2020-09-01 如果设置不允许循环依赖 那么这边就取不到 然后去createBean的时候不能添加到singletonsCurrentlyInCreation就报错了
+					//todo 2020-09-01 从singleFactory三级缓存获取后就放入earlySingleObjects二级缓存中
+					//singletonsCurrentlyInCreation
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
@@ -220,7 +224,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					//调用ObjectFactory的方法
+					//todo 2020-09-01 调用传进来的ObjectFactory的方法
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}

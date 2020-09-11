@@ -82,6 +82,9 @@ public class ProfileApp {
 
 		//因为我们这边的@Profile是在@Configuration 里定义的 Bean方法上的。
 		//所以应该是在ConfigurationClassBeanDefinitionReader里去判断的
+
+
+		System.out.println(InStaticMethod.len("profile1","profile2"));
 	}
 
 	private static  void replaceProperty() throws FileNotFoundException,IOException {

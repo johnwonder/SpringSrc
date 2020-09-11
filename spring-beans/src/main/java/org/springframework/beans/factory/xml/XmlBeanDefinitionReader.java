@@ -108,10 +108,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	private Class<? extends BeanDefinitionDocumentReader> documentReaderClass =
 			DefaultBeanDefinitionDocumentReader.class;
 
+	//FailFastProblemReporter
 	private ProblemReporter problemReporter = new FailFastProblemReporter();
 
 	private ReaderEventListener eventListener = new EmptyReaderEventListener();
 
+	//默认是NullSourceExtractor
 	private SourceExtractor sourceExtractor = new NullSourceExtractor();
 
 	@Nullable
@@ -394,7 +396,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
-			//获取Document对象
+			//todo important 获取Document对象 2020-09-05
 			Document doc = doLoadDocument(inputSource, resource);
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
@@ -461,6 +463,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		// Hmm, we didn't get a clear indication... Let's assume XSD,
 		// since apparently no DTD declaration has been found up until
 		// detection stopped (before finding the document's root tag).
+		//嗯，我们没有得到明确的迹象。。。让我们假设XSD，因为在检测停止之前（在找到文档的根标记之前），显然没有找到DTD声明。
 		return VALIDATION_XSD;
 	}
 
@@ -520,7 +523,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();
 		//https://www.cnblogs.com/whx7762/p/7777775.html
-		//todo 里面最终调用了registry.registerBeanDefinition
+		//todo 里面最终调用了registry.registerBeanDefinition 2020-08-31
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}

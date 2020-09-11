@@ -118,6 +118,8 @@ public abstract class BeanDefinitionReaderUtils {
 					"'class' nor 'parent' nor 'factory-bean' - can't generate bean name");
 		}
 
+		//todo 如果是innerBean 那就是 beanName + # + definition对象的hexString
+		//todo 如果是topLevelBean 那就是 beanName + # + counter (遍历beandefinitionMap 不存在就增加)
 		String id = generatedBeanName;
 		if (isInnerBean) {
 			// Inner bean: generate identity hashcode suffix.
@@ -143,6 +145,7 @@ public abstract class BeanDefinitionReaderUtils {
 		String id = beanName;
 		int counter = -1;
 
+		//todo 生成beanName  判断beanDefinitionMap是否包含这个id的key 比如 bean#1 bean#2
 		// Increase counter until the id is unique.
 		while (counter == -1 || registry.containsBeanDefinition(id)) {
 			counter++;

@@ -60,6 +60,7 @@ public class DelegatingEntityResolver implements EntityResolver {
 	 */
 	public DelegatingEntityResolver(@Nullable ClassLoader classLoader) {
 		this.dtdResolver = new BeansDtdResolver();
+		//todo 可插拔的架构解析程序
 		this.schemaResolver = new PluggableSchemaResolver(classLoader);
 	}
 
@@ -85,6 +86,7 @@ public class DelegatingEntityResolver implements EntityResolver {
 				return this.dtdResolver.resolveEntity(publicId, systemId);
 			}
 			else if (systemId.endsWith(XSD_SUFFIX)) {
+				//todo 加载xml配置文件的时候 去解析 xsd结尾的 schema
 				return this.schemaResolver.resolveEntity(publicId, systemId);
 			}
 		}

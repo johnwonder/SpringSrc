@@ -94,6 +94,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		}
 
 		// Inherit Environment if possible
+		//todo 尽可能的从registry继承Environment 2020-09-11
 		if (this.registry instanceof EnvironmentCapable) {
 			this.environment = ((EnvironmentCapable) this.registry).getEnvironment();
 		}
@@ -225,6 +226,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {
+				//todo important 通过 PathMatchingResourcePatternResolver 获取resource 2020-08-31
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
 
 				//还是交给子类去加载bean
@@ -232,6 +234,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 				if (actualResources != null) {
 					//我们在编码时经常需要将一些元素添加到一个List中，此时我们一般有两种选择：Collections.addAll()或者是ArrayList.addAll()。在需添加元素比较少的情况下，并在List的size在万级以上时，一般建议Collections.addAll()，
 					// 但当List的size较小时，两种方法没有什么区别，甚至ArrayList.addAll()更好。
+					//todo Collections.addAll
 					Collections.addAll(actualResources, resources);
 				}
 				if (logger.isTraceEnabled()) {

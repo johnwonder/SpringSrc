@@ -87,6 +87,7 @@ public class BeanDefinitionParserDelegate {
 
 	public static final String BEANS_NAMESPACE_URI = "http://www.springframework.org/schema/beans";
 
+	//多值分隔符
 	public static final String MULTI_VALUE_ATTRIBUTE_DELIMITERS = ",; ";
 
 	/**
@@ -239,6 +240,8 @@ public class BeanDefinitionParserDelegate {
 	 * beans-element basis. Duplicate bean ids/names may not exist within the
 	 * same level of beans element nesting, but may be duplicated across levels.
 	 */
+	//https://www.cnblogs.com/LiaHon/p/11257805.html#%E4%BA%94-%E9%81%8D%E5%8E%86
+    //HashSet是通过HashMap来实现的，HashMap通过hash(key)来确定存储的位置，是不具备存储顺序性的，因此HashSet遍历出的元素也并非按照插入的顺序。
 	private final Set<String> usedNames = new HashSet<>();
 
 
@@ -411,6 +414,7 @@ public class BeanDefinitionParserDelegate {
 	 * if there were errors during parse. Errors are reported to the
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
 	 */
+	//todo 解析xml配置文件中的<bean> 节点 2020-08-31
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
 		//获取id属性
@@ -419,6 +423,8 @@ public class BeanDefinitionParserDelegate {
 		//获取name属性
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
+		//todo name属性是用来为alias服务的
+		//todo MULTI_VALUE_ATTRIBUTE_DELIMITERS dependsOn 注解  profile 都用到了
 		List<String> aliases = new ArrayList<>();
 		if (StringUtils.hasLength(nameAttr)) {
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
@@ -438,7 +444,8 @@ public class BeanDefinitionParserDelegate {
 			}
 		}
 
-		//// 检查 name 的唯一性
+		////todo  检查 name 的唯一性 先检查name 再检查aliases same-level不能重复 cross-level可以重复 2020-08-31
+		//todo 也会检查aliases中是否存在
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
@@ -449,11 +456,14 @@ public class BeanDefinitionParserDelegate {
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
 				try {
+					//todo Spring文档中说的 框架会自动生成一个beanName 2020-08-31
+					// If you do not supply a name or id explicitly, the container generates a unique name for that bean
 					if (containingBean != null) {
-						beanName = BeanDefinitionReaderUtils.generateBeanName(
-								beanDefinition, this.readerContext.getRegistry(), true);
+						//todo innerbean
+						beanName = BeanDefinitionReaderUtils.generateBeanName(beanDefinition, this.readerContext.getRegistry(), true);
 					}
 					else {
+
 						beanName = this.readerContext.generateBeanName(beanDefinition);
 						// Register an alias for the plain bean class name, if still possible,
 						// if the generator returned the class name plus a suffix.
@@ -489,16 +499,21 @@ public class BeanDefinitionParserDelegate {
 	protected void checkNameUniqueness(String beanName, List<String> aliases, Element beanElement) {
 		String foundName = null;
 
+		//如果beanName不为空 且usedNames包含这个beanName了
 		if (StringUtils.hasText(beanName) && this.usedNames.contains(beanName)) {
 			foundName = beanName;
 		}
 		if (foundName == null) {
 			foundName = CollectionUtils.findFirstMatch(this.usedNames, aliases);
 		}
+		//foundName不为null就报错
 		if (foundName != null) {
+			System.out.println(this.usedNames);
 			error("Bean name '" + foundName + "' is already used in this <beans> element", beanElement);
-		}
 
+
+		}
+		//访问无序
 		this.usedNames.add(beanName);
 		this.usedNames.addAll(aliases);
 	}
@@ -507,6 +522,7 @@ public class BeanDefinitionParserDelegate {
 	 * Parse the bean definition itself, without regard to name or aliases. May return
 	 * {@code null} if problems occurred during the parsing of the bean definition.
 	 */
+	//https://www.cnblogs.com/ssh-html/p/11179860.html spring源码学习之默认标签的解析（一）
 	@Nullable
 	public AbstractBeanDefinition parseBeanDefinitionElement(
 			Element ele, String beanName, @Nullable BeanDefinition containingBean) {
@@ -542,7 +558,10 @@ public class BeanDefinitionParserDelegate {
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 			// 解析构造函数参数
 			parseConstructorArgElements(ele, bd);
-			// 解析 property 子元素
+
+			//todo  解析 property 子元素 2020-08-31
+			//todo property 可直接包含ref value等属性 也可以 包含ref value等子节点
+			//比如 ref属性 2020-08-11
 			parsePropertyElements(ele, bd);
 			// 解析 qualifier 子元素
 			parseQualifierElements(ele, bd);
@@ -792,6 +811,7 @@ public class BeanDefinitionParserDelegate {
 		}
 	}
 
+	//todo 构造函数的参数 是ref的情况下 ref名称会放入RuntimeReference对象中 2020-08-31
 	/**
 	 * Parse a constructor-arg element.
 	 */
@@ -851,6 +871,8 @@ public class BeanDefinitionParserDelegate {
 					valueHolder.setName(nameAttr);
 				}
 				valueHolder.setSource(extractSource(ele));
+
+				//添加到 List<ValueHolder> 中
 				bd.getConstructorArgumentValues().addGenericArgumentValue(valueHolder);
 			}
 			finally {
@@ -958,6 +980,10 @@ public class BeanDefinitionParserDelegate {
 
 		boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);
 		boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE);
+
+		//todo 不允许既包含ref 又包含value  或者  ref或者value 且又有subElement 2020-08-31
+		//https://www.cnblogs.com/straybirds/p/9069948.html
+		//Spring框架xml配置中属性 ref 与 value的区别
 		if ((hasRefAttribute && hasValueAttribute) ||
 				((hasRefAttribute || hasValueAttribute) && subElement != null)) {
 			error(elementName +
@@ -1007,6 +1033,7 @@ public class BeanDefinitionParserDelegate {
 			return parseNestedCustomElement(ele, bd);
 		}
 		else if (nodeNameEquals(ele, BEAN_ELEMENT)) {
+			//todo 这就是 文档中说的inner bean 2020-08-31
 			BeanDefinitionHolder nestedBd = parseBeanDefinitionElement(ele, bd);
 			if (nestedBd != null) {
 				nestedBd = decorateBeanDefinitionIfRequired(ele, nestedBd, bd);
@@ -1395,7 +1422,9 @@ public class BeanDefinitionParserDelegate {
 			return null;
 		}
 		//resolve里有初始化过程
-		//根据命名空间uri获取 NamesoaceHandler
+		//根据命名空间uri获取 NamespaceHandler
+
+		//比如 ContextNamespaceHandler
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 		if (handler == null) {
 			error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);
@@ -1404,6 +1433,7 @@ public class BeanDefinitionParserDelegate {
 		//调用parse方法
 		//这里ParserContext注入registry
 		//readerContext里 reader->XmlBeanDefinitionReader 里包含了 registry
+		//TODO 会初始化一个ParserContext进去
 		return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
 	}
 
@@ -1518,6 +1548,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	public boolean isDefaultNamespace(@Nullable String namespaceUri) {
+
+		//没有namespaceUri 或者 属于默认namespace
 		return (!StringUtils.hasLength(namespaceUri) || BEANS_NAMESPACE_URI.equals(namespaceUri));
 	}
 

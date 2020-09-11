@@ -146,10 +146,13 @@ public class PropertyPlaceholderHelper {
 					throw new IllegalArgumentException(
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
+
+				//1. todo 2020-09-01 解析出来占位符，比如java.version
+				//解析内嵌占位符
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
-				//获取实际值
+				//2.todo 2020-09-01 获取实际值
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
 				if (propVal == null && this.valueSeparator != null) {
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);
@@ -165,6 +168,8 @@ public class PropertyPlaceholderHelper {
 				if (propVal != null) {
 					// Recursive invocation, parsing placeholders contained in the
 					// previously resolved placeholder value.
+					//
+					//TODO 2020-09-01 从占位符里获取的值也有可能包含占位符 这里可能会报 Circular placeholder reference
 					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);
 
 					//替换占位符 为 实际值
@@ -197,10 +202,10 @@ public class PropertyPlaceholderHelper {
 	private int findPlaceholderEndIndex(CharSequence buf, int startIndex) {
 		int index = startIndex + this.placeholderPrefix.length();
 
-		//这个变量貌似没啥用
+		//这个变量为了内嵌的占位符服务的
 		int withinNestedPlaceholder = 0;
 		while (index < buf.length()) {
-			//索引和 占位符后缀 能不能匹配
+			//当前索引的字符 和 占位符后缀 字符 能不能匹配
 			if (StringUtils.substringMatch(buf, index, this.placeholderSuffix)) {
 				if (withinNestedPlaceholder > 0) {
 					withinNestedPlaceholder--;

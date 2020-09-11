@@ -48,6 +48,7 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	 * Stores the {@link BeanDefinitionParser} implementations keyed by the
 	 * local name of the {@link Element Elements} they handle.
 	 */
+	//https://blog.csdn.net/f641385712/article/details/81880711
 	private final Map<String, BeanDefinitionParser> parsers = new HashMap<>();
 
 	/**
@@ -82,6 +83,8 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	 */
 	@Nullable
 	private BeanDefinitionParser findParserForElement(Element element, ParserContext parserContext) {
+
+		//todo 比如 <context:property-placeholder> 那获取到的就是property-placeholder
 		String localName = parserContext.getDelegate().getLocalName(element);
 		BeanDefinitionParser parser = this.parsers.get(localName);
 		if (parser == null) {

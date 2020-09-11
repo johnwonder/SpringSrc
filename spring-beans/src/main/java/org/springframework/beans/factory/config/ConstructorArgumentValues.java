@@ -33,9 +33,10 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * Holder for constructor argument values, typically as part of a bean definition.
- *
+ * 构造函数参数值的持有者，通常作为bean定义的一部分
  * <p>Supports values for a specific index in the constructor argument list
  * as well as for generic argument matches by type.
+ * //支持构造函数参数列表中特定索引的值以及按类型匹配的泛型参数的值
  *
  * @author Juergen Hoeller
  * @since 09.11.2003
@@ -233,6 +234,7 @@ public class ConstructorArgumentValues {
 					if (newValue.getValue() instanceof Mergeable) {
 						Mergeable mergeable = (Mergeable) newValue.getValue();
 						if (mergeable.isMergeEnabled()) {
+							//返回合并后的值
 							newValue.setValue(mergeable.merge(currentValue.getValue()));
 						}
 					}
@@ -585,6 +587,7 @@ public class ConstructorArgumentValues {
 		 * <p>Note that ValueHolder does not implement {@code hashCode}
 		 * directly, to allow for multiple ValueHolder instances with the
 		 * same content to reside in the same Set.
+		 * //允许具有 相同内容的多个ValueHolder实例驻留在同一个集合中
 		 */
 		private int contentHashCode() {
 			return ObjectUtils.nullSafeHashCode(this.value) * 29 + ObjectUtils.nullSafeHashCode(this.type);

@@ -169,6 +169,7 @@ public abstract class PropertiesLoaderUtils {
 	 * @return the populated Properties instance
 	 * @throws IOException if loading failed
 	 */
+	//todo 获取所有属性文件 2020-09-04
 	public static Properties loadAllProperties(String resourceName, @Nullable ClassLoader classLoader) throws IOException {
 		Assert.notNull(resourceName, "Resource name must not be null");
 		ClassLoader classLoaderToUse = classLoader;

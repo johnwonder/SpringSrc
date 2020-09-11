@@ -61,7 +61,9 @@ public class DefaultResourceLoader implements ResourceLoader {
 	 * at the time of this ResourceLoader's initialization.
 	 * @see java.lang.Thread#getContextClassLoader()
 	 */
+	//todo ClassPathXmlApplicationContext 实例化的时候会调用 因为AbstractApplicationContext继承此类
 	public DefaultResourceLoader() {
+		//todo  初始化 classLoader 2020-09-05
 		this.classLoader = ClassUtils.getDefaultClassLoader();
 	}
 
@@ -168,6 +170,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 			}
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
+				//todo datasource.xml 这种 会 调用此处方法 2020-09-07
 				return getResourceByPath(location);
 			}
 		}

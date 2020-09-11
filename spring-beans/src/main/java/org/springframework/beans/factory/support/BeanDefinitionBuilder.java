@@ -34,6 +34,7 @@ import org.springframework.util.ObjectUtils;
  * @author Juergen Hoeller
  * @since 2.0
  */
+//todo Builder 设计模式 实例化BeanDefinition
 public final class BeanDefinitionBuilder {
 
 	/**

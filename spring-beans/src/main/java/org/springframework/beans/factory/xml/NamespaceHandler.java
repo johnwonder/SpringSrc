@@ -26,6 +26,7 @@ import org.springframework.lang.Nullable;
 /**
  * Base interface used by the {@link DefaultBeanDefinitionDocumentReader}
  * for handling custom namespaces in a Spring XML configuration file.
+ * //todo 处理 spring xml配置文件中的 自定义命名空间
  *
  * <p>Implementations are expected to return implementations of the
  * {@link BeanDefinitionParser} interface for custom top-level tags and

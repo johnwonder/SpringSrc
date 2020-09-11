@@ -7,5 +7,10 @@ package com.john.profile;
  */
 public interface InStaticMethod {
 
+	static int len(String... profiles){
+		return  profiles.length;
+	}
+
+
 
 }

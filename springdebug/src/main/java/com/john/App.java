@@ -20,6 +20,7 @@ import org.springframework.util.PropertyPlaceholderHelper;
 
 import java.io.*;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Properties;
 
 /**
@@ -43,8 +44,7 @@ public class App
 //		}
 
 
-
-
+		//IdentityHashMap
 
 		String XMLPath = "spring-config.xml";
 		//https://www.cnblogs.com/wade-luffy/p/6072460.html
@@ -56,7 +56,7 @@ public class App
 		////重点看  PathMatchingResourcePatternResolver .getResources
 
 		//1.8.0_144spring-config.xml 从System.getProperties解析占位符
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("${java.version ${java.version}}spring-config.xml");
 
 
 //		applicationContext

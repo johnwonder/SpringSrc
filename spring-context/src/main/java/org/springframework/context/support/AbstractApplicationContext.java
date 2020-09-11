@@ -547,6 +547,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				//允许context子类 处理 bean工厂 传入BeanPostProcessors
 				postProcessBeanFactory(beanFactory);
 
+
+				//1.执行bean工厂 后置处理器
+				//2.解析类成beandefinition对象，并放入beandefinition Map中
+				//3.再次执行bean工厂 后置处理器 完成cglib代理
 				// Invoke factory processors registered as beans in the context.
 				//在上下文中调用注册为bean的工厂处理器
 				//通过PostProcessorRegistrationDelegate
@@ -568,7 +572,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Check for listener beans and register them.
 				registerListeners();
 
+
 				// Instantiate all remaining (non-lazy-init) singletons.
+				//子路 https://blog.csdn.net/java_lyvee/article/details/101793774
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -1371,7 +1377,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 
-		//调用 resourcePatternResolver去 getResources
+		//todo 调用 resourcePatternResolver去 getResources 默认是 2020-09-05
 		return this.resourcePatternResolver.getResources(locationPattern);
 	}
 

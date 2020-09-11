@@ -177,7 +177,7 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 			is = this.clazz.getResourceAsStream(this.path);
 		}
 		else if (this.classLoader != null) {
-			//AppClassLoader.getResourceAsStream
+			//todo 调用 AppClassLoader.getResourceAsStream 2020-09-05
 			is = this.classLoader.getResourceAsStream(this.path);
 		}
 		else {

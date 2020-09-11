@@ -243,6 +243,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object bean;
 
 		// Eagerly(赶紧) check singleton cache for manually registered singletons.
+		//todo getSingleton 2020-08-30
 		Object sharedInstance = getSingleton(beanName);
 		//args参数是为了创建一个新的对象 所以 不为null 的时候 就直接走else了
 		if (sharedInstance != null && args == null) {
@@ -324,6 +325,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				//从头开始加载 bean，这个过程由 getSingleton() 实现。
 				if (mbd.isSingleton()) {
 					//https://www.cnblogs.com/leihuazhe/p/9481018.html
+					////todo getSingleton 2020-08-30
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							return createBean(beanName, mbd, args);

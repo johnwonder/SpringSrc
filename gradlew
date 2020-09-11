@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+#脚本用env启动的原因，是因为脚本解释器在linux中可能被安装于不同的目录，env可以在系统的PATH目录中查找
+#https://www.cnblogs.com/oxspirt/p/8185550.html
 ##############################################################################
 ##
 ##  Gradle start up script for UN*X

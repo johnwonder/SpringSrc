@@ -74,6 +74,8 @@ public class DefaultDocumentLoader implements DocumentLoader {
 			logger.trace("Using JAXP provider [" + factory.getClass().getName() + "]");
 		}
 		DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);
+
+		//TODO 开始解析xml配置文件 包括对立面schema的解析 2020-09-11
 		return builder.parse(inputSource);
 	}
 
@@ -88,8 +90,11 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	protected DocumentBuilderFactory createDocumentBuilderFactory(int validationMode, boolean namespaceAware)
 			throws ParserConfigurationException {
 
-		//jdk里的
+		//todo 使用jdk的 DocumentBuilderFactory 读取xml配置文件
+		//https://blog.csdn.net/hua1017177499/article/details/78985166
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+		//https://blog.csdn.net/yfgsqgq/article/details/51800827
 		factory.setNamespaceAware(namespaceAware);
 
 		if (validationMode != XmlValidationModeDetector.VALIDATION_NONE) {

@@ -23,11 +23,15 @@ import org.springframework.util.Assert;
  * Immutable placeholder class used for a property value object when it's
  * a reference to another bean in the factory, to be resolved at runtime.
  *
+ * //当属性值对象 引用工厂中的另一个bean时，用于属性值对象的不可变占位符类，将在运行时解析。
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see BeanDefinition#getPropertyValues()
  * @see org.springframework.beans.factory.BeanFactory#getBean
  */
+//https://blog.csdn.net/lichuangcsdn/article/details/89931460
+	//当我们需要动态注入Bean，并给该Bean的属性注入其他Bean时，比如在Mybatis和Spring的整合中，我们需要动态注入Mapper到spring容器中，而该Mapper如果需要执行SQL语句，还需要持有SqlSessionFactory的引用。但是我们注入时，可能对应的Bean还没有准备好，这时，我们就可以使用RuntimeBeanReference，以保持对实际Bean的引用。在Spring处理依赖关系时，最终会将该引用替换成实际生成的Bean对象。例如：
+//definition.getPropertyValues().add("sqlSessionFactory", new RuntimeBeanReference(this.sqlSessionFactoryBeanName));
 public class RuntimeBeanReference implements BeanReference {
 
 	private final String beanName;

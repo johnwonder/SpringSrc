@@ -640,15 +640,18 @@ class ConstructorResolver {
 		BeanDefinitionValueResolver valueResolver =
 				new BeanDefinitionValueResolver(this.beanFactory, beanName, mbd, converter);
 
+		//构造函数的参数个数 包括 带index 属性的参数 和 普通的参数
 		int minNrOfArgs = cargs.getArgumentCount();
 
+		//遍历index参数集合
 		for (Map.Entry<Integer, ConstructorArgumentValues.ValueHolder> entry : cargs.getIndexedArgumentValues().entrySet()) {
 			int index = entry.getKey();
 			if (index < 0) {
 				throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 						"Invalid constructor argument index: " + index);
 			}
-			if (index > minNrOfArgs) {
+			//5  0,1,2,3,4
+			if (index > minNrOfArgs) { //bug 修改为 index +1 > minNrOfArgs
 				minNrOfArgs = index + 1;
 			}
 			ConstructorArgumentValues.ValueHolder valueHolder = entry.getValue();

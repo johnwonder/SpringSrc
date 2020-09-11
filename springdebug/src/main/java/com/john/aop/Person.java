@@ -33,7 +33,7 @@ public class Person {
 	@Override
 	public String toString() { return "Person [" + id + ", " + firstName + " " + lastName + "]"; }
 
-	public static void main2(String[] args) {
+	public static void main(String[] args) {
 		Person albert = new Person(1, "Albert", "Camus");
 		Person audrey = new Person(2, "Audrey", "Hepburn");
 		System.out.println(albert);

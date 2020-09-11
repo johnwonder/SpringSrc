@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
  * creating a new internal bean factory instance every time.
  * Typically (but not necessarily), such a context will be driven by
  * a set of config locations to load bean definitions from.
+ * TODO 这样的上下文将由一组配置位置驱动，以便从中加载bean定义 2020-09-11
+ * TODO 也就是说这个上下文 是由配置文件来加载BEAN的 例如CLASSPATH XML
  *
  * <p>The only method to be implemented by subclasses is {@link #loadBeanDefinitions},
  * which gets invoked on each refresh. A concrete implementation is supposed to load
@@ -132,6 +134,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		}
 		try {
 			//创建beanFactory 默认为DefaultListableBeanFactory
+			//todo important 加载配置文件 会判断 是否是 ResourceLoader DefaultListableBeanFactory不是
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 
 			beanFactory.setSerializationId(getId());
