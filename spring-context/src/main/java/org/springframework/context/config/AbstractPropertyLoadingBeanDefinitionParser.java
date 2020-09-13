@@ -43,6 +43,7 @@ abstract class AbstractPropertyLoadingBeanDefinitionParser extends AbstractSingl
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
 		String location = element.getAttribute("location");
 		if (StringUtils.hasLength(location)) {
+			//TODO  解析 location 占位符 比如${jdbc.url} 2020-09-11
 			location = parserContext.getReaderContext().getEnvironment().resolvePlaceholders(location);
 			String[] locations = StringUtils.commaDelimitedListToStringArray(location);
 			builder.addPropertyValue("locations", locations);

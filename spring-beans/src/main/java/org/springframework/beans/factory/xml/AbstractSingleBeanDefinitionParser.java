@@ -28,7 +28,7 @@ import org.springframework.lang.Nullable;
  * need to parse and define just a <i>single</i> {@code BeanDefinition}.
  *
  * <p>Extend this parser class when you want to create a single bean definition
- * from an arbitrarily complex XML element. You may wish to consider extending
+ * from an arbitrarily complex XML element(任意复杂的XML元素). You may wish to consider extending
  * the {@link AbstractSimpleBeanDefinitionParser} when you want to create a
  * single bean definition from a relatively simple custom XML element.
  *
@@ -61,7 +61,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 	@Override
 	protected final AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
 
-		//构造一个 new GenericBeanDefinition()
+		//todo 构造一个 new GenericBeanDefinition() 2020-09-11
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition();
 		String parentName = getParentName(element);
 		if (parentName != null) {
@@ -88,6 +88,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 			// Default-lazy-init applies to custom bean definitions as well.
 			builder.setLazyInit(true);
 		}
+		//todo 直接调用子类的doParse方法 比如PropertyPlaceholderBeanDefinitionParser
 		doParse(element, parserContext, builder);
 		return builder.getBeanDefinition();
 	}

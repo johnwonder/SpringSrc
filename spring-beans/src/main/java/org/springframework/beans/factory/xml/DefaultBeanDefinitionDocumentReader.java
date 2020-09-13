@@ -171,6 +171,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	protected BeanDefinitionParserDelegate createDelegate(
 			XmlReaderContext readerContext, Element root, @Nullable BeanDefinitionParserDelegate parentDelegate) {
 
+		//todo 传入readerContext给 BeanDefinitionParserDelegate
 		BeanDefinitionParserDelegate delegate = new BeanDefinitionParserDelegate(readerContext);
 		delegate.initDefaults(root, parentDelegate);
 		return delegate;
@@ -189,6 +190,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				Node node = nl.item(i);
 				if (node instanceof Element) {
 					Element ele = (Element) node;
+
+					//如果属于beans命名空间
 					if (delegate.isDefaultNamespace(ele)) {
 						//处理默认标签
 						parseDefaultElement(ele, delegate);
@@ -350,7 +353,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.
-				//通过readerContext 获取registry
+				//todo 通过readerContext 获取registry ,registry 就是 DefaultListableBeanFactory 实现了 BeanDefinitionRegistry 接口
+				//todo 此处就放入了 beanDefinitionMap 2020-09-11 !important
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			}
 			catch (BeanDefinitionStoreException ex) {

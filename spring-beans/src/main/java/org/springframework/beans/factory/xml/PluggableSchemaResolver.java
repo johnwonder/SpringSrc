@@ -125,6 +125,8 @@ public class PluggableSchemaResolver implements EntityResolver {
 					return source;
 				}
 				catch (FileNotFoundException ex) {
+					//todo 本地找不到 如果网络也连不上 那么就会报错
+					//https://ask.csdn.net/questions/729288
 					if (logger.isDebugEnabled()) {
 						logger.debug("Could not find XML schema [" + systemId + "]: " + resource, ex);
 					}

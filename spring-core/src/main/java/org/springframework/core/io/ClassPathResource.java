@@ -36,8 +36,9 @@ import org.springframework.util.StringUtils;
  * <p>Supports resolution as {@code java.io.File} if the class path
  * resource resides in the file system（驻留在文件系统中）, but not for resources in a JAR.
  * Always supports resolution as URL.
- *
- *  支持文件系统中的类路径资源，但是不支持jar包中的资源。
+ * https://blog.csdn.net/YangLiehui/article/details/98599253
+ * https://www.renfei.net/posts/1003293
+ *  支持文件系统中的类路径资源 解析为File ，但是不支持jar包中的资源 解析为File 因为会以jar开头。
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
@@ -45,6 +46,8 @@ import org.springframework.util.StringUtils;
  * @see ClassLoader#getResourceAsStream(String)
  * @see Class#getResourceAsStream(String)
  */
+
+//https://www.renfei.net/posts/1003293
 public class ClassPathResource extends AbstractFileResolvingResource {
 
 	private final String path;

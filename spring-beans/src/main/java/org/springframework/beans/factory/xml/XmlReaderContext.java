@@ -111,6 +111,7 @@ public class XmlReaderContext extends ReaderContext {
 	 * Return the environment to use.
 	 * @see XmlBeanDefinitionReader#setEnvironment
 	 */
+	//todo 通过 XmlBeanDefinitionReader 来获取Environment
 	public final Environment getEnvironment() {
 		return this.reader.getEnvironment();
 	}

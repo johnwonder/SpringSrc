@@ -110,14 +110,14 @@ public class PathPatternTests {
 		assertMatches(pp,"/resource/");
 		assertNoMatch(pp,"/resource//");
 
-		pp = parse("res?urce");
+		pp = parse("com.john.res?urce");
 		assertNoMatch(pp,"resource//");
 		// SingleCharWildcardPathElement
-		pp = parse("/res?urce");
+		pp = parse("/com.john.res?urce");
 		assertMatches(pp,"/resource");
 		assertMatches(pp,"/resource/");
 		assertNoMatch(pp,"/resource//");
-		pp = parse("/res?urce/");
+		pp = parse("/com.john.res?urce/");
 		assertNoMatch(pp,"/resource");
 		assertMatches(pp,"/resource/");
 		assertNoMatch(pp,"/resource//");
@@ -198,11 +198,11 @@ public class PathPatternTests {
 		assertNoMatch(pp,"/resource//");
 
 		// SingleCharWildcardPathElement
-		pp = parser.parse("/res?urce");
+		pp = parser.parse("/com.john.res?urce");
 		assertMatches(pp,"/resource");
 		assertNoMatch(pp,"/resource/");
 		assertNoMatch(pp,"/resource//");
-		pp = parser.parse("/res?urce/");
+		pp = parser.parse("/com.john.res?urce/");
 		assertNoMatch(pp,"/resource");
 		assertMatches(pp,"/resource/");
 		assertNoMatch(pp,"/resource//");

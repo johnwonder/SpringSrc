@@ -83,11 +83,12 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
 
 		//todo 传入bean工厂 使得beanDefinitionReader有了 Environment  2020-09-11
+		//todo 使得beanDefinitionReader有了 BeanRegistry  2020-09-11
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
-		//todo  beanDefinitionReader 又设置了 Environment  2020-09-11
+		//todo  beanDefinitionReader 又设置了 Environment 把当前Context的环境 给了他  2020-09-11
 		beanDefinitionReader.setEnvironment(this.getEnvironment());
 
 		//todo important 设置为ClassPathXmlApplicationContext 又因为AbstractApplicationContext继承自 DefaultResourceLoader 为自己 2020-08-31

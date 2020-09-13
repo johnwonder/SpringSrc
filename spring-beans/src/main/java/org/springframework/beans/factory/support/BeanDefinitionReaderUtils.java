@@ -166,12 +166,14 @@ public abstract class BeanDefinitionReaderUtils {
 
 		// Register bean definition under primary name.
 		String beanName = definitionHolder.getBeanName();
+		//todo 放入 beandefinitionMap中 2020-09-11
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		// Register aliases for bean name, if any.
 		String[] aliases = definitionHolder.getAliases();
 		if (aliases != null) {
 			for (String alias : aliases) {
+				//todo 因为 DefaultListableBeanFactory 继承了 SimpleAliasRegistry 类 所以可以调用 2020-09-11
 				registry.registerAlias(beanName, alias);
 			}
 		}

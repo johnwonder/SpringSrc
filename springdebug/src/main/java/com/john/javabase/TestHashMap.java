@@ -9,7 +9,17 @@ import java.util.HashMap;
  */
 public class TestHashMap {
 
+	//https://blog.csdn.net/Fighting_mjtao/article/details/81415357
+	//https://blog.csdn.net/f641385712/article/details/81880711
+
+	//https://blog.csdn.net/weixin_43689776/article/details/99999126
 	public static void main(String[] args) {
+
+		int h =1290846991;
+		int hash = h ^ (h >>> 16);
+
+		System.out.println(hash);
+
 		HashMap arr=new HashMap();
 		String a="111";
 		String b=new String("111");

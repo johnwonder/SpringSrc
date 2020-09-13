@@ -34,7 +34,7 @@ import org.springframework.core.AliasRegistry;
  *
  * <p>Spring's bean definition readers expect to work on an implementation of this
  * interface. Known implementors within the Spring core are DefaultListableBeanFactory
- * and GenericApplicationContext. spring核心内部已知的实现为 (DefaultListableBeanFactory 和GenericApplicationContext
+ * and GenericApplicationContext. todo spring核心内部已知的实现为 (DefaultListableBeanFactory 和GenericApplicationContext
  *
  * @author Juergen Hoeller
  * @since 26.11.2003

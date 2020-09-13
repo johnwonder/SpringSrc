@@ -154,7 +154,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		setConfigLocations(configLocations);
 		//默认为true
 		if (refresh) {
-			//调用抽象类AbstractApplicationContext中的refresh方法
+			//todo 调用抽象类AbstractApplicationContext中的refresh方法 加载Bean定义
 			refresh();
 		}
 	}
