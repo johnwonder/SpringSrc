@@ -47,7 +47,8 @@ import org.springframework.util.StringUtils;
  * hook, while clients should customize using {@link ConfigurableEnvironment#getPropertySources()}
  * and working against the {@link MutablePropertySources} API.
  * See {@link ConfigurableEnvironment} javadoc for usage examples.
- *
+ * 子类应该通过customizePropertySources 方法钩子 贡献property sources
+ * 客户端应该通过ConfigurableEnvironment 接口的 getPropertySources 方法 处理  MutablePropertySources 的api.
  * @author Chris Beams
  * @author Juergen Hoeller
  * @since 3.1

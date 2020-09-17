@@ -298,6 +298,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			try {
 				//获取合并过的BeanDefinition
 				//https://blog.csdn.net/andy_zhang2007/article/details/86514320
+				//todo important RootBeanDefinition
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
@@ -700,6 +701,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Override
 	public boolean containsLocalBean(String name) {
 		String beanName = transformedBeanName(name);
+		//todo containsBeanDefinition 在 DefaultListableBeanFactory 中实现 2020-09-15
+		//todo 在 singleObjects中或者beandefinitionMap中要有 且 不是factoryBean 或者 再判断下是不是factorybean
 		return ((containsSingleton(beanName) || containsBeanDefinition(beanName)) &&
 				(!BeanFactoryUtils.isFactoryDereference(name) || isFactoryBean(beanName)));
 	}
@@ -1221,6 +1224,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (mbd != null) {
 			return mbd;
 		}
+
+		//todo 首先从beanDefinitionMap中获取
 		// 获取 RootBeanDefinition，
 		// 如果返回的 BeanDefinition 是子类 bean 的话，则合并父类相关属性
 		return getMergedBeanDefinition(beanName, getBeanDefinition(beanName));
@@ -1270,6 +1275,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// 2. 或者是一个 RootBeanDefinition 实例，parentName 属性为null
 					// 此时mbd直接使用一个bd的复制品
 					if (bd instanceof RootBeanDefinition) {
+						//todo clone里各种set deepCopy 2020-09-16
 						mbd = ((RootBeanDefinition) bd).cloneBeanDefinition();
 					}
 					else {
@@ -1812,6 +1818,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @throws BeanCreationException if the bean could not be created
 	 */
 	//开启 bean 的实例化进程
+	//todo 子类 AbstractAutowireCapableBeanFactory 实现了 实例化bean
 	protected abstract Object createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
 			throws BeanCreationException;
 

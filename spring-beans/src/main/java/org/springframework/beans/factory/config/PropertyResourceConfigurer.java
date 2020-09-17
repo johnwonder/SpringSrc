@@ -69,6 +69,7 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	}
 
 
+	//todo 很重要 处理Property PlaceHolder 2020-09-15
 	/**
 	 * {@linkplain #mergeProperties Merge}, {@linkplain #convertProperties convert} and
 	 * {@linkplain #processProperties process} properties against the given bean factory.
@@ -77,9 +78,12 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		try {
+			//todo 合并 属性
 			Properties mergedProps = mergeProperties();
 
 			// Convert the merged properties, if necessary.
+			//https://www.cnblogs.com/fnlingnzb-learner/p/10384742.html
+			//todo 可以用于加解密
 			convertProperties(mergedProps);
 
 			// Let the subclass process the properties.

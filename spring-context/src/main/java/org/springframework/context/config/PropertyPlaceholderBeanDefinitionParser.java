@@ -45,6 +45,8 @@ class PropertyPlaceholderBeanDefinitionParser extends AbstractPropertyLoadingBea
 		// 'FALLBACK' to 'ENVIRONMENT'. This latter value indicates that resolution of
 		// placeholders against system properties is a function of the Environment and
 		// its current set of PropertySources.
+		//后一个值表示//占位符对系统属性的解析是环境及其当前属性源集的函数。
+		//todo spring-context.xsd中默认变为了ENVIRONMENT 2020-09-15
 		if (SYSTEM_PROPERTIES_MODE_DEFAULT.equals(element.getAttribute(SYSTEM_PROPERTIES_MODE_ATTRIBUTE))) {
 			return PropertySourcesPlaceholderConfigurer.class;
 		}
@@ -63,6 +65,9 @@ class PropertyPlaceholderBeanDefinitionParser extends AbstractPropertyLoadingBea
 				Boolean.valueOf(element.getAttribute("ignore-unresolvable")));
 
 		String systemPropertiesModeName = element.getAttribute(SYSTEM_PROPERTIES_MODE_ATTRIBUTE);
+
+		//todo 这个关联到解析配置符的顺序 2020-09-15
+		//todo  具体看PropertyPlaceholderConfigurer resolvePlaceholder
 		if (StringUtils.hasLength(systemPropertiesModeName) &&
 				!systemPropertiesModeName.equals(SYSTEM_PROPERTIES_MODE_DEFAULT)) {
 			builder.addPropertyValue("systemPropertiesModeName", "SYSTEM_PROPERTIES_MODE_" + systemPropertiesModeName);

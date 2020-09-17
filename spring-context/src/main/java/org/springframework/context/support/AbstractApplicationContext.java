@@ -325,7 +325,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Subclasses may override this method in order to supply
 	 * a custom {@link ConfigurableEnvironment} implementation.
 	 */
-	//
+	//todo 子类可以重载 提供一个自定义的ConfigurableEnvironment的实现 2020-09-15
 	protected ConfigurableEnvironment createEnvironment() {
 		//StandardEnvironment 构造函数 会 使他的抽象父类 也执行构造函数
 		return new StandardEnvironment();

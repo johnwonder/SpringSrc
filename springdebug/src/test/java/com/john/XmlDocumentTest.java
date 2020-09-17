@@ -21,10 +21,10 @@ import java.io.IOException;
 public class XmlDocumentTest {
 
 	//https://www.cnblogs.com/564085446java/p/5197343.html
+	//https://www.jianshu.com/p/f26fa567b3e6 Spring读取xml配置文件
 	@Test
 	public void testLoadXml() throws Exception {
 		Resource resource = new ClassPathResource("datasource3.xml");
-
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 

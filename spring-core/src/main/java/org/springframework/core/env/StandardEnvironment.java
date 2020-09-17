@@ -76,6 +76,9 @@ public class StandardEnvironment extends AbstractEnvironment {
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {
 
+		//todo Java提供了System类的静态方法getenv()和getProperty()用于返回系统相关的变量与属性，
+		//todo  getenv方法返回的变量大多于系统相关，
+		//todo getProperty方法返回的变量大多与java程序有关。
 		//https://blog.csdn.net/rtuujnncc/article/details/78248733
 		// MapPropertySource 是 System.getProperties()
 		//addLast最低优先级

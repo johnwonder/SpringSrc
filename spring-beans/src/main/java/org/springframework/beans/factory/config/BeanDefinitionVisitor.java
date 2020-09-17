@@ -282,6 +282,7 @@ public class BeanDefinitionVisitor {
 		}
 	}
 
+	//todo 最终调用valueResolver的 resolveStringValue方法 2020-09-15
 	/**
 	 * Resolve the given String value, for example parsing placeholders.
 	 * @param strVal the original String value

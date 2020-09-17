@@ -54,7 +54,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 
 	private boolean ignoreUnresolvableNestedPlaceholders = false;
 
-	//${
+	//todo placeholderPrefix 默认 是${ 2020-09-15
 	private String placeholderPrefix = SystemPropertyUtils.PLACEHOLDER_PREFIX;
 
 	//}

@@ -147,6 +147,7 @@ public abstract class PropertiesLoaderSupport {
 		Properties result = new Properties();
 
 		if (this.localOverride) {
+			//todo 先从locations 预先加载 ，然后再用local properties覆盖
 			// Load properties from file upfront, to let local properties override.
 			loadProperties(result);
 		}

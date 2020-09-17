@@ -1,0 +1,14 @@
+description = "Spring debug"
+
+
+dependencies {
+
+	compile(project(":spring-context"))
+	compile(project(":spring-beans"))
+	compile(project(":spring-core"))
+	compile(project(":spring-instrument"))
+	compile(project(":spring-aop"))
+//	compile(project(":spring-aop"))
+	compile("javax.inject:javax.inject:1")
+	compile fileTree(dir:'lib',includes:['*jar'])
+}

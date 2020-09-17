@@ -156,6 +156,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	@Nullable
 	protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
 		String propVal = null;
+		//todo 指定了override后 那么就不会从props中去获取 2020-09-15
 		if (systemPropertiesMode == SYSTEM_PROPERTIES_MODE_OVERRIDE) {
 			propVal = resolveSystemProperty(placeholder);
 		}
@@ -233,11 +234,16 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 		private final PlaceholderResolver resolver;
 
 		public PlaceholderResolvingStringValueResolver(Properties props) {
+
+			//todo 这里的PropertyPlaceholderHelper 在解析xml配置文件路径占位符的时候也用到了
+			//todo AbstractPropertyResolver 调用 createPlaceholderHelper 的时候
+			//PlaceholderConfigurerSupport 提供的 placeholderPrefix
 			this.helper = new PropertyPlaceholderHelper(
 					placeholderPrefix, placeholderSuffix, valueSeparator, ignoreUnresolvablePlaceholders);
 			this.resolver = new PropertyPlaceholderConfigurerResolver(props);
 		}
 
+		//todo 最终会在 BeanDefinitionVisitor 去调用 2020-09-15
 		@Override
 		@Nullable
 		public String resolveStringValue(String strVal) throws BeansException {
@@ -250,6 +256,8 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	}
 
 
+	//todo 实现了函数式接口PlaceholderResolver的  2020-09-15
+	// todo AbstractPropertyResolver里是 调用了子类 PropertySourcesPropertyResolver的getPropertyAsRawString 函数
 	private final class PropertyPlaceholderConfigurerResolver implements PlaceholderResolver {
 
 		private final Properties props;

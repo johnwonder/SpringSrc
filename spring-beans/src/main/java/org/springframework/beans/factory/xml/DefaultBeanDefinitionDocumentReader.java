@@ -345,7 +345,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 *  处理 bean元素，解析 bean定义  用registry注册它
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
-		//通过代理 解析默认标签
+		//todo 通过代理 解析默认标签(Bean节点) 2020-09-13
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
 			//解析自定义标签
