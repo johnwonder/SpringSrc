@@ -1306,7 +1306,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				//todo 用 clazz.getDeclaredConstructor().newInstance 实例化bean 2020-09-16
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
+
+			//todo important 初始化 typeConverterDelegate 2020-09-17
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
+			//todo important 设置 conversionSevice 2020-09-17
 			initBeanWrapper(bw);
 			return bw;
 		}
@@ -1677,6 +1680,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			original = Arrays.asList(pvs.getPropertyValues());
 		}
 
+		//todo customTypeConverter貌似是 copyFrom其他BeanFactory的
 		TypeConverter converter = getCustomTypeConverter();
 		if (converter == null) {
 			converter = bw;

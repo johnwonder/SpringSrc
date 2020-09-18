@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Base class for concrete, full-fledged {@link BeanDefinition} classes,
- * factoring out common properties of {@link GenericBeanDefinition},
+ * factoring out common properties(分解公共属性) of {@link GenericBeanDefinition},
  * {@link RootBeanDefinition}, and {@link ChildBeanDefinition}.
  *
  * <p>The autowire constants match the ones defined in the
@@ -833,6 +833,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	@Override
 	public MutablePropertyValues getPropertyValues() {
+		//todo 获取BeanDefinition的PropertyValues 如果为空会初始化 2020-09-17
 		if (this.propertyValues == null) {
 			this.propertyValues = new MutablePropertyValues();
 		}
