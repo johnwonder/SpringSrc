@@ -15,8 +15,8 @@ public class FactoryMain {
 		ClassPathXmlApplicationContext ac =new ClassPathXmlApplicationContext();
 		ac.setConfigLocations("spring-config-factory.xml");
 		ac.refresh();
-		System.out.println(ac.getBean("car2"));
-		System.out.println(ac.getBean("car1"));
+		System.out.println(ac.getBean("staticCar"));
+		//System.out.println(ac.getBean("car1"));
 
 	}
 }

@@ -133,6 +133,7 @@ public class BeanDefinitionParserDelegate {
 
 	public static final String DESTROY_METHOD_ATTRIBUTE = "destroy-method";
 
+	//todo factory-method 实例化bean 2020-09-22
 	public static final String FACTORY_METHOD_ATTRIBUTE = "factory-method";
 
 	public static final String FACTORY_BEAN_ATTRIBUTE = "factory-bean";
@@ -652,6 +653,7 @@ public class BeanDefinitionParserDelegate {
 			bd.setEnforceDestroyMethod(false);
 		}
 
+		//todo BeanDefinition接口中 AbstractBeanDefinition 中实现 2020-09-22
 		if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {
 			bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));
 		}
@@ -1079,7 +1081,7 @@ public class BeanDefinitionParserDelegate {
 		else if (nodeNameEquals(ele, MAP_ELEMENT)) {
 			return parseMapElement(ele, bd);
 		}
-		else if (nodeNameEquals(ele, PROPS_ELEMENT)) {
+		else if (nodeNameEquals(ele, PROPS_ELEMENT)) { //todo props元素 2020-09-19
 			return parsePropsElement(ele);
 		}
 		else {
@@ -1372,6 +1374,7 @@ public class BeanDefinitionParserDelegate {
 		return parsePropertySubElement(subElement, bd, defaultKeyTypeName);
 	}
 
+	//todo 解析一个properties元素 2020-09-19
 	/**
 	 * Parse a props element.
 	 */

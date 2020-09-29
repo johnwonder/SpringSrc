@@ -102,6 +102,7 @@ public class CustomEditorConfigurer implements BeanFactoryPostProcessor, Ordered
 	@Nullable
 	private PropertyEditorRegistrar[] propertyEditorRegistrars;
 
+	//https://blog.csdn.net/xinyoulin/article/details/52315810 4.0的变化
 	@Nullable
 	private Map<Class<?>, Class<? extends PropertyEditor>> customEditors;
 
@@ -140,6 +141,7 @@ public class CustomEditorConfigurer implements BeanFactoryPostProcessor, Ordered
 	}
 
 
+	//todo CustomEditorConfigurer 也是个 BeanFactoryPostProcessor 2020-09-28
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		if (this.propertyEditorRegistrars != null) {

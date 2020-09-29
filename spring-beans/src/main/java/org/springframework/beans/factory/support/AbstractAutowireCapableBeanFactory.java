@@ -553,7 +553,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 主要是将 BeanDefinition 转换为 BeanWrapper
 		if (instanceWrapper == null) {
 			// 使用合适的实例化策略来创建新的实例：工厂方法、构造函数自动注入、简单初始化
-			//todo 实例化bean对象
+			//todo 实例化bean对象 2020-09-22
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		//todo 获取实例化的对象 2020-08-31
@@ -595,7 +595,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// 对 bean 进行填充，将各个属性值注入，其中，可能存在依赖于其他 bean 的属性
 			// 则会递归初始依赖 bean
-			//todo important
+			//todo important 属性值注入
 			populateBean(beanName, mbd, instanceWrapper);
 
 			// 调用初始化方法
@@ -1164,7 +1164,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// @configuration 中的@bean方法实例化
 		//https://www.cnblogs.com/vickylinj/p/9474597.html
 		if (mbd.getFactoryMethodName() != null)  {
-			//工厂方法实例化
+			//todo  工厂方法实例化 2020-09-22
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
 		}
 
@@ -1310,6 +1310,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//todo important 初始化 typeConverterDelegate 2020-09-17
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
 			//todo important 设置 conversionSevice 2020-09-17
+			//todo 注册自定义属性编辑器 2020-09-29
 			initBeanWrapper(bw);
 			return bw;
 		}

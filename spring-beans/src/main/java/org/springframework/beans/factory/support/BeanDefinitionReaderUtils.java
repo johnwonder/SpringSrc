@@ -59,6 +59,8 @@ public abstract class BeanDefinitionReaderUtils {
 
 		GenericBeanDefinition bd = new GenericBeanDefinition();
 		bd.setParentName(parentName);
+
+		//todo 如果又classLoader 那么就会根据className加载class ，ClassUtils.forName 2020-09-22
 		if (className != null) {
 			if (classLoader != null) {
 				bd.setBeanClass(ClassUtils.forName(className, classLoader));

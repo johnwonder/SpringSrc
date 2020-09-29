@@ -555,6 +555,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				//在上下文中调用注册为bean的工厂处理器
 				//通过PostProcessorRegistrationDelegate
 				//todo 执行完这个后 PropertyPlaceholderConfigurer 存入了 singleObjects 2020-09-12
+				//todo 此时定义的beandefinition 放入了 map中 2020-09-22
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
@@ -679,6 +680,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Tell the internal bean factory to use the context's class loader etc.
 		beanFactory.setBeanClassLoader(getClassLoader());
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
+
+		//todo 为beanFactory增加一个默认的propertyEditor，这个主要是对bean的属性等设置管理一个工具 2020-09-29
+		//放入propertyEditorRegistrars Set集合中
+		//CustomEditorConfigurer类中 在postProcessBeanFactory时也会调用它的propertyEditorRegistrars的 addPropertyEditorRegistrar方法
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.

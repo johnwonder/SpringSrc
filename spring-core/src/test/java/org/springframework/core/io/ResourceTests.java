@@ -123,6 +123,10 @@ public class ResourceTests {
 
 	@Test
 	public void testFileSystemResource() throws IOException {
+
+		String filePath = getClass().getResource("Resource.class").getFile();
+
+		System.out.println(filePath);
 		Resource resource = new FileSystemResource(getClass().getResource("Resource.class").getFile());
 		doTestResource(resource);
 		assertEquals(new FileSystemResource(getClass().getResource("Resource.class").getFile()), resource);
@@ -132,12 +136,24 @@ public class ResourceTests {
 
 	@Test
 	public void testFileSystemResourceWithFilePath() throws Exception {
-		Path filePath = Paths.get(getClass().getResource("Resource.class").toURI());
-		Resource resource = new FileSystemResource(filePath);
-		doTestResource(resource);
-		assertEquals(new FileSystemResource(filePath), resource);
-		Resource resource2 = new FileSystemResource("core/io/Resource.class");
-		assertEquals(resource2, new FileSystemResource("core/../core/io/./Resource.class"));
+//		Path filePath = Paths.get(getClass().getResource("Resource.class").toURI());
+//		Resource resource = new FileSystemResource(filePath);
+//		System.out.println(resource.getFile().getAbsolutePath());
+//		System.out.println(resource.getFile().exists());
+//		doTestResource(resource);
+//		assertEquals(new FileSystemResource(filePath), resource);
+//		Resource resource2 = new FileSystemResource("core/io/Resource.class");
+//
+//		System.out.println(resource2.getFile().getAbsolutePath());
+//		//用户目录+ 'core/io/Resource.class'
+//		System.out.println(System.getProperty("user.dir"));
+//		System.out.println(resource2.getFile().exists());
+
+		FileSystemResource resource3 = new FileSystemResource("core/../core/io/./Resource.class");
+
+		//todo 利用 StringUtils.cleanPath(path) 清除过后变为 core/io/Resource.class
+		System.out.println(resource3.getPath());
+		//assertEquals(resource2, new FileSystemResource("core/../core/io/./Resource.class"));
 	}
 
 	@Test

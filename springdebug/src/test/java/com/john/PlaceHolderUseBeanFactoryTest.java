@@ -56,8 +56,8 @@ public class PlaceHolderUseBeanFactoryTest {
 //
 
 		//加载的是PropertySourcesPlaceholderConfigurer 这个bean 因为xsd里配置的system-properties-mode 属性默认是  ENVIRONMENT
-//		PropertySourcesPlaceholderConfigurer cfgBean = (PropertySourcesPlaceholderConfigurer)xmlBeanFactory.getBean(PropertySourcesPlaceholderConfigurer.class);
-//		cfgBean.postProcessBeanFactory(xmlBeanFactory);
+		PropertySourcesPlaceholderConfigurer cfgBean = (PropertySourcesPlaceholderConfigurer)xmlBeanFactory.getBean(PropertySourcesPlaceholderConfigurer.class);
+		cfgBean.postProcessBeanFactory(xmlBeanFactory);
 		jdbcBean jdbcBean = (com.john.properties.jdbcBean)xmlBeanFactory.getBean("jdbc");
 		System.out.println(jdbcBean.getUrl());
 
@@ -65,6 +65,8 @@ public class PlaceHolderUseBeanFactoryTest {
 		System.out.println(jdbc1Bean.getUrl());
 
 	}
+
+	//https://vimsky.com/examples/detail/java-method-org.springframework.beans.factory.config.PropertyPlaceholderConfigurer.postProcessBeanFactory.html
 	//https://blog.csdn.net/pythias_/article/details/82752881 BeanFactory和ApplicationContext的区别
 	// https://www.cnblogs.com/javahr/p/8376742.html <context:property-placeholder> 使用总结
 

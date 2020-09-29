@@ -385,6 +385,7 @@ class ConstructorResolver {
 		Class<?> factoryClass;
 		boolean isStatic;
 
+		//todo 有factory-bean属性的就是 实例工厂 2020-09-22
 		String factoryBeanName = mbd.getFactoryBeanName();
 		if (factoryBeanName != null) {
 			if (factoryBeanName.equals(beanName)) {
@@ -395,6 +396,8 @@ class ConstructorResolver {
 			if (mbd.isSingleton() && this.beanFactory.containsSingleton(beanName)) {
 				throw new ImplicitlyAppearedSingletonException();
 			}
+
+			//todo 获取 factory-bean属性 定义的class 2020-09-22
 			factoryClass = factoryBean.getClass();
 			isStatic = false;
 		}
@@ -405,6 +408,7 @@ class ConstructorResolver {
 						"bean definition declares neither a bean class nor a factory-bean reference");
 			}
 			factoryBean = null;
+			//todo 获取bean本身定义的class属性 2020-09-22
 			factoryClass = mbd.getBeanClass();
 			isStatic = true;
 		}
@@ -440,7 +444,9 @@ class ConstructorResolver {
 
 			Method[] rawCandidates = getCandidateMethods(factoryClass, mbd);
 			List<Method> candidateList = new ArrayList<>();
+			//todo 因为一个工厂可以有多个工厂方法供使用 2020-09-22
 			for (Method candidate : rawCandidates) {
+				//todo 会获取到候选的candidateMethod 判断候选的方法名和定义的factoryMethodName是否一样 2020-09-22
 				if (Modifier.isStatic(candidate.getModifiers()) == isStatic && mbd.isFactoryMethod(candidate)) {
 					candidateList.add(candidate);
 				}
@@ -454,6 +460,7 @@ class ConstructorResolver {
 						mbd.constructorArgumentsResolved = true;
 						mbd.resolvedConstructorArguments = EMPTY_ARGS;
 					}
+					//todo instantiate 实例化 内部 也是通过method.invoke 反射调用
 					bw.setBeanInstance(instantiate(beanName, mbd, factoryBean, uniqueCandidate, EMPTY_ARGS));
 					return bw;
 				}

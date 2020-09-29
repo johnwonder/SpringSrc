@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+
+#脚本用env启动的原因，是因为脚本解释器在linux中可能被安装于不同的目录，env可以在系统的PATH目录中查找
+#https://www.cnblogs.com/oxspirt/p/8185550.html
+##############################################################################
+##
+##  Gradle start up script for UN*X
+##
+##############################################################################
+
+#PRG即为Points Ranking Game的英文缩写。
+# PRG即为源程序。源程序是文本文件
+# Attempt to set APP_HOME
+# Resolve links: $0 may be a link
+PRG="$0"
+
+#echo "$PRG  ssss"
+
+# Need this for relative symlinks.
+#https://www.cnblogs.com/boshen-hzb/p/6080115.html
+while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+        PRG="$link"
+    else
+        PRG=`dirname "$PRG"`"/$link"
+    fi
+done
+
+#echo "$PRG  ssss"
+
+#dirname获取给定路径的目录部分 https://www.cnblogs.com/rohens-hbg/p/7604839.html
+cd "`dirname \"$PRG\"`/" >/dev/null
+APP_HOME="`pwd -P`"
+
+#echo "`dirname \"$PRG\"`"
+#echo "$APP_HOME"

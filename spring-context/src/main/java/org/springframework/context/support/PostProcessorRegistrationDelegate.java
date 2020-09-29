@@ -187,6 +187,8 @@ final class PostProcessorRegistrationDelegate {
 		// Next, invoke the BeanFactoryPostProcessors that implement Ordered.
 		List<BeanFactoryPostProcessor> orderedPostProcessors = new ArrayList<>();
 		for (String postProcessorName : orderedPostProcessorNames) {
+			//todo 会获取PostProcessor这个bean放入orderedPostProcessors 集合里 2020-09-28
+			//todo CustomEditorConfigurer 实现了Ordered接口 2020-09-28
 			orderedPostProcessors.add(beanFactory.getBean(postProcessorName, BeanFactoryPostProcessor.class));
 		}
 		sortPostProcessors(orderedPostProcessors, beanFactory);

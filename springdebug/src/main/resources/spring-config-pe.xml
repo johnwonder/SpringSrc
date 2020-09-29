@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!--①配置自动注册属性编辑器的CustomEditorConfigurer -->
+	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<!--②-1属性编辑器对应的属性类型-->
+				<!--<entry key="com.john.propertyEditor.Car">-->
+
+					<!--&lt;!&ndash;②-2对应的属性编辑器Bean &ndash;&gt;-->
+					<!--<bean class="com.john.propertyEditor.CustomCarEditor" />-->
+				<!--</entry>-->
+
+
+				<entry key="com.john.propertyEditor.Car" value="com.john.propertyEditor.CustomCarEditor"/>
+			</map>
+		</property>
+	</bean>
+	<bean id="boss" class="com.john.propertyEditor.Boss">
+		<property name="name" value="John"/>
+		<!--③该属性将使用②处的属性编辑器完成属性填充操作-->
+		<property name="car" value="红旗CA72,200,20000.00"/>
+	</bean>
+
+</beans>

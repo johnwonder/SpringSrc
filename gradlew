@@ -8,6 +8,8 @@
 ##
 ##############################################################################
 
+#PRG即为Points Ranking Game的英文缩写。
+# PRG即为源程序。源程序是文本文件
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
 PRG="$0"

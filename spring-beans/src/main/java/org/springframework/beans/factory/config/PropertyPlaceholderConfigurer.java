@@ -64,6 +64,7 @@ import org.springframework.util.StringValueResolver;
  */
 public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport {
 
+	//https://www.cnblogs.com/fnlingnzb-learner/p/10384742.html
 	/** Never check system properties. */
 	public static final int SYSTEM_PROPERTIES_MODE_NEVER = 0;
 
@@ -80,6 +81,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	public static final int SYSTEM_PROPERTIES_MODE_OVERRIDE = 2;
 
 
+	//todo 这个操作可以 把类到 public static final 成员放入field cache 2020-09-19
 	private static final Constants constants = new Constants(PropertyPlaceholderConfigurer.class);
 
 	private int systemPropertiesMode = SYSTEM_PROPERTIES_MODE_FALLBACK;
@@ -156,7 +158,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	@Nullable
 	protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
 		String propVal = null;
-		//todo 指定了override后 那么就不会从props中去获取 2020-09-15
+		//todo 指定了override后 那么获取到了就不会从props中去获取 2020-09-15
 		if (systemPropertiesMode == SYSTEM_PROPERTIES_MODE_OVERRIDE) {
 			propVal = resolveSystemProperty(placeholder);
 		}
