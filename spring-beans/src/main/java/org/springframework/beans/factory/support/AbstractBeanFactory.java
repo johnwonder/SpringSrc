@@ -1161,6 +1161,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @param bw the BeanWrapper to initialize
 	 */
 	protected void initBeanWrapper(BeanWrapper bw) {
+
+		//todo BeanWrapperImpl 继承了 AbstractNestablePropertyAccessor
+		//todo AbstractNestablePropertyAccessor 的父类 AbstractPropertyAccessor 继承了 TypeConverterSupport 又继承了 PropertyEditorRegistrySupport 2020-09-29
 		bw.setConversionService(getConversionService());
 		registerCustomEditors(bw);
 	}
@@ -1180,10 +1183,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			registrySupport.useConfigValueEditors();
 		}
 
-		//todo 遍历propertyEditorRegistrars 调用 registerCustomEditors方法
+		//todo 遍历propertyEditorRegistrars 调用 registerCustomEditors方法 2020-09-29
 		if (!this.propertyEditorRegistrars.isEmpty()) {
 			for (PropertyEditorRegistrar registrar : this.propertyEditorRegistrars) {
 				try {
+					//todo registry 是 BeanWrapper 2020-09-29
 					registrar.registerCustomEditors(registry);
 				}
 				catch (BeanCreationException ex) {
@@ -1205,6 +1209,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 		}
+		//todo 最后遍历customEditors 注册到beanWrapper中
 		if (!this.customEditors.isEmpty()) {
 			this.customEditors.forEach((requiredType, editorClass) ->
 					registry.registerCustomEditor(requiredType, BeanUtils.instantiateClass(editorClass)));

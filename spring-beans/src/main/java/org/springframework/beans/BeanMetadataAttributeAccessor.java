@@ -49,6 +49,7 @@ public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport impl
 	}
 
 
+	//todo BeanMetadataAttribute 是 BeanMetadataElement 的实现 2020-09-29
 	/**
 	 * Add the given BeanMetadataAttribute to this accessor's set of attributes.
 	 * @param attribute the BeanMetadataAttribute object to register

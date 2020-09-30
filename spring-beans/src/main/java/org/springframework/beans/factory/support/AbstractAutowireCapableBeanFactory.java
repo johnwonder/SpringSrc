@@ -1696,6 +1696,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				deepCopy.add(pv);
 			}
 			else {
+				//todo 获取属性名称和值 准备 转换 2020-09-29
+				//https://blog.csdn.net/cuichunchi/article/details/90407632
 				String propertyName = pv.getName();
 				Object originalValue = pv.getValue();
 				Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue);
@@ -1707,6 +1709,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				}
 				// Possibly store converted value in merged bean definition,
 				// in order to avoid re-conversion for every created bean instance.
+				//为了避免对每个创建的bean实例进行重新转换
 				if (resolvedValue == originalValue) {
 					if (convertible) {
 						pv.setConvertedValue(convertedValue);

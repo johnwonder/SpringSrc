@@ -58,7 +58,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * Role hint indicating that a {@code BeanDefinition} is a major part
 	 * of the application. Typically corresponds to a user-defined bean.
 	 */
-	int ROLE_APPLICATION = 0;
+	int ROLE_APPLICATION = 0;//应用程序重要组成部分
 
 	/**
 	 * Role hint indicating that a {@code BeanDefinition} is a supporting
@@ -69,7 +69,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * {@link org.springframework.beans.factory.parsing.ComponentDefinition},
 	 * but not when looking at the overall configuration of an application.
 	 */
-	int ROLE_SUPPORT = 1;
+	int ROLE_SUPPORT = 1;//做为大量配置的一部分（支持、扩展类）
 
 	/**
 	 * Role hint indicating that a {@code BeanDefinition} is providing an
@@ -77,7 +77,9 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * used when registering beans that are completely part of the internal workings
 	 * of a {@link org.springframework.beans.factory.parsing.ComponentDefinition}.
 	 */
-	int ROLE_INFRASTRUCTURE = 2;
+	int ROLE_INFRASTRUCTURE = 2;////指内部工作的基础构造
+	//https://www.iteye.com/blog/jinnianshilongnian-1894465
+	//https://www.cnblogs.com/dennyzhangdd/p/9602673.html Spring事务详解
 
 
 	// Modifiable attributes
@@ -138,12 +140,14 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * factories that perform eager initialization of singletons.
 	 */
 	void setLazyInit(boolean lazyInit);
+	//设置是否进行懒加载
 
 	/**
 	 * Return whether this bean should be lazily initialized, i.e. not
 	 * eagerly instantiated on startup. Only applicable to a singleton bean.
 	 */
 	boolean isLazyInit();
+	//判断是否是懒加载
 
 	/**
 	 * Set the names of the beans that this bean depends on being initialized.
@@ -339,5 +343,5 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 */
 	@Nullable
 	BeanDefinition getOriginatingBeanDefinition();
-
+	//cglib代理前的BeanDefinition 2020-09-29
 }

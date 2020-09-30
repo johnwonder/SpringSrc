@@ -104,6 +104,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	@Nullable
 	private Map<Class<?>, PropertyEditor> overriddenDefaultEditors;
 
+	//todo 自定义Editor 实际上是一个Class和PropertyEditor的 Map 2020-09-29
 	@Nullable
 	private Map<Class<?>, PropertyEditor> customEditors;
 

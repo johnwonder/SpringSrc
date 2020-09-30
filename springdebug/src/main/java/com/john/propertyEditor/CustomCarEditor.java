@@ -7,6 +7,7 @@ import java.beans.PropertyEditorSupport;
  * @Author: johnwonder
  * @Date: 2020/9/29
  */
+//继承PropertyEditorSupport  实现了 PropertyEditor 接口
 public class CustomCarEditor extends PropertyEditorSupport {
 
 	//1. 将字面值转换为属性类型对象

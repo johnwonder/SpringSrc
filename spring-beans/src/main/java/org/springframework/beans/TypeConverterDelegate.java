@@ -420,6 +420,8 @@ class TypeConverterDelegate {
 		Object returnValue = convertedValue;
 
 		if (requiredType != null && !requiredType.isArray() && convertedValue instanceof String[]) {
+
+			//仅适用于之前没有PropertyEditor转换字符串数组的情况
 			// Convert String array to a comma-separated String.
 			// Only applies if no PropertyEditor converted the String array before.
 			// The CSV String will be passed into a PropertyEditor's setAsText method, if any.

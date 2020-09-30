@@ -609,6 +609,8 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	@Nullable
 	public Object getPropertyValue(String propertyName) throws BeansException {
 		AbstractNestablePropertyAccessor nestedPa = getPropertyAccessorForPropertyPath(propertyName);
+
+		//todo https://www.cnblogs.com/daimzh/p/12854384.html#3setPropertyValuePropertyTokenHolderPropertyValue_301
 		PropertyTokenHolder tokens = getPropertyNameTokens(getFinalPath(nestedPa, propertyName));
 		return nestedPa.getPropertyValue(tokens);
 	}

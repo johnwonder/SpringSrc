@@ -890,11 +890,13 @@ public class BeanDefinitionParserDelegate {
 				return;
 			}
 			Object val = parsePropertyValue(ele, bd, propertyName);
+
+			//todo 解析属性完成 放入PropertyValues中 2020-09-29
 			PropertyValue pv = new PropertyValue(propertyName, val);
 			parseMetaElements(ele, pv);
 			pv.setSource(extractSource(ele));
 			//pv里 合并的value
-			//最终添加到beanDefinition的PropertyValues中
+			//todo 最终添加到beanDefinition的PropertyValues中 2020-09-29
 			bd.getPropertyValues().addPropertyValue(pv);
 		}
 		finally {
