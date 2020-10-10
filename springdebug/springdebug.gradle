@@ -1,6 +1,8 @@
 description = "Spring debug"
 
-
+//repositories {
+//	flatDir { dirs "${System.env.JAVA_HOME}/jre/lib" }
+//}
 dependencies {
 
 	compile(project(":spring-context"))
@@ -10,5 +12,45 @@ dependencies {
 	compile(project(":spring-aop"))
 //	compile(project(":spring-aop"))
 	compile("javax.inject:javax.inject:1")
+	//compile name: 'rt'
 	compile fileTree(dir:'lib',includes:['*jar'])
 }
+apply plugin: 'java'
+compileJava {
+	options.compilerArgs << '-XDignore.symbol.file'
+	//https://blog.csdn.net/am_Sun/article/details/106374866?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param
+	options.bootClasspath = "${System.env.JAVA_HOME}/jre/lib/rt.jar"
+}
+
+//tasks.withType(JavaCompile){
+//	options.encoding= "UTF-8"
+//	options.warnings(false)
+//
+//	// Try to turn them all off automatically
+//	options.compilerArgs << '-Xlint:none'
+//	options.compilerArgs << '-nowarn' // same as '-Xlint:none'
+//
+//	// Turn them off manually
+//
+//	options.compilerArgs << '-XDignore.symbol.file'
+//	options.compilerArgs << '-Xlint:-auxiliaryclass'
+//	options.compilerArgs << '-Xlint:-cast'
+//	options.compilerArgs << '-Xlint:-classfile'
+//	options.compilerArgs << '-Xlint:-deprecation'
+//	options.compilerArgs << '-Xlint:-dep-ann'
+//	options.compilerArgs << '-Xlint:-divzero'
+//	options.compilerArgs << '-Xlint:-empty'
+//	options.compilerArgs << '-Xlint:-fallthrough'
+//	options.compilerArgs << '-Xlint:-finally'
+//	options.compilerArgs << '-Xlint:-options'
+//	options.compilerArgs << '-Xlint:-overloads'
+//	options.compilerArgs << '-Xlint:-overrides'
+//	options.compilerArgs << '-Xlint:-path'
+//	options.compilerArgs << '-Xlint:-processing'
+//	options.compilerArgs << '-Xlint:-rawtypes'
+//	options.compilerArgs << '-Xlint:-serial'
+//	options.compilerArgs << '-Xlint:-static'
+//	options.compilerArgs << '-Xlint:-try'
+//	options.compilerArgs << '-Xlint:-unchecked'
+//	options.compilerArgs << '-Xlint:-varargs'
+//}

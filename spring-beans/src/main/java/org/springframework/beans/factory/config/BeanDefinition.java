@@ -28,8 +28,14 @@ import org.springframework.lang.Nullable;
  *
  * <p>This is just a minimal interface: The main intention is to allow a
  * {@link BeanFactoryPostProcessor} such as {@link PropertyPlaceholderConfigurer}
- * to introspect and modify property values and other bean metadata.
+ * to introspect(内省机制) and modify property values and other bean metadata.
  *
+ * 在Java内省中，用到的基本上就是上述几个类。 通过BeanInfo这个类就可以获取到类中的方法和属性。
+ * 例如类 A 中有属性 name, 那我们可以通过 getName,setName 来得到其值或者设置新的值。通过 getName/setName 来访问 name 属性，这就是默认的规则。
+ * Java 中提供了一套 API 用来访问某个属性的 getter/setter 方法，通过这些 API 可以使你不需要了解这个规则（但你最好还是要搞清楚），
+ * 这些 API 存放于包 java.beans 中,一般的做法是通过类 Introspector 的 getBeanInfo方法 来获取某个对象的 BeanInfo 信息,
+ * 然后通过 BeanInfo 来获取属性的描述器(PropertyDescriptor),通过这个属性描述器就可以获取某个属性对应的 getter/setter 方法,
+ * 然后我们就可以通过反射机制来调用这些方法，这就是内省机制。
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @since 19.03.2004
@@ -165,8 +171,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * Set whether this bean is a candidate for getting autowired into some other bean.
 	 * <p>Note that this flag is designed to only affect type-based autowiring.
 	 * It does not affect explicit references by name, which will get resolved even
-	 * if the specified bean is not marked as an autowire candidate. As a consequence,
-	 * autowiring by name will nevertheless inject a bean if the name matches.
+	 * if the specified bean is not marked as an autowire candidate(即使指定的bean没有标记为自动装配候选，它也将得到解决). As a consequence,
+	 * autowiring by name will nevertheless inject a bean if the name matches(结果，如果名称匹配，按名称自动装配仍会注入一个bean。).
 	 */
 	void setAutowireCandidate(boolean autowireCandidate);
 
@@ -178,7 +184,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	/**
 	 * Set whether this bean is a primary autowire candidate.
 	 * <p>If this value is {@code true} for exactly one bean among multiple
-	 * matching candidates, it will serve as a tie-breaker.
+	 * matching candidates, it will serve as a tie-breaker(决胜).
 	 */
 	void setPrimary(boolean primary);
 

@@ -16,47 +16,50 @@
 
 package org.springframework.beans.propertyeditors;
 
-import java.beans.*;
-
-import org.apache.tomcat.util.IntrospectionUtils;
 import org.junit.Test;
-
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.Assert;
 
-import static org.junit.Assert.*;
+import java.beans.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @author Juergen Hoeller
  * @since 06.03.2006
  */
-public class BeanInfoTests {
+public class SimpleBeanInfoTests {
 
 	@Test
 	public void testComplexObject() {
-		ValueBean bean = new ValueBean();
-		BeanWrapper bw = new BeanWrapperImpl(bean);
-		Integer value = new Integer(1);
 
+//		PropertyEditor editor = PropertyEditorManager.findEditor(ValueBean.class);
+//		editor.setAsText("1");
+//		System.out.println(editor.getValue());
 
-		//Integer value2 = new Integer(11);
-		bw.setPropertyValue("value", value);
-		System.out.println(bean.getValue());
-		assertEquals("value not set correctly", bean.getValue(), value);
+		try{
+			BeanInfo beanInfo = Introspector.getBeanInfo(ValueBean.class);
 
-		value = new Integer(2);
-		bw.setPropertyValue("value", value.toString());
-		assertEquals("value not converted", bean.getValue(), value);
+			ValueBean valueBean = new ValueBean();
+			PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors() ;
+			for (PropertyDescriptor pd : pds) {
+				Method method = pd.getReadMethod() ;
+				String methodName = method.getName() ;
+				try{
+					Object result = method.invoke(valueBean) ;
+					System.out.println(methodName + "-->" + result);
+				}catch (InvocationTargetException e){
 
-		bw.setPropertyValue("value", null);
-		assertNull("value not null", bean.getValue());
+				}
+				catch (IllegalAccessException e){
 
-		bw.setPropertyValue("value", "");
-		System.out.println(bean.getValue());
-		assertNull("value not converted to null", bean.getValue());
+				}
 
+			}
+		}
+		catch (IntrospectionException e){
+
+		}
 	}
 
 
@@ -80,7 +83,7 @@ public class BeanInfoTests {
 		public PropertyDescriptor[] getPropertyDescriptors() {
 			try {
 				PropertyDescriptor pd = new PropertyDescriptor("value", ValueBean.class);
-				pd.setPropertyEditorClass(MyNumberEditor.class);
+				pd.setPropertyEditorClass(ValueBeanEditor.class);
 				return new PropertyDescriptor[] {pd};
 			}
 			catch (IntrospectionException ex) {
@@ -89,25 +92,24 @@ public class BeanInfoTests {
 		}
 	}
 
-	public static class MyNumberEditor extends CustomNumberEditor {
+	public static class ValueBeanEditor extends CustomNumberEditor {
 
 		private Object target;
 
-		public MyNumberEditor() throws IllegalArgumentException {
+		public ValueBeanEditor() throws IllegalArgumentException {
 			super(Integer.class, true);
 		}
 
-		public MyNumberEditor(Object target) throws IllegalArgumentException {
+		public ValueBeanEditor(Object target) throws IllegalArgumentException {
 			super(Integer.class, true);
 			this.target = target;
 		}
 
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
-			Assert.isTrue(this.target instanceof ValueBean, "Target must be available");
+			//Assert.isTrue(this.target instanceof BeanInfoTests.ValueBean, "Target must be available");
 			super.setAsText(text);
 		}
-
 	}
 
 }
