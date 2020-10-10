@@ -34,6 +34,7 @@ import static org.junit.Assert.*;
  */
 public class BeanInfoTests {
 
+	//https://blog.csdn.net/u010445297/article/details/60967146
 	@Test
 	public void testComplexObject() {
 		ValueBean bean = new ValueBean();

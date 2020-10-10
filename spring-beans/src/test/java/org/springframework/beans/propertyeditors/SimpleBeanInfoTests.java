@@ -43,6 +43,22 @@ public class SimpleBeanInfoTests {
 			ValueBean valueBean = new ValueBean();
 			PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors() ;
 			for (PropertyDescriptor pd : pds) {
+				Method writeMethod = pd.getWriteMethod() ;
+
+				String methodName = writeMethod.getName() ;
+				try{
+					Object result = writeMethod.invoke(valueBean,1) ;
+					System.out.println(methodName + "-->" + result);
+				}catch (InvocationTargetException e){
+
+				}
+				catch (IllegalAccessException e){
+
+				}
+
+			}
+			for (PropertyDescriptor pd : pds) {
+				Method writeMethod = pd.getWriteMethod() ;
 				Method method = pd.getReadMethod() ;
 				String methodName = method.getName() ;
 				try{
@@ -83,7 +99,7 @@ public class SimpleBeanInfoTests {
 		public PropertyDescriptor[] getPropertyDescriptors() {
 			try {
 				PropertyDescriptor pd = new PropertyDescriptor("value", ValueBean.class);
-				pd.setPropertyEditorClass(ValueBeanEditor.class);
+				//pd.setPropertyEditorClass(ValueBeanEditor.class);
 				return new PropertyDescriptor[] {pd};
 			}
 			catch (IntrospectionException ex) {
@@ -107,7 +123,7 @@ public class SimpleBeanInfoTests {
 
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
-			//Assert.isTrue(this.target instanceof BeanInfoTests.ValueBean, "Target must be available");
+			Assert.isTrue(this.target instanceof BeanInfoTests.ValueBean, "Target must be available");
 			super.setAsText(text);
 		}
 	}
