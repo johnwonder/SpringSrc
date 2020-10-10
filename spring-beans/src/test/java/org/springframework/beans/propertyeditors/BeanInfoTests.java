@@ -58,6 +58,7 @@ public class BeanInfoTests {
 		System.out.println(bean.getValue());
 		assertNull("value not converted to null", bean.getValue());
 
+		bw.setPropertyValue("value","1");
 	}
 
 

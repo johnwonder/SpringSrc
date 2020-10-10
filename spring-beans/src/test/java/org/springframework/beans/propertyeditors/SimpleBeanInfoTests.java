@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
  */
 public class SimpleBeanInfoTests {
 
+	//https://blog.csdn.net/qq_35029061/article/details/86664795
 	@Test
 	public void testComplexObject() {
 
@@ -44,6 +45,7 @@ public class SimpleBeanInfoTests {
 			PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors() ;
 			for (PropertyDescriptor pd : pds) {
 				Method writeMethod = pd.getWriteMethod() ;
+
 
 				String methodName = writeMethod.getName() ;
 				try{

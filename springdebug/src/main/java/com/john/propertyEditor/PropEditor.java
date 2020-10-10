@@ -14,7 +14,7 @@ public class PropEditor {
 	public static void main (String[] args) {
 
 		PropertyEditor editor = PropertyEditorManager.findEditor(User.class);
-		editor.setAsText("Joe");
+		editor.setAsText("Joe1");
 		System.out.println(editor.getValue());
 	}
 
