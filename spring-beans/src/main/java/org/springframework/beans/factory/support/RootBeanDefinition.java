@@ -45,7 +45,7 @@ import org.springframework.util.Assert;
  * bean definitions programmatically is the {@link GenericBeanDefinition} class.
  * GenericBeanDefinition has the advantage that it allows to dynamically define(允许动态定义父依赖)
  * parent dependencies, not 'hard-coding' the role as a root bean definition.
- *
+ * https://blog.csdn.net/dhaiuda/article/details/83278406
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see GenericBeanDefinition
@@ -60,6 +60,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	private AnnotatedElement qualifiedElement;
 
+	//默认允许缓存
 	boolean allowCaching = true;
 
 	boolean isFactoryMethodUnique = false;
@@ -71,6 +72,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	volatile Class<?> resolvedTargetType;
 
+	//缓存工厂方法的返回类型
 	/** Package-visible field for caching the return type of a generically typed factory method. */
 	@Nullable
 	volatile ResolvableType factoryMethodReturnType;
@@ -82,9 +84,11 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	Executable resolvedConstructorOrFactoryMethod;
 
+	//表明构造函数参数是否解析完毕
 	/** Package-visible field that marks the constructor arguments as resolved. */
 	boolean constructorArgumentsResolved = false;
 
+	//缓存完全解析的构造函数参数
 	/** Package-visible field for caching fully resolved constructor arguments. */
 	@Nullable
 	Object[] resolvedConstructorArguments;

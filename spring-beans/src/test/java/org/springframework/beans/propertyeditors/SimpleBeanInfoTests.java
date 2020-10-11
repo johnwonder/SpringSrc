@@ -46,7 +46,6 @@ public class SimpleBeanInfoTests {
 			for (PropertyDescriptor pd : pds) {
 				Method writeMethod = pd.getWriteMethod() ;
 
-
 				String methodName = writeMethod.getName() ;
 				try{
 					Object result = writeMethod.invoke(valueBean,1) ;

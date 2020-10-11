@@ -267,6 +267,7 @@ class TypeConverterDelegate {
 				}
 			}
 
+			//todo 判断转换后的值是否属于 需要的类型 2020-10-11
 			if (!ClassUtils.isAssignableValue(requiredType, convertedValue)) {
 				if (conversionAttemptEx != null) {
 					// Original exception from former ConversionService call above...
@@ -295,6 +296,7 @@ class TypeConverterDelegate {
 					throw new IllegalArgumentException(msg.toString());
 				}
 				else {
+					//todo 输出没有找到匹配的 property editor 或者 转换策略 2020-10-11
 					msg.append(": no matching editors or conversion strategy found");
 					throw new IllegalStateException(msg.toString());
 				}
@@ -358,6 +360,8 @@ class TypeConverterDelegate {
 
 		return convertedValue;
 	}
+
+	//todo 会根据requiredType 去 propertyEditorRegistry 找默认的PropertyEditor 2020-10-10
 	/**
 	 * Find a default editor for the given type.
 	 * @param requiredType the type to find an editor for
@@ -431,6 +435,7 @@ class TypeConverterDelegate {
 			convertedValue = StringUtils.arrayToCommaDelimitedString((String[]) convertedValue);
 		}
 
+		//todo 如果被转换的值是字符串 就执行doConvertTextValue 方法 2020-10-11
 		if (convertedValue instanceof String) {
 			if (editor != null) {
 				// Use PropertyEditor's setAsText in case of a String value.
@@ -463,6 +468,7 @@ class TypeConverterDelegate {
 			if (logger.isDebugEnabled()) {
 				logger.debug("PropertyEditor [" + editor.getClass().getName() + "] does not support setValue call", ex);
 			}
+			//todo 有意思 吞下并继续 2020-10-11
 			// Swallow and proceed.
 		}
 		editor.setAsText(newTextValue);

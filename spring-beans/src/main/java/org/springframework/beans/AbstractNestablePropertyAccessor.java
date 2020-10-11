@@ -414,7 +414,12 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	}
 
 	private void processLocalProperty(PropertyTokenHolder tokens, PropertyValue pv) {
+
+		//todo BeanWrapperImpl 继承了 AbstractNestablePropertyAccessor
+		//所以去调用BeanWrapperImpl的 getLocalPropertyHandler 获取BeanPropertyHandler 2020-10-11
 		PropertyHandler ph = getLocalPropertyHandler(tokens.actualName);
+
+		//todo 判断Writable是通过PropertyDescriptor 判断  有无WriteMethod的 2020-10-11
 		if (ph == null || !ph.isWritable()) {
 			if (pv.isOptional()) {
 				if (logger.isDebugEnabled()) {
@@ -451,11 +456,12 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 							}
 						}
 					}
-					valueToApply = convertForProperty(
-							tokens.canonicalName, oldValue, originalValue, ph.toTypeDescriptor());
+
+					valueToApply = convertForProperty(tokens.canonicalName, oldValue, originalValue, ph.toTypeDescriptor());
 				}
 				pv.getOriginalPropertyValue().conversionNecessary = (valueToApply != originalValue);
 			}
+			//propertyHandler
 			ph.setValue(valueToApply);
 		}
 		catch (TypeMismatchException ex) {
@@ -588,6 +594,8 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		catch (ConverterNotFoundException | IllegalStateException ex) {
 			PropertyChangeEvent pce =
 					new PropertyChangeEvent(getRootInstance(), this.nestedPath + propertyName, oldValue, newValue);
+
+			//todo 应该要支持 PropertyDescriptor 带有PropertyEditorClasss 的情况下 根据 这个class去转换属性 2020-10-11
 			throw new ConversionNotSupportedException(pce, requiredType, ex);
 		}
 		catch (ConversionException | IllegalArgumentException ex) {

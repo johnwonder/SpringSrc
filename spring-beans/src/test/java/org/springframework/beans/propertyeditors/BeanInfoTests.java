@@ -43,22 +43,31 @@ public class BeanInfoTests {
 
 
 		//Integer value2 = new Integer(11);
-		bw.setPropertyValue("value", value);
-		System.out.println(bean.getValue());
-		assertEquals("value not set correctly", bean.getValue(), value);
+//		bw.setPropertyValue("value", value);
+//		System.out.println(bean.getValue());
+//		assertEquals("value not set correctly", bean.getValue(), value);
+//
+//		value = new Integer(2);
+//		bw.setPropertyValue("value", value.toString());
+//		assertEquals("value not converted", bean.getValue(), value);
+//
+//		bw.setPropertyValue("value", null);
+//		assertNull("value not null", bean.getValue());
+//
+//		bw.setPropertyValue("value", "");
+//		System.out.println(bean.getValue());
+//		assertNull("value not converted to null", bean.getValue());
+//
+//		bw.setPropertyValue("value","1");
 
-		value = new Integer(2);
-		bw.setPropertyValue("value", value.toString());
-		assertEquals("value not converted", bean.getValue(), value);
+		bw.setPropertyValue("user","john");
 
-		bw.setPropertyValue("value", null);
-		assertNull("value not null", bean.getValue());
+		bw.setPropertyValue("user","john");
 
-		bw.setPropertyValue("value", "");
-		System.out.println(bean.getValue());
-		assertNull("value not converted to null", bean.getValue());
 
-		bw.setPropertyValue("value","1");
+
+		UserBean user =(UserBean)bw.getPropertyValue("user");
+		System.out.println(user.getName());
 	}
 
 
@@ -66,12 +75,35 @@ public class BeanInfoTests {
 
 		private Integer value;
 
+		private UserBean user;
+
 		public Integer getValue() {
 			return value;
 		}
 
 		public void setValue(Integer value) {
 			this.value = value;
+		}
+
+		public UserBean getUser() {
+			return user;
+		}
+
+		public void setUser(UserBean user) {
+			this.user = user;
+		}
+	}
+
+	public static class UserBean{
+
+		private String name;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 	}
 
@@ -83,11 +115,33 @@ public class BeanInfoTests {
 			try {
 				PropertyDescriptor pd = new PropertyDescriptor("value", ValueBean.class);
 				pd.setPropertyEditorClass(MyNumberEditor.class);
-				return new PropertyDescriptor[] {pd};
+
+				PropertyDescriptor userPd = new PropertyDescriptor("user", ValueBean.class);
+				//写了也没用
+				//userPd.setPropertyEditorClass(UserBeanEditor.class);
+
+				return new PropertyDescriptor[] {pd,userPd};
 			}
 			catch (IntrospectionException ex) {
 				throw new FatalBeanException("Couldn't create PropertyDescriptor", ex);
 			}
+		}
+	}
+
+
+	public static class UserBean1Editor extends PropertyEditorSupport {
+
+		@Override
+		public String getAsText() {
+			return super.getAsText();
+		}
+
+		@Override
+		public void setAsText(String text) throws IllegalArgumentException {
+
+			UserBean userBean = new UserBean();
+			userBean.setName(text);
+			super.setValue(userBean);
 		}
 	}
 

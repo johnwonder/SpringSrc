@@ -41,7 +41,7 @@ import org.springframework.util.ReflectionUtils;
  * to register an editor for a particular instance (i.e. they are not shared
  * across the application). See the base class
  * {@link PropertyEditorRegistrySupport} for details.
- *
+ * https://blog.csdn.net/cockroach02/article/details/81416913
  * <p><b>NOTE: As of Spring 2.5, this is - for almost all purposes - an
  * internal class.</b> It is just public in order to allow for access from
  * other framework packages. For standard application access purposes, use the
@@ -289,6 +289,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 		@Override
 		@Nullable
 		public Object getValue() throws Exception {
+
 			final Method readMethod = this.pd.getReadMethod();
 			if (System.getSecurityManager() != null) {
 				AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
@@ -328,6 +329,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 				}
 			}
 			else {
+				//pd.getPropertyEditorClass()
 				ReflectionUtils.makeAccessible(writeMethod);
 				//todo 最后设置属性 2020-10-10
 				writeMethod.invoke(getWrappedInstance(), value);
