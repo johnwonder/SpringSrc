@@ -21,7 +21,7 @@ import org.springframework.beans.BeansException;
 /**
  * Allows for custom modification of an application context's bean definitions,
  * adapting the bean property values of the context's underlying bean factory.
- *
+ * 允许自定义修改应用程序上下文的Bean定义，调整上下文的基础Bean工厂的Bean属性值
  * <p>Application contexts can auto-detect BeanFactoryPostProcessor beans in
  * their bean definitions and apply them before any other beans get created.
  *

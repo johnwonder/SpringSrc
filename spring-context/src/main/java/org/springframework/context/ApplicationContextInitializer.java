@@ -21,7 +21,7 @@ package org.springframework.context;
  * prior to being {@linkplain ConfigurableApplicationContext#refresh() refreshed}.
  * //回调接口  在 调用refresh()之前发生
  * <p>Typically used within web applications that require some programmatic initialization
- * of the application context. For example, registering property sources or activating
+ * of the application context(通常在需要对应用程序上下文进行一些程序初始化的Web应用程序中使用). For example, registering property sources or activating
  * profiles against the {@linkplain ConfigurableApplicationContext#getEnvironment()
  * context's environment}. See {@code ContextLoader} and {@code FrameworkServlet} support
  * for declaring a "contextInitializerClasses" context-param and init-param, respectively.
@@ -42,7 +42,7 @@ package org.springframework.context;
 //https://www.cnblogs.com/duanxz/p/11239291.html
 	//configureAndRefreshWebApplicationContext 中有 applyInitializers
 	//ContextLoader customizeContext
-
+	//todo 通常在需要对应用程序上下文进行一些程序初始化的Web应用程序中使用 例如，注册属性源或激活配置文件 2020-10-12
 	//ApplicationContextInitializer  initialize里 调用 getPropertySources
 public interface ApplicationContextInitializer<C extends ConfigurableApplicationContext> {
 

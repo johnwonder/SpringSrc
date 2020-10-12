@@ -109,6 +109,7 @@ public class SystemEnvironmentPropertySource extends MapPropertySource {
 		if (resolvedName != null) {
 			return resolvedName;
 		}
+		//todo 先把名称换成大写 如果本身名称是小写 那再 把 .变换为_ 再根据新的noDotName去检查 比如 SPRING_PROFILES_ACTIVE 2020-10-12
 		String uppercasedName = name.toUpperCase();
 		if (!name.equals(uppercasedName)) {
 			resolvedName = checkPropertyName(uppercasedName);
@@ -121,10 +122,13 @@ public class SystemEnvironmentPropertySource extends MapPropertySource {
 
 	@Nullable
 	private String checkPropertyName(String name) {
+
+		//todo 去source检查本身是否带这个名称的属性 2020-10-12
 		// Check name as-is
 		if (containsKey(name)) {
 			return name;
 		}
+
 		// Check name with just dots replaced
 		String noDotName = name.replace('.', '_');
 		if (!name.equals(noDotName) && containsKey(noDotName)) {

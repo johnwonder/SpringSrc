@@ -42,6 +42,8 @@ public interface BeanFactoryAware extends Aware {
 
 	/**
 	 * Callback that supplies the owning factory to a bean instance.
+	 * 将拥有的工厂提供给Bean实例的回调
+	 * 在填充正常的bean属性之后调用，但在初始化回调之前调用
 	 * <p>Invoked after the population of normal bean properties
 	 * but before an initialization callback such as
 	 * {@link InitializingBean#afterPropertiesSet()} or a custom init-method.

@@ -20,11 +20,13 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 
 /**
+ * 什么是SPI ,全称为 Service Provider Interface,是一种服务发现机制
  * Extension to the standard {@link BeanFactoryPostProcessor} SPI, allowing for
  * the registration of further bean definitions <i>before</i> regular
  * BeanFactoryPostProcessor detection kicks in. In particular,
  * BeanDefinitionRegistryPostProcessor may register further bean definitions
  * which in turn define BeanFactoryPostProcessor instances.
+ * 特别地，BeanDefinitionRegistryPostProcessor可以注册更多的Bean定义 进而定义BeanFactoryPostProcessor实例
  *
  * @author Juergen Hoeller
  * @since 3.0.1
@@ -35,8 +37,10 @@ public interface BeanDefinitionRegistryPostProcessor extends BeanFactoryPostProc
 	/**
 	 * Modify the application context's internal bean definition registry after its
 	 * standard initialization. All regular bean definitions will have been loaded,
+	 * 所有常规bean定义都应该已经加载，但是还没实例化
 	 * but no beans will have been instantiated yet. This allows for adding further
 	 * bean definitions before the next post-processing phase kicks in.
+	 * 这允许在下一个后处理阶段开始之前添加更多的bean定义。
 	 * @param registry the bean definition registry used by the application context
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 */

@@ -36,6 +36,7 @@ import org.springframework.util.StringValueResolver;
 
 /**
  * {@link org.springframework.beans.factory.config.BeanPostProcessor}
+ * 将ApplicationContext传递给 实现 EnvironmentAware 等接口的bean
  * implementation that passes the ApplicationContext to beans that
  * implement the {@link EnvironmentAware}, {@link EmbeddedValueResolverAware},
  * {@link ResourceLoaderAware}, {@link ApplicationEventPublisherAware},

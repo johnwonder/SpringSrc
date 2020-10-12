@@ -155,6 +155,8 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	boolean isLazyInit();
 	//判断是否是懒加载
 
+	//dependsOn一般用于两个bean之间没有显示依赖，但后一个Bean需要用到前一个Bean执行初始方法后的结果。
+	// 例如在< bean id=“a” dependsOn=“b”/> 时，在初始化a时首先先初始化b，在销毁b之前会先销毁a。
 	/**
 	 * Set the names of the beans that this bean depends on being initialized.
 	 * The bean factory will guarantee that these beans get initialized first.
@@ -167,9 +169,12 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	@Nullable
 	String[] getDependsOn();
 
+	//设置该对象是否可以被其他对象自动装配。
+	//https://blog.csdn.net/prestigeding/article/details/80490206
 	/**
 	 * Set whether this bean is a candidate for getting autowired into some other bean.
 	 * <p>Note that this flag is designed to only affect type-based autowiring.
+	 * //被设计为只影响类型自动装配
 	 * It does not affect explicit references by name, which will get resolved even
 	 * if the specified bean is not marked as an autowire candidate(即使指定的bean没有标记为自动装配候选，它也将得到解决). As a consequence,
 	 * autowiring by name will nevertheless inject a bean if the name matches(结果，如果名称匹配，按名称自动装配仍会注入一个bean。).
@@ -282,6 +287,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * Set the role hint for this {@code BeanDefinition}. The role hint
 	 * provides the frameworks as well as tools with an indication of
 	 * the role and importance of a particular {@code BeanDefinition}.
+	 * 向框架和工具提供特定BeanDefinition的角色和重要性的指示
 	 * @since 5.1
 	 * @see #ROLE_APPLICATION
 	 * @see #ROLE_SUPPORT
@@ -344,8 +350,10 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	/**
 	 * Return the originating BeanDefinition, or {@code null} if none.
 	 * Allows for retrieving the decorated bean definition, if any.
+	 * 允许获取修饰的bean定义（如果有）
 	 * <p>Note that this method returns the immediate originator. Iterate through the
 	 * originator chain to find the original BeanDefinition as defined by the user.
+	 * 请注意，此方法返回直接发起者。遍历 鼻祖 链以查找用户定义的原始BeanDefinition
 	 */
 	@Nullable
 	BeanDefinition getOriginatingBeanDefinition();

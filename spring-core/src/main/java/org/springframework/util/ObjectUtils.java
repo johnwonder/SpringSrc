@@ -310,6 +310,7 @@ public abstract class ObjectUtils {
 	 * both are {@code null} or {@code false} if only one is {@code null}.
 	 * <p>Compares arrays with {@code Arrays.equals}, performing an equality
 	 * check based on the array elements rather than the array reference.
+	 * 根据数组元素而不是数组引用执行相等性检查
 	 * @param o1 first Object to compare
 	 * @param o2 second Object to compare
 	 * @return whether the given objects are equal
@@ -326,6 +327,7 @@ public abstract class ObjectUtils {
 		if (o1.equals(o2)) {
 			return true;
 		}
+		//todo 如果是array再根据arrayEquals比较
 		if (o1.getClass().isArray() && o2.getClass().isArray()) {
 			return arrayEquals(o1, o2);
 		}

@@ -37,6 +37,8 @@ public interface BeanNameAware extends Aware {
 
 	/**
 	 * Set the name of the bean in the bean factory that created this bean.
+	 * 在创建此bean的bean工厂中设置bean的名称
+	 * 在填充正常的bean属性后调用
 	 * <p>Invoked after population of normal bean properties but before an
 	 * init callback such as {@link InitializingBean#afterPropertiesSet()}
 	 * or a custom init-method.

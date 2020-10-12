@@ -24,7 +24,7 @@ import org.springframework.lang.Nullable;
 /**
  * Extension of the {@link InstantiationAwareBeanPostProcessor} interface,
  * adding a callback for predicting the eventual type of a processed bean.
- *
+ * InstantiationAwareBeanPostProcessor 接口的扩展，添加了一个回调以预测已处理bean的最终类型
  * <p><b>NOTE:</b> This interface is a special purpose interface, mainly for
  * internal use within the framework. In general, application-provided
  * post-processors should simply implement the plain {@link BeanPostProcessor}

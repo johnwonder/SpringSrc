@@ -21,7 +21,7 @@ import java.beans.PropertyEditor;
 import org.springframework.lang.Nullable;
 
 /**
- * Encapsulates methods for registering JavaBeans {@link PropertyEditor PropertyEditors}.
+ * Encapsulates(封装) methods for registering JavaBeans {@link PropertyEditor PropertyEditors}.
  * This is the central interface that a {@link PropertyEditorRegistrar} operates on.
  *
  * <p>Extended by {@link BeanWrapper}; implemented by {@link BeanWrapperImpl}
@@ -36,6 +36,7 @@ import org.springframework.lang.Nullable;
  */
 public interface PropertyEditorRegistry {
 
+	//注册自定义的PropertyEditor
 	/**
 	 * Register the given custom property editor for all properties of the given type.
 	 * @param requiredType the type of the property
