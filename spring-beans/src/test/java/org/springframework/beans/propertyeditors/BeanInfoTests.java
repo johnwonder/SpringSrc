@@ -108,7 +108,8 @@ public class BeanInfoTests {
 	}
 
 
-	public static class ValueBeanBeanInfo extends SimpleBeanInfo {
+	//这个还是根据Bean名称去找到的
+	public static class ValueBean1BeanInfo extends SimpleBeanInfo {
 
 		@Override
 		public PropertyDescriptor[] getPropertyDescriptors() {
@@ -129,7 +130,7 @@ public class BeanInfoTests {
 	}
 
 
-	public static class UserBean1Editor extends PropertyEditorSupport {
+	public static class UserBeanEditor extends PropertyEditorSupport {
 
 		@Override
 		public String getAsText() {
