@@ -38,6 +38,13 @@ public class ClassPathResourceTest
 	}
 
 	@Test
+	public void testClassPathResource() throws IOException {
+		Resource res = new ClassPathResource("res/datasource.xml");
+		InputStream input = res.getInputStream();
+		Assert.assertNotNull(input);
+	}
+
+	@Test
 	public void testClassPathResource1() throws IOException {
 		Resource res = new ClassPathResource("res/datasource1.xml");
 		InputStream input = res.getInputStream();
