@@ -21,17 +21,23 @@ import org.springframework.lang.Nullable;
 
 /**
  * Factory hook that allows for custom modification of new bean instances,
+ * 工厂钩子，允许自定义修改新的bean实例
  * e.g. checking for marker interfaces or wrapping them with proxies.
+ * 检查标记界面或使用代理包装
  *
  * <p>ApplicationContexts can autodetect BeanPostProcessor beans in their
  * bean definitions and apply them to any beans subsequently created.
+ * ApplicationContexts可以在其 bean定义中自动检测BeanPostProcessor bean，并将它们应用于随后创建的任何bean
  * Plain bean factories allow for programmatic registration of post-processors,
  * applying to all beans created through this factory.
+ * 普通beanFactory 允许以编程方式注册后处理器,应用于通过该工厂创建的所有bean
  *
  * <p>Typically, post-processors that populate beans via marker interfaces
  * or the like will implement {@link #postProcessBeforeInitialization},
+ * 通常，通过标记接口或类似对象填充Bean 的后处理器将实现 postProcessBeforeInitialization
  * while post-processors that wrap beans with proxies will normally
  * implement {@link #postProcessAfterInitialization}.
+ * 而使用代理包装bean的后处理器通常将实现 postProcessAfterInitialization
  *
  * @author Juergen Hoeller
  * @since 10.10.2003
