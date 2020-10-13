@@ -1054,6 +1054,7 @@ public class BeanDefinitionParserDelegate {
 				error("<ref> element contains empty target attribute", ele);
 				return null;
 			}
+			//todo ref属性是放入RuntmeBeanReference对象中的 2020-10-13
 			RuntimeBeanReference ref = new RuntimeBeanReference(refName, toParent);
 			ref.setSource(extractSource(ele));
 			return ref;
@@ -1107,7 +1108,7 @@ public class BeanDefinitionParserDelegate {
 			error("<idref> element contains empty target attribute", ele);
 			return null;
 		}
-		//todo ref属性是放入RuntmeBeanNameReference对象中的 2020-10-03
+		//todo idref属性是放入RuntmeBeanNameReference对象中的 2020-10-03
 		RuntimeBeanNameReference ref = new RuntimeBeanNameReference(refName);
 		ref.setSource(extractSource(ele));
 		return ref;

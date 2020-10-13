@@ -24,15 +24,15 @@ public class TestHashMap {
 		String a="111";
 		String b=new String("111");
 
-		System.out.println(a);
-		System.out.println(b);
-		System.out.println(a == b);
-		System.out.println(a.equals(b));
-		System.out.println("a的hashcode:" + a.hashCode());
-		System.out.println("b的hashcode:" + b.hashCode());
+		System.out.println(a);//111
+		System.out.println(b);//111
+		System.out.println(a == b);///false
+		System.out.println(a.equals(b));//true
+		System.out.println("a的hashcode:" + a.hashCode()); //48657
+		System.out.println("b的hashcode:" + b.hashCode()); //48657
 		arr.put(a,"aaaaa");
 		arr.put(b,"bbbbb");
-		System.out.println(arr);
-		System.out.println(arr.get(a));
+		System.out.println(arr); //{111=bbbbb}
+		System.out.println(arr.get(a)); //bbbbb
 	}
 }
