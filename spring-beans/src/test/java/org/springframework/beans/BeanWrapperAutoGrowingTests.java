@@ -53,6 +53,14 @@ public class BeanWrapperAutoGrowingTests {
 		assertEquals("test", bean.getNested().getProp());
 	}
 
+
+	@Test
+	public void setPropertyValueNullValueInNestedPath1() {
+		wrapper.setPropertyValue("nestedConstructor.prop", "test");
+
+		System.out.println(wrapper.getPropertyValue("nestedConstructor.prop"));
+	}
+
 	@Test(expected = NullValueInNestedPathException.class)
 	public void getPropertyValueNullValueInNestedPathNoDefaultConstructor() {
 		wrapper.getPropertyValue("nestedNoConstructor.prop");
@@ -167,6 +175,8 @@ public class BeanWrapperAutoGrowingTests {
 
 		private NestedNoDefaultConstructor nestedNoConstructor;
 
+		private NestedDefaultConstructor nestedConstructor;
+
 		private Bean[] array;
 
 		private Bean[][] multiArray;
@@ -235,6 +245,14 @@ public class BeanWrapperAutoGrowingTests {
 			this.nestedNoConstructor = nestedNoConstructor;
 		}
 
+		public NestedDefaultConstructor getNestedConstructor() {
+			return nestedConstructor;
+		}
+
+		public void setNestedConstructor(NestedDefaultConstructor nestedConstructor) {
+			this.nestedConstructor = nestedConstructor;
+		}
+
 		public List getListNotParameterized() {
 			return listNotParameterized;
 		}
@@ -249,6 +267,12 @@ public class BeanWrapperAutoGrowingTests {
 
 		public void setMap(Map<String, Bean> map) {
 			this.map = map;
+		}
+	}
+
+	public static class NestedDefaultConstructor {
+
+		public NestedDefaultConstructor() {
 		}
 	}
 

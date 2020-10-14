@@ -23,6 +23,8 @@ import org.springframework.lang.Nullable;
  * Interface that encapsulates configuration methods for a PropertyAccessor.
  * Also extends the PropertyEditorRegistry interface, which defines methods
  * for PropertyEditor management.
+ * 封装PropertyAccessor的配置方法的接口。
+ * 还扩展了PropertyEditorRegistry接口，该接口定义了PropertyEditor管理的方法
  *
  * <p>Serves as base interface for {@link BeanWrapper}.
  *
@@ -63,6 +65,7 @@ public interface ConfigurablePropertyAccessor extends PropertyAccessor, Property
 	 * nested path that contains a {@code null} value.
 	 * <p>If {@code true}, a {@code null} path location will be populated
 	 * with a default object value and traversed instead of resulting in a
+	 * null路径位置将使用默认对象值填充 并遍历，而不是导致 NullValueInNestedPathException
 	 * {@link NullValueInNestedPathException}.
 	 * <p>Default is {@code false} on a plain PropertyAccessor instance.
 	 */

@@ -54,7 +54,7 @@ import org.springframework.util.StringUtils;
  * with collections or arrays can either be written via PropertyEditor's
  * {@code setValue}, or against a comma-delimited String via {@code setAsText},
  * as String arrays are converted in such a format if the array itself is not
- * assignable.
+ * assignable(如果数组本身不是可分配的，则以这种格式转换字符串数组).
  *
  * @author Juergen Hoeller
  * @author Stephane Nicoll
@@ -243,6 +243,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			throw new NotWritablePropertyException(getRootClass(), this.nestedPath + propertyName,
 					"Nested property in path '" + propertyName + "' does not exist", ex);
 		}
+		//todo getFinalPath(nestedPa, propertyName) 获取到最后的属性名称 2020-10-14
 		PropertyTokenHolder tokens = getPropertyNameTokens(getFinalPath(nestedPa, propertyName));
 		nestedPa.setPropertyValue(tokens, new PropertyValue(propertyName, value));
 	}
@@ -437,6 +438,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		try {
 			Object originalValue = pv.getValue();
 			Object valueToApply = originalValue;
+			//todo pv.conversionNecessary 初始化是null 2020-10-14
 			if (!Boolean.FALSE.equals(pv.conversionNecessary)) {
 				if (pv.isConverted()) {
 					valueToApply = pv.getConvertedValue();
@@ -459,6 +461,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 
 					valueToApply = convertForProperty(tokens.canonicalName, oldValue, originalValue, ph.toTypeDescriptor());
 				}
+
 				pv.getOriginalPropertyValue().conversionNecessary = (valueToApply != originalValue);
 			}
 			//propertyHandler

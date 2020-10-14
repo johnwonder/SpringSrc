@@ -200,9 +200,11 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	 * Set whether this binder should attempt to "auto-grow" a nested path that contains a null value.
 	 * <p>If "true", a null path location will be populated with a default object value and traversed
 	 * instead of resulting in an exception. This flag also enables auto-growth of collection elements
-	 * when accessing an out-of-bounds index.
+	 * when accessing an out-of-bounds index(当访问越界索引时，此标志还启用集合元素的自动增长。).
 	 * <p>Default is "true" on a standard DataBinder. Note that since Spring 4.1 this feature is supported
 	 * for bean property access (DataBinder's default mode) and field access.
+	 * 在标准DataBinder上，默认值为“ true”。
+	 * 请注意，从Spring 4.1开始，此功能支持*用于bean属性访问（DataBinder的默认模式）和字段访问。
 	 * @see #initBeanPropertyAccess()
 	 * @see org.springframework.beans.BeanWrapper#setAutoGrowNestedPaths
 	 */

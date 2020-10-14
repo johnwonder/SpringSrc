@@ -329,6 +329,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 				}
 			}
 			else {
+				//todo 关键是没走到这步 已经报错了 不然应该可以通过pd.getPropertyEditorClass 2020-10-14
 				//pd.getPropertyEditorClass()
 				ReflectionUtils.makeAccessible(writeMethod);
 				//todo 最后设置属性 2020-10-10

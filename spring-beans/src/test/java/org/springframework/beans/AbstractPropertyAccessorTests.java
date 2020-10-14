@@ -99,9 +99,11 @@ public abstract class AbstractPropertyAccessorTests {
 
 	@Test
 	public void isReadableProperty() {
+		//createAccessor 返回一个BeanWrapperImpl
 		AbstractPropertyAccessor accessor = createAccessor(new Simple("John", 2));
 
-		assertThat(accessor.isReadableProperty("name"), is(true));
+		System.out.println(accessor.getPropertyType("name"));//class java.lang.String
+		assertThat(accessor.isReadableProperty("sex"), is(true));
 	}
 
 	@Test
@@ -1783,6 +1785,8 @@ public abstract class AbstractPropertyAccessorTests {
 		private String name;
 
 		private Integer integer;
+
+		private Integer sex;
 
 		private Simple(String name, Integer integer) {
 			this.name = name;

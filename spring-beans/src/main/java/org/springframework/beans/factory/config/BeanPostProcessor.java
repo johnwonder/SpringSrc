@@ -48,11 +48,16 @@ import org.springframework.lang.Nullable;
  */
 public interface BeanPostProcessor {
 
+	//todo BeanPostProcessor接口的作用及实现 2020-10-13
+	// 1: 工厂钩子，允许自定义修改新的bean实例, 2: 检查标记接口或使用代理包装
 	/**
+	 * 在任何bean 初始化回调之前（例如，InitializingBean的  afterPropertiesSet 或自定义的init-method），
+	 * 将此BeanPostProcessor应用于给定的新bean实例
 	 * Apply this BeanPostProcessor to the given new bean instance <i>before</i> any bean
 	 * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
 	 * or a custom init-method). The bean will already be populated with property values.
 	 * The returned bean instance may be a wrapper around the original.
+	 * 该bean将已经用属性值填充。 返回的bean实例可能是原始包装的包装
 	 * <p>The default implementation returns the given {@code bean} as-is.
 	 * @param bean the new bean instance
 	 * @param beanName the name of the bean
@@ -77,6 +82,7 @@ public interface BeanPostProcessor {
 	 * objects or both through corresponding {@code bean instanceof FactoryBean} checks.
 	 * <p>This callback will also be invoked after a short-circuiting triggered by a
 	 * {@link InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation} method,
+	 * 在  InstantiationAwareBeanPostProcessor postProcessBeforeInstantiation 方法触发短路后，也会调用此回调
 	 * in contrast to all other BeanPostProcessor callbacks.
 	 * <p>The default implementation returns the given {@code bean} as-is.
 	 * @param bean the new bean instance
