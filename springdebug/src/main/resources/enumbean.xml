@@ -1,0 +1,12 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+		"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="user" class="com.john.beanFactory.User">
+
+		<property name="ss" value="com.john.beanFactory.City.HANGZHOU"/>
+		<property name="cc" value="HANGZHOU"/>
+		<property name="city" value="City.HANGZHOU"/>
+
+	</bean>
+</beans>

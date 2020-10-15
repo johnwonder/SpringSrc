@@ -251,6 +251,7 @@ class TypeConverterDelegate {
 						// It's an empty enum identifier: reset the enum value to null.
 						return null;
 					}
+					//todo 这边会尝试去把字符串转换为枚举 2020-10-15
 					convertedValue = attemptToConvertStringToEnum(requiredType, trimmedValue, convertedValue);
 					standardConversion = true;
 				}
@@ -314,11 +315,13 @@ class TypeConverterDelegate {
 		return (T) convertedValue;
 	}
 
+	//todo 这个方法很重要 尝试去把字符串转换为枚举 2020-10-15
 	private Object attemptToConvertStringToEnum(Class<?> requiredType, String trimmedValue, Object currentConvertedValue) {
 		Object convertedValue = currentConvertedValue;
 
 		if (Enum.class == requiredType && this.targetObject != null) {
 			// target type is declared as raw enum, treat the trimmed value as <enum.fqn>.FIELD_NAME
+			//目标类型被声明为原始枚举，请使用调整后的值
 			int index = trimmedValue.lastIndexOf('.');
 			if (index > - 1) {
 				String enumType = trimmedValue.substring(0, index);
@@ -347,6 +350,7 @@ class TypeConverterDelegate {
 			// with values defined as static fields. Resulting value still needs
 			// to be checked, hence we don't return it right away.
 			try {
+				//todo 这边去尝试根据字符串获取枚举 是否有这个字段 2020-10-15
 				Field enumField = requiredType.getField(trimmedValue);
 				ReflectionUtils.makeAccessible(enumField);
 				convertedValue = enumField.get(null);

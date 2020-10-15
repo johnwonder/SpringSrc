@@ -35,6 +35,7 @@ import org.springframework.util.StringValueResolver;
  * A factory providing convenient access to a {@code FormattingConversionService}
  * configured with converters and formatters for common types such as numbers and
  * datetimes.
+ * //todo 提供方便访问{@code FormattingConversionService} *的工厂，该工厂配置有用于常见类型（例如数字和*日期时间）的转换器和格式化程序
  *
  * <p>Additional converters and formatters can be registered declaratively through
  * {@link #setConverters(Set)} and {@link #setFormatters(Set)}. Another option

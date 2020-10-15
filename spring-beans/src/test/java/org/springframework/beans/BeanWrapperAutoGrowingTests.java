@@ -272,7 +272,16 @@ public class BeanWrapperAutoGrowingTests {
 
 	public static class NestedDefaultConstructor {
 
+		private String prop;
 		public NestedDefaultConstructor() {
+		}
+
+		public String getProp() {
+			return prop;
+		}
+
+		public void setProp(String prop) {
+			this.prop = prop;
 		}
 	}
 

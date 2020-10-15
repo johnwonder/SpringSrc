@@ -817,6 +817,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 
 	/**
 	 * Recursively navigate to return a property accessor for the nested property path.
+	 * //todo 递归导航以返回嵌套属性路径的属性访问器 2020-10-15
 	 * @param propertyPath property path, which may be nested
 	 * @return a property accessor for the target bean
 	 */
@@ -866,6 +867,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			if (logger.isTraceEnabled()) {
 				logger.trace("Creating new nested " + getClass().getSimpleName() + " for property '" + canonicalName + "'");
 			}
+			//返回一个新的BeanWrapperImpl实例
 			nestedPa = newNestedPropertyAccessor(value, this.nestedPath + canonicalName + NESTED_PROPERTY_SEPARATOR);
 			// Inherit all type-specific PropertyEditors.
 			copyDefaultEditorsTo(nestedPa);

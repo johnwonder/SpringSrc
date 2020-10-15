@@ -1737,7 +1737,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Set our (possibly massaged) deep copy.
 		try {
-			//todo 重点看 设置bean属性值  2020-09-16
+			//todo 重点看 遍历deepCopy设置bean属性值  2020-09-16
 			bw.setPropertyValues(new MutablePropertyValues(deepCopy));
 		}
 		catch (BeansException ex) {

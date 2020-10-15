@@ -64,6 +64,7 @@ public abstract class AbstractPropertyAccessor extends TypeConverterSupport impl
 
 	@Override
 	public void setPropertyValue(PropertyValue pv) throws BeansException {
+		//todo 最终调用 AbstractNestablePropertyAccessor 的 setPropertyValue方法 2020-10-15
 		setPropertyValue(pv.getName(), pv.getValue());
 	}
 
@@ -94,6 +95,7 @@ public abstract class AbstractPropertyAccessor extends TypeConverterSupport impl
 				// This method may throw any BeansException, which won't be caught
 				// here, if there is a critical failure such as no matching field.
 				// We can attempt to deal only with less serious exceptions.
+				////todo 最终调用 AbstractNestablePropertyAccessor 的 setPropertyValue方法 2020-10-15
 				setPropertyValue(pv);
 			}
 			catch (NotWritablePropertyException ex) {
