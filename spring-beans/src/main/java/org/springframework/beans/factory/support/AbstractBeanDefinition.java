@@ -278,6 +278,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Override settings in this bean definition (presumably a copied parent
 	 * from a parent-child inheritance relationship) from the given bean
 	 * definition (presumably the child).
+	 * todo 从给定的bean定义（可能是子定义）重写此bean定义中的设置（可能是从父子继承关系复制的parent）。 2020-10-17
 	 * <ul>
 	 * <li>Will override beanClass if specified in the given bean definition.
 	 * <li>Will always take {@code abstract}, {@code scope},

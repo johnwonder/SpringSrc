@@ -695,6 +695,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.ignoreDependencyInterface(MessageSourceAware.class);
 		beanFactory.ignoreDependencyInterface(ApplicationContextAware.class);
 
+		//todo BeanFactory接口未在普通工厂中注册为可解析类型 也局势说只在applicationContext中具有这种能力 2020-10-17
 		// BeanFactory interface not registered as resolvable type in a plain factory.
 		// MessageSource registered (and found for autowiring) as a bean.
 		beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);
@@ -1451,7 +1452,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #refreshBeanFactory()
 	 * @see #closeBeanFactory()
 	 */
-	//ConfigurableApplicationContext 接口
+	//todo 实现 了ConfigurableApplicationContext 接口
 	@Override
 	public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
 

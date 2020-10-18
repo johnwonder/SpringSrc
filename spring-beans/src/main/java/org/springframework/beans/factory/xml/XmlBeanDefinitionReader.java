@@ -524,7 +524,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		int countBefore = getRegistry().getBeanDefinitionCount();
 		//https://www.cnblogs.com/whx7762/p/7777775.html
 		//todo 里面最终调用了registry.registerBeanDefinition 2020-08-31
-		//todo createReaderContext 会传入 当前 XmlBeanDefinitionReader(继承自 AbstractBeanDefinitionReader 实现了 EnvironmentCapable 接口)  所以有了 Environment
+		//todo createReaderContext new 一个XmlReaderContext  构造函数会传入 当前 XmlBeanDefinitionReader(继承自 AbstractBeanDefinitionReader 实现了 EnvironmentCapable 接口)  所以有了 Environment 2020-10-18
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}

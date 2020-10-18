@@ -16,6 +16,9 @@ public class Test {
 		//https://www.cnblogs.com/zhuyeshen/p/12936912.html
 		ApplicationContext context=new ClassPathXmlApplicationContext("spring-config-ref.xml");
 		School school=(School)context.getBean("lschool");
+
+
+
 		System.out.print("student name:"+school.getStudents().getName()+"teacher name :"+school.getTeachers().getName());
 
 

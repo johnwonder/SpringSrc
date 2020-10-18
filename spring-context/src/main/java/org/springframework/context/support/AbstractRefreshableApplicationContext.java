@@ -204,6 +204,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	protected void assertBeanFactoryActive() {
 	}
 
+	//todo important 很重要 为这个上下文创建一个内部的beanFactory
 	/**
 	 * Create an internal bean factory for this context.
 	 * Called for each {@link #refresh()} attempt.

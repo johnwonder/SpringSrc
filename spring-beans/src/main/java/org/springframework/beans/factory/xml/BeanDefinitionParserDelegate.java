@@ -327,6 +327,7 @@ public class BeanDefinitionParserDelegate {
 		}
 		defaults.setMerge(merge);
 
+		//todo 根据根节点的 autowire属性 设置默认autowire 模式
 		String autowire = root.getAttribute(DEFAULT_AUTOWIRE_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(autowire)) {
 			// Potentially inherited from outer <beans> sections, otherwise falling back to 'no'.
@@ -533,7 +534,7 @@ public class BeanDefinitionParserDelegate {
 		try {
 			//// 创建用于承载属性的 GenericBeanDefinition 实例
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-			// 解析默认 bean 的各种属性
+			//todo 解析默认 bean 的各种属性 比如autowire 属性 2020-10-17
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
 			// 提取 description
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));

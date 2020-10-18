@@ -94,6 +94,7 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 	 * @param required whether the dependency is required
 	 * @param eager whether this dependency is 'eager' in the sense of
 	 * eagerly resolving potential target beans for type matching
+	 *  这个依赖是否是“急切地”在*急切地解析用于类型匹配的潜在目标bean的意义上
 	 */
 	public DependencyDescriptor(MethodParameter methodParameter, boolean required, boolean eager) {
 		super(methodParameter);

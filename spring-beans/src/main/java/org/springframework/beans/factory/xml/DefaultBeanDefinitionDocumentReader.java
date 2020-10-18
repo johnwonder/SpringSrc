@@ -291,6 +291,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				}
 				else {
 					String baseLocation = getReaderContext().getResource().getURL().toString();
+					//todo import节点 内部会调用loadBeanDefinitions 操作 2020-10-17
 					importCount = getReaderContext().getReader().loadBeanDefinitions(
 							StringUtils.applyRelativePath(baseLocation, location), actualResources);
 				}

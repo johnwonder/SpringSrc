@@ -298,7 +298,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			try {
 				//获取合并过的BeanDefinition
 				//https://blog.csdn.net/andy_zhang2007/article/details/86514320
-				//todo important RootBeanDefinition
+				//todo important RootBeanDefinition 2020-10-17
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
@@ -1136,6 +1136,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @return the transformed bean name
 	 */
 	protected String transformedBeanName(String name) {
+		//todo 解析别名为真正的bean id 2020-10-17
 		return canonicalName(BeanFactoryUtils.transformedBeanName(name));
 	}
 
