@@ -658,8 +658,9 @@ class ConstructorResolver {
 				throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 						"Invalid constructor argument index: " + index);
 			}
+			//https://blog.csdn.net/zl1zl2zl3/article/details/106589275
 			//5  0,1,2,3,4
-			if (index > minNrOfArgs) { //bug 修改为 index +1 > minNrOfArgs
+			if (index > minNrOfArgs) { //todo bug 修改为 index +1 > minNrOfArgs 2020-10-21
 				minNrOfArgs = index + 1;
 			}
 			ConstructorArgumentValues.ValueHolder valueHolder = entry.getValue();

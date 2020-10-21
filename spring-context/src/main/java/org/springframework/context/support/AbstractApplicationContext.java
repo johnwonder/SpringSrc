@@ -1429,6 +1429,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	//
 	//
 	//AbstractRefreshableApplicationContext
+	//GenericApplicationContext
 	protected abstract void refreshBeanFactory() throws BeansException, IllegalStateException;
 
 	/**
@@ -1453,6 +1454,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #closeBeanFactory()
 	 */
 	//todo 实现 了ConfigurableApplicationContext 接口
+	//todo 子类AbstractRefreshableApplicationContext 实现 会调用同步锁判断下 2020-10-21
+	//todo 子类GenericApplicationContext 实现 直接返回BeanFactory 2020-10-21
 	@Override
 	public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
 

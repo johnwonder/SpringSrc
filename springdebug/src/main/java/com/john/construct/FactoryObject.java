@@ -15,8 +15,14 @@ public class FactoryObject {
 	}
 
 
-	public DmzService getDmz(String name,OrderService orderService, String sex){
+//	public DmzService getDmz(String name,OrderService orderService, String sex){
+//
+//		return new DmzService(orderService,name);
+//	}
+
+	public DmzService getDmz(OrderService orderService,String name) {
 
 		return new DmzService(orderService,name);
 	}
+
 }

@@ -122,6 +122,13 @@ public class ClassPathResourceTests {
 
 
 	private void assertDescriptionContainsExpectedPath(ClassPathResource resource, String expectedPath) {
+//		try{
+//			System.out.println(resource.getFile().getPath());
+//
+//		}catch (IOException ex) {
+//
+//		}
+		System.out.println(resource.getDescription());
 		Matcher matcher = DESCRIPTION_PATTERN.matcher(resource.getDescription());
 		assertTrue(matcher.matches());
 		assertEquals(1, matcher.groupCount());
@@ -132,6 +139,7 @@ public class ClassPathResourceTests {
 
 	private void assertExceptionContainsFullyQualifiedPath(ClassPathResource resource) {
 		try {
+//			System.out.println(resource.getFile().getPath());
 			resource.getInputStream();
 			fail("FileNotFoundException expected for resource: " + resource);
 		}

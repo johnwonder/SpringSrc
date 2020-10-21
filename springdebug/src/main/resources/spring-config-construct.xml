@@ -13,13 +13,16 @@
 
 	<bean class="com.john.construct.OrderService" id="orderService"/>
 
+	<!--<bean id="dmzService" factory-bean="factoryObject" factory-method="getDmz">-->
+		<!--<constructor-arg index="0"  value="dmz"/>-->
+
+		<!--<constructor-arg name="sex" >-->
+
+			<!--<value >1</value>-->
+
+		<!--</constructor-arg>-->
+	<!--</bean>-->
 	<bean id="dmzService" factory-bean="factoryObject" factory-method="getDmz">
-		<constructor-arg index="0"  value="dmz"/>
-
-		<constructor-arg name="sex" >
-
-			<value >1</value>
-
-		</constructor-arg>
+		<constructor-arg index="1"  value="dmz"/>
 	</bean>
 </beans>

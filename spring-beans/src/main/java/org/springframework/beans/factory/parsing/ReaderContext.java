@@ -109,6 +109,7 @@ public class ReaderContext {
 	 * Raise a regular error.
 	 */
 	public void error(String message, @Nullable Object source, @Nullable ParseState parseState) {
+		//todo cause为null时不会展示子错误，直接返回消息 2020-10-20
 		error(message, source, parseState, null);
 	}
 

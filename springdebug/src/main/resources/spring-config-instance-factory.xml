@@ -9,18 +9,23 @@
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd">
-	<bean id="movielistener" class="com.john.construct.SimpleMovieLister">
 
-		<!-- constructor模式 -->
-		<constructor-arg ref="movie">
 
-		</constructor-arg>
-
-		<!-- setter模式-->
-		<property name="movieFinder">
-			<ref bean="movie"/>
-		</property>
+	<bean id="carFactory" class="com.john.domain.CarFactory" />
+	<!--实例工厂方法创建bean-->
+	<bean id="instanceCar" factory-bean="carFactory" factory-method="createCar">
+		<constructor-arg ref="brand"/>
 	</bean>
-	<bean id="movie" class="com.john.construct.MovieFinder"/>
+	<bean id="brand" class="com.john.domain.Brand" />
 
+
+
+	<!--通过FactoryBean类来返回的bean -->
+	<!--<bean id="car" name="car1 car1" class="com.john.factorybean.CarFactoryBean">-->
+	<!--<property name="carInfo" value="超级跑车,400,2000000"/>-->
+	<!--</bean>-->
+
+	<!--<bean id="car3" name="car2" class="com.john.factorybean.CarFactoryBean">-->
+		<!--<property name="carInfo" value="超级跑车,400,2000000"/>-->
+	<!--</bean>-->
 </beans>

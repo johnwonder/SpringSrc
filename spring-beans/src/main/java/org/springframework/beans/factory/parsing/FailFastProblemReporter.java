@@ -52,6 +52,7 @@ public class FailFastProblemReporter implements ProblemReporter {
 	}
 
 
+	//fatal是致命的
 	/**
 	 * Throws a {@link BeanDefinitionParsingException} detailing the error
 	 * that has occurred.

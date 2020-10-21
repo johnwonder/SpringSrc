@@ -39,22 +39,24 @@
 	<!--</bean>-->
 	<bean id="person" class="com.john.aop.Person">
 	</bean>
-	<context:component-scan base-package="com.john" />
-	<context:component-scan base-package="com.john" />
+	<!--<context:component-scan base-package="com.john" />-->
+	<!--<context:component-scan base-package="com.john" />-->
 
-	<aop:aspectj-autoproxy/>
-	<bean id="carFactory" class="com.john.factorybeanpro.CarFactory" />
-	<bean id="car5" factory-bean="carFactory" factory-method="createCar">
-	</bean>
+	<!--<aop:aspectj-autoproxy/>-->
+	<!--<bean id="carFactory" class="com.john.factorybeanpro.CarFactory" />-->
+	<!--<bean id="car5" factory-bean="carFactory" factory-method="createCar">-->
+	<!--</bean>-->
 
 	<bean id="ChineseFemaleSinger" class="com.john.beanFactory.Singer" abstract="true" >
 		<property name="country" value="中国"/>
 		<property name="gender" value="女"/>
+		<property name="gender" value="女"/>
+
 	</bean>
-	<bean id="Jane" parent="ChineseFemaleSinger">
-		<property name="name" value="张靓颖"/>
-	</bean>
-	<bean id="Bibi" parent="ChineseFemaleSinger">
-		<property name="name" value="周笔畅"/>
-	</bean>
+	<!--<bean id="Jane" parent="ChineseFemaleSinger">-->
+		<!--<property name="name" value="张靓颖"/>-->
+	<!--</bean>-->
+	<!--<bean id="Bibi" parent="ChineseFemaleSinger">-->
+		<!--<property name="name" value="周笔畅"/>-->
+	<!--</bean>-->
 </beans>

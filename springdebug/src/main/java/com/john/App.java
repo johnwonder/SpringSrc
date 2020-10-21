@@ -2,26 +2,12 @@ package com.john;
 
 import com.john.aop.test.Landlord;
 import com.john.aop.Person;
-import com.john.autowire.AutowireTest1;
-import com.john.beanFactory.MyBeanFactory;
 import com.john.beanFactory.SimpleTarget;
-import com.john.beanFactory.Singer;
-import com.john.construct.StandardEnv;
-import com.john.factorybean.CarFactoryBean;
-import com.john.factorybeanpro.Car;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.PropertyPlaceholderHelper;
-
-import java.io.*;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Properties;
 
 /**
  * Hello world!

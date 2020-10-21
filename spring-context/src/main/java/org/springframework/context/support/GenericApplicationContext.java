@@ -76,7 +76,7 @@ import org.springframework.util.Assert;
  * {@link ClassPathXmlApplicationContext} or {@link FileSystemXmlApplicationContext},
  * which are easier to set up - but less flexible, since you can just use standard
  * resource locations for XML bean definitions, rather than mixing arbitrary bean
- * definition formats. The equivalent in a web environment is
+ * definition formats(这更容易设置，但灵活性较差，因为您可以使用标准*资源位置来定义XML bean，而不是混合使用任意的bean*定义格式). The equivalent in a web environment is
  * {@link org.springframework.web.context.support.XmlWebApplicationContext}.
  *
  * <p>For custom application context implementations that are supposed to read

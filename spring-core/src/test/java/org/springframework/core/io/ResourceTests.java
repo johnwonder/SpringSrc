@@ -177,6 +177,8 @@ public class ResourceTests {
 		Resource relative1 = resource.createRelative("ClassPathResource.class");
 		assertEquals("ClassPathResource.class", relative1.getFilename());
 		assertTrue(relative1.getURL().getFile().endsWith("ClassPathResource.class"));
+
+		System.out.println(relative1.exists());
 		assertTrue(relative1.exists());
 
 		Resource relative2 = resource.createRelative("support/ResourcePatternResolver.class");
@@ -203,6 +205,8 @@ public class ResourceTests {
 	public void testFileSystemResourceWithRelativePath() throws IOException {
 		Resource resource = new FileSystemResource("dir/");
 		Resource relative = resource.createRelative("subdir");
+
+		System.out.println(relative.exists());
 		assertEquals(new FileSystemResource("dir/subdir"), relative);
 	}
 

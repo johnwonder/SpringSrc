@@ -71,6 +71,9 @@ public class ClassPathResourceTest
 		Resource resource = new ClassPathResource("datasource3.xml");
 
 		try {
+
+		 System.out.println(resource.getFile().getPath());
+
 			InputStream stream = resource.getInputStream();
 			System.out.println(stream.available());
 			BufferedReader br = new BufferedReader(new InputStreamReader(stream));

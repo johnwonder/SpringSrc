@@ -63,6 +63,7 @@ public abstract class BeanDefinitionReaderUtils {
 		//todo 如果又classLoader 那么就会根据className加载class ，ClassUtils.forName 2020-09-22
 		if (className != null) {
 			//todo 都是给AbstractBeanDefinition的 BeanClass 赋值 2020-10-13
+			//todo 因为getBeanClassLoader默认为空 所以即使class 不存在这边也不会报错 2020-10-20
 			if (classLoader != null) {
 				bd.setBeanClass(ClassUtils.forName(className, classLoader));
 			}

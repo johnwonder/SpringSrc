@@ -1,4 +1,4 @@
-package com.john.factorybeanpro;
+package com.john.domain;
 
 public class Car {
 

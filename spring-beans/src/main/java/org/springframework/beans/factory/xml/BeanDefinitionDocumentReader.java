@@ -29,6 +29,8 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
  * state in instance variables during the execution of the
  * {@code registerBeanDefinitions} method &mdash; for example, global
  * settings that are defined for all bean definitions in the document.
+ * 实例化每个要解析的文档 registerBeanDefinitions 方法执行期间，
+ * 实现可以在实例变量中保存状态，例如，为文档中所有bean定义定义的全局设置
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
