@@ -213,6 +213,7 @@ public abstract class PropertyMatches {
 			return StringUtils.toStringArray(candidates);
 		}
 
+		//todo 如果是setter方式注入 但是类中没有setter方法那么会报这个错
 		@Override
 		public String buildErrorMessage() {
 			StringBuilder msg = new StringBuilder(160);

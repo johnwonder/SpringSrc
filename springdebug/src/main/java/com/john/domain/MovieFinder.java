@@ -1,4 +1,4 @@
-package com.john.construct;
+package com.john.domain;
 
 /**
  * @Description: SpringSrc

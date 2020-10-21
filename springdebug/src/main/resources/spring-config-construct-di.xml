@@ -9,7 +9,7 @@
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd">
-	<bean id="movielistener" class="com.john.construct.SimpleMovieLister">
+	<bean id="movielistener" class="com.john.domain.SimpleMovieLister">
 
 		<!-- constructor模式 -->
 		<constructor-arg ref="movie">
@@ -17,10 +17,10 @@
 		</constructor-arg>
 
 		<!-- setter模式-->
-		<property name="movieFinder">
+		<property name="moviefinder">
 			<ref bean="movie"/>
 		</property>
 	</bean>
-	<bean id="movie" class="com.john.construct.MovieFinder"/>
+	<bean id="movie" class="com.john.domain.MovieFinder"/>
 
 </beans>

@@ -430,6 +430,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 				return;
 			}
 			else {
+				//todo 没有setter方法就会报这个错 2020-10-21
 				throw createNotWritablePropertyException(tokens.canonicalName);
 			}
 		}
@@ -464,7 +465,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 
 				pv.getOriginalPropertyValue().conversionNecessary = (valueToApply != originalValue);
 			}
-			//propertyHandler
+			//todo 调用 BeanPropertyHandler 的 setValue方法赋上属性值 2020-10-21
 			ph.setValue(valueToApply);
 		}
 		catch (TypeMismatchException ex) {

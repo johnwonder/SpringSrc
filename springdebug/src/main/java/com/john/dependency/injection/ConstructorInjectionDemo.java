@@ -1,5 +1,6 @@
-package com.john.construct;
+package com.john.dependency.injection;
 
+import com.john.domain.SetterObject;
 import com.john.domain.SimpleMovieLister;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -7,15 +8,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * @Description: SpringSrc
  * @Author: johnwonder
- * @Date: 2020/8/20
+ * @Date: 2020/10/21
  */
-public class TestSetterDI {
+public class ConstructorInjectionDemo {
 
 	public static void main( String[] args ) {
 
 
 		//https://www.cnblogs.com/zhuyeshen/p/12936912.html
-		ApplicationContext context=new ClassPathXmlApplicationContext("spring-config-di.xml");
+		ApplicationContext context=new ClassPathXmlApplicationContext("spring-config-construct-di.xml");
 		SimpleMovieLister movielistener=(SimpleMovieLister)context.getBean("movielistener");
 		System.out.print(movielistener);
 

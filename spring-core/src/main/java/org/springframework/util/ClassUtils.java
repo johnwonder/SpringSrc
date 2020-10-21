@@ -397,6 +397,8 @@ public abstract class ClassUtils {
 			if (classLoader == null) {
 				return false;
 			}
+
+			////todo 如果参数classLoader的Parent等于 当前类的classLoader 就是缓存安全的
 			// Check for match in ancestors -> positive
 			ClassLoader current = classLoader;
 			while (current != null) {
@@ -406,6 +408,7 @@ public abstract class ClassUtils {
 				}
 			}
 			// Check for match in children -> negative
+			//todo 如果当前类的classLoader的Parent等于 参数classLoader 就不是缓存安全的
 			while (target != null) {
 				target = target.getParent();
 				if (target == classLoader) {
@@ -424,7 +427,7 @@ public abstract class ClassUtils {
 
 	/**
 	 * Check whether the given class is loadable in the given ClassLoader.
-	 * @param clazz the class to check (typically an interface)
+	 * @param clazz the class to check (typically an interface) 典型的就是接口
 	 * @param classLoader the ClassLoader to check against
 	 * @since 5.0.6
 	 */

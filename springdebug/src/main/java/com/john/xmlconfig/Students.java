@@ -1,12 +1,12 @@
-package com.john.xmlconfig.ref;
+package com.john.xmlconfig;
 
 /**
  * @Description: SpringSrc
  * @Author: johnwonder
  * @Date: 2020/8/11
  */
-public class Teachers {
-	private String name;
+public class Students {
+	private String name ;
 
 	public String getName() {
 		return name;
@@ -16,4 +16,3 @@ public class Teachers {
 		this.name = name;
 	}
 }
-

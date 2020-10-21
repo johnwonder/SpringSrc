@@ -1,4 +1,4 @@
-package com.john.xmlconfig.ref;
+package com.john.xmlconfig;
 
 /**
  * @Description: SpringSrc

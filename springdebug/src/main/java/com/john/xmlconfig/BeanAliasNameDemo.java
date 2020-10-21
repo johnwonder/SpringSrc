@@ -1,4 +1,4 @@
-package com.john.xmlconfig.ref;
+package com.john.xmlconfig;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @Author: johnwonder
  * @Date: 2020/8/11
  */
-public class Test {
+public class BeanAliasNameDemo {
 
 	public static void main( String[] args ) {
 
@@ -17,11 +17,7 @@ public class Test {
 		ApplicationContext context=new ClassPathXmlApplicationContext("spring-config-ref.xml");
 		School school=(School)context.getBean("lschool");
 
-
-
 		System.out.print("student name:"+school.getStudents().getName()+"teacher name :"+school.getTeachers().getName());
-
-
 	}
 
 }

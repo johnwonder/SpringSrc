@@ -1,4 +1,4 @@
-package com.john.xmlconfig.ref;
+package com.john.xmlconfig;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;

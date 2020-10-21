@@ -11,6 +11,7 @@
        http://www.springframework.org/schema/aop/spring-aop.xsd" default-autowire="constructor">
 	<bean id="factoryObject" class="com.john.construct.FactoryObject"/>
 
+
 	<bean class="com.john.construct.OrderService" id="orderService"/>
 
 	<!--<bean id="dmzService" factory-bean="factoryObject" factory-method="getDmz">-->
@@ -22,6 +23,7 @@
 
 		<!--</constructor-arg>-->
 	<!--</bean>-->
+	<!--https://mp.weixin.qq.com/s/ieHUJcBBa6FwFTq185VS_Q-->
 	<bean id="dmzService" factory-bean="factoryObject" factory-method="getDmz">
 		<constructor-arg index="1"  value="dmz"/>
 	</bean>
