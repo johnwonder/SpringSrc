@@ -50,7 +50,7 @@
 	<bean id="ChineseFemaleSinger" class="com.john.beanFactory.Singer" abstract="true" >
 		<property name="country" value="中国"/>
 		<property name="gender" value="女"/>
-		<property name="gender" value="女"/>
+		<!--<property name="gender" value="女"/>-->
 
 	</bean>
 	<!--<bean id="Jane" parent="ChineseFemaleSinger">-->

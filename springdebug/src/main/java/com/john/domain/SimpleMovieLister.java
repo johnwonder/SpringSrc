@@ -1,5 +1,8 @@
 package com.john.domain;
 
+
+import org.springframework.context.ApplicationContext;
+
 /**
  * @Description: SpringSrc
  * @Author: johnwonder
@@ -14,8 +17,9 @@ public class SimpleMovieLister {
 //
 //	}
 	 //a constructor so that the Spring container can inject a MovieFinder
-	public SimpleMovieLister(MovieFinder movieFinder) {
+	public SimpleMovieLister(MovieFinder movieFinder, ApplicationContext applicationContext) {
 		System.out.println("construct"+ movieFinder);
+		System.out.println("applicationContext: "+ applicationContext);
 
 		this.finder = movieFinder;
 	}

@@ -73,6 +73,7 @@ public interface ListableBeanFactory extends BeanFactory {
 	 */
 	boolean containsBeanDefinition(String beanName);
 
+	//不考虑此工厂可能参与的任何层次结构，并忽略 不是通过bean定义 注册的任何单例bean
 	/**
 	 * Return the number of beans defined in the factory.
 	 * <p>Does not consider any hierarchy this factory may participate in,

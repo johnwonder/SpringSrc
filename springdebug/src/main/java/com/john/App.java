@@ -42,7 +42,7 @@ public class App
 		////重点看  PathMatchingResourcePatternResolver .getResources
 
 		//1.8.0_144spring-config.xml 从System.getProperties解析占位符
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("${java.version ${java.version}}spring-config.xml");
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");//${${java.version}}
 
 
 //		applicationContext
@@ -84,24 +84,24 @@ public class App
 
 		//https://blog.csdn.net/sundenskyqq/article/details/44776699
 		//https://blog.csdn.net/iteye_14104/article/details/82672514
-		ClassPathResource resource = new ClassPathResource("parent.xml");
-		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
-		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-		reader.loadBeanDefinitions(resource);
-
-
-		ClassPathResource childRes = new ClassPathResource("beans.xml");
-		DefaultListableBeanFactory childFactory = new DefaultListableBeanFactory(factory);
-		XmlBeanDefinitionReader childReader = new XmlBeanDefinitionReader(childFactory);
-		childReader.loadBeanDefinitions(childRes);
-
-		SimpleTarget target1 = (SimpleTarget) childFactory.getBean("target1");
-		SimpleTarget target2 = (SimpleTarget) childFactory.getBean("target2");
-		SimpleTarget target3 = (SimpleTarget) childFactory.getBean("target3");
-
-		System.out.println(target1.getVal());
-		System.out.println(target2.getVal());
-		System.out.println(target3.getVal());
+//		ClassPathResource resource = new ClassPathResource("parent.xml");
+//		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+//		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+//		reader.loadBeanDefinitions(resource);
+//
+//
+//		ClassPathResource childRes = new ClassPathResource("beans.xml");
+//		DefaultListableBeanFactory childFactory = new DefaultListableBeanFactory(factory);
+//		XmlBeanDefinitionReader childReader = new XmlBeanDefinitionReader(childFactory);
+//		childReader.loadBeanDefinitions(childRes);
+//
+//		SimpleTarget target1 = (SimpleTarget) childFactory.getBean("target1");
+//		SimpleTarget target2 = (SimpleTarget) childFactory.getBean("target2");
+//		SimpleTarget target3 = (SimpleTarget) childFactory.getBean("target3");
+//
+//		System.out.println(target1.getVal());
+//		System.out.println(target2.getVal());
+//		System.out.println(target3.getVal());
 
 
 

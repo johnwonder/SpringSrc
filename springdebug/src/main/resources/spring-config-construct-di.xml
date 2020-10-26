@@ -12,15 +12,18 @@
 	<bean id="movielistener" class="com.john.domain.SimpleMovieLister">
 
 		<!-- constructor模式 -->
-		<constructor-arg ref="movie">
+		<constructor-arg index="0" ref="movie">
 
 		</constructor-arg>
+		<constructor-arg index="1"   ref="applicationContext">
 
+		</constructor-arg>
 		<!-- setter模式-->
 		<property name="moviefinder">
 			<ref bean="movie"/>
 		</property>
 	</bean>
 	<bean id="movie" class="com.john.domain.MovieFinder"/>
+	<bean id="applicationContext" autowire="byType" class="org.springframework.context.ApplicationContext"/>
 
 </beans>
