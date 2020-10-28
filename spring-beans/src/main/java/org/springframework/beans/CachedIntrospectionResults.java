@@ -91,7 +91,16 @@ public final class CachedIntrospectionResults {
 	 * @see Introspector#getBeanInfo(Class, int)
 	 */
 	public static final String IGNORE_BEANINFO_PROPERTY_NAME = "spring.beaninfo.ignore";
+	//指示Spring使用 Introspector IGNORE_ALL_BEANINFO 模式。
+	// 调用JavaBeans Introspector 的模式：“spring.beaninfo.ignore" 时忽略所有的信息
 
+	//默认值为“false”，考虑到所有BeanInfo元数据类，比如标准 Introspector .getBeanInfo 调用。
+	// 如果您遇到对不存在的BeanInfo类的重复类加载器访问，请考虑将此标志切换为“true”，以防这种访问在启动或延迟加载时代价高昂。
+
+	//请注意，这样的效果还可能表明缓存无法有效工作的场景：更喜欢spring jars 与应用程序类位于同一个类加载器中的安排，
+	// 这使得在任何情况下都可以在应用程序的生命周期中进行clean caching。
+	// 对于web应用程序，请考虑在web.xml文件定义IntrospectorCleanupListener
+	// 在多类加载器布局的情况下，这也将允许有效的缓存。
 
 	private static final boolean shouldIntrospectorIgnoreBeaninfoClasses =
 			SpringProperties.getFlag(IGNORE_BEANINFO_PROPERTY_NAME);
@@ -124,6 +133,10 @@ public final class CachedIntrospectionResults {
 			new ConcurrentReferenceHashMap<>(64);
 
 
+	//接受给定的类加载器为缓存安全的，即使它的类在这个CachedIntrospectionResults类中不符合缓存安全的条件
+	//这种配置方法只适用于Spring类驻留在一个“公共”类加载器（例如系统类加载器）中的场景，
+	// 该类加载器的生命周期不与应用程序耦合
+	//在这种情况下，CachedIntrospectionResults默认情况下不会缓存应用程序的任何类，因为它们会在公共类加载器中造成泄漏。
 	/**
 	 * Accept the given ClassLoader as cache-safe, even if its classes would
 	 * not qualify as cache-safe in this CachedIntrospectionResults class.
@@ -177,6 +190,7 @@ public final class CachedIntrospectionResults {
 		results = new CachedIntrospectionResults(beanClass);
 		ConcurrentMap<Class<?>, CachedIntrospectionResults> classCacheToUse;
 
+		//todo beanClass 不是缓存安全的情况下 如果它的类加载是可以接受的ClassLoader那么也会放入strongClassCache 2020-10-26
 		if (ClassUtils.isCacheSafe(beanClass, CachedIntrospectionResults.class.getClassLoader()) ||
 				isClassLoaderAccepted(beanClass.getClassLoader())) {
 			classCacheToUse = strongClassCache;

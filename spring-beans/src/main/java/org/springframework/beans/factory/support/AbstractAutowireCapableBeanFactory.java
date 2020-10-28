@@ -130,6 +130,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	/** Whether to automatically try to resolve circular references between beans. */
 	private boolean allowCircularReferences = true;
 
+	//在循环引用的情况下是否使用注入原始bean实例，即使注入的bean最终被包装
 	/**
 	 * Whether to resort to injecting a raw bean instance in case of circular reference,
 	 * even if the injected bean eventually got wrapped.
@@ -625,8 +626,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				if (exposedObject == bean) {
 					exposedObject = earlySingletonReference;
 				}
-				// 处理依赖
+				// 处理依赖 //在不允许原始注入 且又
 				else if (!this.allowRawInjectionDespiteWrapping && hasDependentBean(beanName)) {
+
 					String[] dependentBeans = getDependentBeans(beanName);
 					Set<String> actualDependentBeans = new LinkedHashSet<>(dependentBeans.length);
 					for (String dependentBean : dependentBeans) {

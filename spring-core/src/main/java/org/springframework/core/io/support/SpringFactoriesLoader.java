@@ -102,6 +102,7 @@ public final class SpringFactoriesLoader {
 		}
 		List<T> result = new ArrayList<>(factoryNames.size());
 		for (String factoryName : factoryNames) {
+			//实例化一个工厂
 			result.add(instantiateFactory(factoryName, factoryClass, classLoaderToUse));
 		}
 		AnnotationAwareOrderComparator.sort(result);
@@ -123,12 +124,16 @@ public final class SpringFactoriesLoader {
 		return loadSpringFactories(classLoader).getOrDefault(factoryClassName, Collections.emptyList());
 	}
 
+	//todo ClassLoader 学习 2020-10-28
+	//https://blog.csdn.net/wanglei303707/article/details/88174707
+	//https://www.jianshu.com/p/554c138ca0f5
+	//https://developer.ibm.com/zh/articles/j-lo-classloader/
 	private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
 		MultiValueMap<String, String> result = cache.get(classLoader);
 		if (result != null) {
 			return result;
 		}
-
+		//Thread.currentThread().getContextClassLoader()
 		try {
 			Enumeration<URL> urls = (classLoader != null ?
 					classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
