@@ -66,6 +66,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 	private final StringValueResolver embeddedValueResolver;
 
 
+	//todo 放入了ApplicationContext 2020-11-04
 	/**
 	 * Create a new ApplicationContextAwareProcessor for the given context.
 	 */

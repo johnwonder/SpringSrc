@@ -87,6 +87,9 @@ public class InitDestroyAnnotationBeanPostProcessor
 
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
+	//https://baijiahao.baidu.com/s?id=1636557218432721275&wfr=spider&for=pc
+	//java 的transient关键字为我们提供了便利，你只需要实现Serilizable接口，将不需要序列化的属性前添加关键字transient，序列化对象的时候，这个属性就不会序列化到指定的目的地中。
+	// 像银行卡、密码等等这些数据。这个需要根据业务情况了
 	@Nullable
 	private final transient Map<Class<?>, LifecycleMetadata> lifecycleMetadataCache = new ConcurrentHashMap<>(256);
 
@@ -176,6 +179,7 @@ public class InitDestroyAnnotationBeanPostProcessor
 
 
 	private LifecycleMetadata findLifecycleMetadata(Class<?> clazz) {
+		//todo 为啥要判断为空呢 2020-11-03
 		if (this.lifecycleMetadataCache == null) {
 			// Happens after deserialization, during destruction...
 			return buildLifecycleMetadata(clazz);

@@ -111,8 +111,10 @@ class BeanDefinitionValueResolver {
 		}
 		else if (value instanceof RuntimeBeanNameReference) {
 			//https://blog.csdn.net/caihaijiang/article/details/5903227
-			//todo 只是起到验证id bean是否存在的功能
+			//todo 只是起到验证id bean是否存在的功能 2020-11-03
 			String refName = ((RuntimeBeanNameReference) value).getBeanName();
+
+			//todo doEvaluate里还涉及beanExpression 之后再研究 2020-11-04
 			refName = String.valueOf(doEvaluate(refName));
 			if (!this.beanFactory.containsBean(refName)) {
 				throw new BeanDefinitionStoreException(

@@ -9,14 +9,16 @@
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd">
-	<bean id="setterObject" class="com.john.domain.SetterObject" >
 
+	<bean id="parent" name="idRefParent" class="com.john.xmlconfig.IdRefParent">
 
-		<!-- setter模式-->
-		<property name="movieFinder">
-			<ref bean="movie"/>
-		</property>
+		 <property name="child">
+			 <!-- idref 仅仅用来判断容器中是否有这个id为child1的Bean-->
+				<idref bean="child"/>
+		 </property>
 	</bean>
-	<bean id="movie" class="com.john.domain.MovieFinder"/>
+	<bean id="child" name="idRefChild" class="com.john.xmlconfig.IdRefChild">
+		<property name="name" value="john"/>
 
+	</bean>
 </beans>
