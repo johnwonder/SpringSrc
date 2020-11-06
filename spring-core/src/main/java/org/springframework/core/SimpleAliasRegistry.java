@@ -55,7 +55,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 
 		synchronized (this.aliasMap) {
 			if (alias.equals(name)) {
-				//名字和别名相同就移除别名
+				//名字和别名相同就移除已经存在的别名
 				this.aliasMap.remove(alias);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Alias definition '" + alias + "' ignored since it points to same name");

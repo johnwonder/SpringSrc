@@ -6,6 +6,15 @@ public class Singer {
 	private String country;
 	private String name;
 
+	public Singer() {
+
+	}
+
+	public Singer(String country,String gender) {
+		this.country = country;
+		this.gender =gender;
+	}
+
 	public String getName() {
 		return name;
 	}

@@ -127,6 +127,10 @@ public interface BeanFactory {
 	String FACTORY_BEAN_PREFIX = "&";
 
 
+	//1.返回指定bean的一个实例，该实例可以是共享的，也可以是独立的
+	//2.这种方法允许使用spring beanfactory替代Singleton或Prototype设计模式。
+	// 对于单例bean，调用者可以保留对返回对象的引用
+	//3.将别名转换回相应的规范bean名称。将询问父工厂是否在此工厂实例中找不到bean。
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
 	 * <p>This method allows a Spring BeanFactory to be used as a replacement for the
@@ -144,6 +148,10 @@ public interface BeanFactory {
 	// 如果是singleton模式将返回一个共享实例，否则将返回一个新建的实例，如果没有找到指定bean,该方法可能会抛出异常
 	Object getBean(String name) throws BeansException;
 
+	//1.返回指定bean的一个实例，该实例可以是共享的，也可以是独立的
+	//2.其行为与getBean（String）相同，但如果bean不是必需的类型，则通过抛出BeanNotOfRequiredTypeException来提供类型安全度量。
+	//这意味着在正确转换结果时不能抛出ClassCastException，就像getBean（String）一样
+	//3.将别名转换回相应的规范bean名称。将询问父工厂是否在此工厂实例中找不到bean。
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
 	 * <p>Behaves the same as {@link #getBean(String)}, but provides a measure of type
@@ -161,6 +169,8 @@ public interface BeanFactory {
 	 */
 	<T> T getBean(String name, Class<T> requiredType) throws BeansException;
 
+	//1.
+	//2.允许指定显式构造函数参数/工厂方法参数，重写bean定义中指定的默认参数（如果有）。
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
 	 * <p>Allows for specifying explicit constructor arguments / factory method arguments,
@@ -168,15 +178,18 @@ public interface BeanFactory {
 	 * @param name the name of the bean to retrieve
 	 * @param args arguments to use when creating a bean instance using explicit arguments
 	 * (only applied when creating a new instance as opposed to retrieving an existing one)
+	 *  //仅在创建新实例而不是检索现有实例时应用
 	 * @return an instance of the bean
 	 * @throws NoSuchBeanDefinitionException if there is no such bean definition
 	 * @throws BeanDefinitionStoreException if arguments have been given but
-	 * the affected bean isn't a prototype
+	 * the affected bean isn't a prototype //todo 这边单例Bean貌似不会抛出这个异常 2020-11-06
 	 * @throws BeansException if the bean could not be created
 	 * @since 2.5
 	 */
 	Object getBean(String name, Object... args) throws BeansException;
 
+	//1.此方法进入ListableBeanFactory按类型查找区域，但也可以转换为基于给定类型名称的常规按名称查找。
+	//2. 对于跨bean集的更广泛的检索操作，请使用ListableBeanFactory 和或者 BeanFactoryUtils。
 	/**
 	 * Return the bean instance that uniquely matches the given object type, if any.
 	 * <p>This method goes into {@link ListableBeanFactory} by-type lookup territory
@@ -193,6 +206,9 @@ public interface BeanFactory {
 	 */
 	<T> T getBean(Class<T> requiredType) throws BeansException;
 
+	//1.允许指定显式构造函数参数/工厂方法参数，重写bean定义中指定的默认参数（如果有）
+	//2.此方法进入ListableBeanFactory按类型查找区域，但也可以转换为基于给定类型名称的conventional by-name lookup。
+	// 对于跨bean集的更广泛的检索操作，请使用ListableBeanFactory 和/或  BeanFactoryUtils。
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
 	 * <p>Allows for specifying explicit constructor arguments / factory method arguments,
@@ -213,6 +229,9 @@ public interface BeanFactory {
 	 */
 	<T> T getBean(Class<T> requiredType, Object... args) throws BeansException;
 
+	//https://www.cnblogs.com/fengxueyi/p/13888562.html
+	//https://blog.csdn.net/qq_41907991/article/details/105123387
+	//返回指定bean的提供程序，允许延迟按需检索实例，包括可用性和唯一性选项。
 	/**
 	 * Return an provider for the specified bean, allowing for lazy on-demand retrieval
 	 * of instances, including availability and uniqueness options.
@@ -223,6 +242,8 @@ public interface BeanFactory {
 	 */
 	<T> ObjectProvider<T> getBeanProvider(Class<T> requiredType);
 
+	//bean必须匹配的类型；可以是泛型类型声明。注意，这里不支持集合类型，与反射注入点不同。要以编程方式检索与特定类型匹配的bean列表，
+	// 请在此处指定实际的bean类型作为参数，然后使用ObjectProvider#toList（）或其延迟流式处理/迭代选项。
 	/**
 	 * Return an provider for the specified bean, allowing for lazy on-demand retrieval
 	 * of instances, including availability and uniqueness options.
@@ -239,6 +260,10 @@ public interface BeanFactory {
 	 */
 	<T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType);
 
+	//1.如果给定的名称是别名，它将被转换回相应的规范bean名称。
+	//2.如果这个工厂是层次结构的，会问parentFactory是否有这个bean。
+	//3.这个方法无论命名的bean定义是具体的还是抽象的、懒惰的还是急切的、范围内的，都将返回true。
+	//4.因此，请注意，此方法的实际返回值不一定表示getBean方法将能够获得同名的实例
 	/**
 	 * Does this bean factory contain a bean definition or externally registered singleton
 	 * instance with the given name?
@@ -325,6 +350,9 @@ public interface BeanFactory {
 	 */
 	boolean isTypeMatch(String name, Class<?> typeToMatch) throws NoSuchBeanDefinitionException;
 
+	//1.确定具有给定名称的bean的类型。更具体地说，确定getBean的对象类型(java.lang.String)会返回给你的名字。
+	//2.对于FactoryBean，返回FactoryBean创建的对象类型，如FactoryBean.getObjectType().
+	//3.将别名转换回相应的规范bean名称。将询问父工厂是否在此工厂实例中找不到bean。
 	/**
 	 * Determine the type of the bean with the given name. More specifically,
 	 * determine the type of object that {@link #getBean} would return for the given name.
@@ -342,6 +370,10 @@ public interface BeanFactory {
 	@Nullable
 	Class<?> getType(String name) throws NoSuchBeanDefinitionException;
 
+	//1.返回给定bean名称的别名（如果有）。
+	//2.当在getBean中使用时，所有这些别名都指向同一个getBean(java.lang.String)调用。
+	//3.如果给定的名称是别名，则将返回相应的原始bean名称和其他别名（如果有），原始bean名称是数组中的第一个元素
+	//4.将询问父工厂是否在此工厂实例中找不到bean。
 	/**
 	 * Return the aliases for the given bean name, if any.
 	 * All of those aliases point to the same bean when used in a {@link #getBean} call.

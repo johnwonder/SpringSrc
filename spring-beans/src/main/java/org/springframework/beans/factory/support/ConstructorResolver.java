@@ -145,7 +145,10 @@ class ConstructorResolver {
 			}
 		}
 
+		//准备使用的构造函数为空或者准备使用的参数为空 那都得去解析
 		if (constructorToUse == null || argsToUse == null) {
+
+			//如果有指定的构造函数 就拿来用
 			// Take specified constructors, if any.
 			Constructor<?>[] candidates = chosenCtors;
 			if (candidates == null) {
@@ -195,6 +198,7 @@ class ConstructorResolver {
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
 			for (Constructor<?> candidate : candidates) {
+				//todo 获取当前候选构造函数的参数类型数组 2020-11-06
 				Class<?>[] paramTypes = candidate.getParameterTypes();
 
 				if (constructorToUse != null && argsToUse.length > paramTypes.length) {
@@ -207,6 +211,7 @@ class ConstructorResolver {
 				}
 
 				ArgumentsHolder argsHolder;
+				//todo 如果有显示的构造参数 解析过的构造函数值为空， 2020-11-06
 				if (resolvedValues != null) {
 					try {
 						String[] paramNames = ConstructorPropertiesChecker.evaluate(candidate, paramTypes.length);

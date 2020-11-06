@@ -496,6 +496,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		if (!isConfigurationFrozen() || type == null || !allowEagerInit) {
 			return doGetBeanNamesForType(ResolvableType.forRawClass(type), includeNonSingletons, allowEagerInit);
 		}
+
+		//todo 是否包含不是单例的Bean 如果是 就从allBeanNamesByType中去查询 ，如果不是，那么就只查找单例的 singletonBeanNamesByType
 		Map<Class<?>, String[]> cache =
 				(includeNonSingletons ? this.allBeanNamesByType : this.singletonBeanNamesByType);
 		String[] resolvedBeanNames = cache.get(type);
@@ -510,12 +512,15 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	private String[] doGetBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {
+
+		//返回一个bean名称的ArrayList 2020-11-06
 		List<String> result = new ArrayList<>();
 
 		// Check all bean definitions.
 		for (String beanName : this.beanDefinitionNames) {
 			// Only consider bean as eligible if the bean name
 			// is not defined as alias for some other bean.
+			//todo 只有当bean名称没有定义为其他bean的别名时，才认为bean是合格的
 			if (!isAlias(beanName)) {
 				try {
 					RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
@@ -1134,6 +1139,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		Assert.notNull(requiredType, "Required type must not be null");
 		Class<?> clazz = requiredType.getRawClass();
 		Assert.notNull(clazz, "Required type must have a raw Class");
+
+		//调用ListableBeanFactory接口的getBeanNamesForType方法
 		String[] candidateNames = getBeanNamesForType(requiredType);
 
 		if (candidateNames.length > 1) {

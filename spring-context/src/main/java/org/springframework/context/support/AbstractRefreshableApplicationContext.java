@@ -196,6 +196,8 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		}
 	}
 
+	//no-op 无操作
+	//getBeanFactory()  为活动上下文提供强断言
 	/**
 	 * Overridden to turn it into a no-op: With AbstractRefreshableApplicationContext,
 	 * {@link #getBeanFactory()} serves a strong assertion for an active context anyway.

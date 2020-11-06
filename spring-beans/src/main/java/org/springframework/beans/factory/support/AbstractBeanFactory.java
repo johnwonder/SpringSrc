@@ -239,6 +239,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
+		//就像BeanFactory接口中getBean方法javadoc中说的 转换为对应的规范的Bean名称
+		//Translates aliases back to the corresponding canonical bean name.
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -268,6 +270,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// Check if bean definition exists in this factory.
 			BeanFactory parentBeanFactory = getParentBeanFactory();
+			//如果当前工厂不存在bean 那么就检查父工厂
+			//BeanFactory接口中：Will ask the parent factory if the bean cannot be found in this factory instance
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
 				String nameToLookup = originalBeanName(name);
