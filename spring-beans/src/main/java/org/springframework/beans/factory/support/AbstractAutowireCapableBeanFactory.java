@@ -1188,6 +1188,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 		if (resolved) {
+			//todo 如果需要构造函数自动注入，否则直接实例化bean 2020-11-09
 			if (autowireNecessary) {
 				return autowireConstructor(beanName, mbd, null, null);
 			}
@@ -1200,6 +1201,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args))  {
+
+			//todo 2020-11-09 ObjectProvider注入
 			return autowireConstructor(beanName, mbd, ctors, args);
 		}
 
@@ -1283,6 +1286,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof SmartInstantiationAwareBeanPostProcessor) {
 					SmartInstantiationAwareBeanPostProcessor ibp = (SmartInstantiationAwareBeanPostProcessor) bp;
+
+					//todo 通过AutowiredAnnotationBeanPostProcessor 注入构造函数 2020-11-09
 					Constructor<?>[] ctors = ibp.determineCandidateConstructors(beanClass, beanName);
 					if (ctors != null) {
 						return ctors;
@@ -1699,7 +1704,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			converter = bw;
 		}
 
-		//todo 定义一个BeanDefinitionValueResolver 去解析Bean 的属性值 2020-10-13
+		//todo 这里每次都new一个BeanDefinitionValueResolver 去解析Bean 的属性值 2020-10-13
 		BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this, beanName, mbd, converter);
 
 		// Create a deep copy, resolving any references for values.
@@ -1714,12 +1719,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				//https://blog.csdn.net/cuichunchi/article/details/90407632
 				String propertyName = pv.getName();
 				Object originalValue = pv.getValue();
+
+				//todo important 这里很重要 ManagedList等都在这边解析 2020-11-09
 				Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue);
 				Object convertedValue = resolvedValue;
 				//todo 通过PropertyDescriptor判断是否有WriteMethod 且 不是嵌套 或者索引的属性 2020-10-11
 				boolean convertible = bw.isWritableProperty(propertyName) &&
 						!PropertyAccessorUtils.isNestedOrIndexedProperty(propertyName);
 				if (convertible) {
+					//todo important convertForProperty  2020-11-09
 					convertedValue = convertForProperty(resolvedValue, propertyName, bw, converter);
 				}
 				// Possibly store converted value in merged bean definition,

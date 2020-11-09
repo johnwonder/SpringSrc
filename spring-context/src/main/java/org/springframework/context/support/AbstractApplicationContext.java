@@ -560,6 +560,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Register bean processors that intercept bean creation.
 				// 注册拦截bean创建的bean处理器
+				//todo CommonAnnotationBeanPostProcessor 和 AutowiredAnnotationBeanPostProcessor 会在这里注册 2020-11-09
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.

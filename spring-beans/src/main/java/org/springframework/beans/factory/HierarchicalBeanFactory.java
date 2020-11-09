@@ -42,6 +42,7 @@ public interface HierarchicalBeanFactory extends BeanFactory {
 	@Nullable
 	BeanFactory getParentBeanFactory();
 
+	//忽略层级结构
 	/**
 	 * Return whether the local bean factory contains a bean of the given name,
 	 * ignoring beans defined in ancestor contexts.

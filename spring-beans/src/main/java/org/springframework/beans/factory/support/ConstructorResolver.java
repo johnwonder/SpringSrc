@@ -177,9 +177,12 @@ class ConstructorResolver {
 				}
 			}
 
+			//todo 如果选中的 chosenCtors 不为空 或者beandefinition的autowireMode 为constructor 就代表是自动注入构造函数
 			// Need to resolve the constructor.
 			boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);
+
+			//构造函数参数值集合 内部包含 集合
 			ConstructorArgumentValues resolvedValues = null;
 
 			int minNrOfArgs;
@@ -211,9 +214,10 @@ class ConstructorResolver {
 				}
 
 				ArgumentsHolder argsHolder;
-				//todo 如果有显示的构造参数 解析过的构造函数值为空， 2020-11-06
+				//todo 如果有显示的构造参数  resolvedValues(解析过的构造函数值)为空， 2020-11-06
 				if (resolvedValues != null) {
 					try {
+						//todo 解析 java6的 ConstructorProperties 注解 2020-11-09
 						String[] paramNames = ConstructorPropertiesChecker.evaluate(candidate, paramTypes.length);
 						if (paramNames == null) {
 							ParameterNameDiscoverer pnd = this.beanFactory.getParameterNameDiscoverer();
@@ -250,6 +254,8 @@ class ConstructorResolver {
 				if (typeDiffWeight < minTypeDiffWeight) {
 					constructorToUse = candidate;
 					argsHolderToUse = argsHolder;
+
+					//todo 赋值给argsToUse 2020-11-09
 					argsToUse = argsHolder.arguments;
 					minTypeDiffWeight = typeDiffWeight;
 					ambiguousConstructors = null;
@@ -772,9 +778,12 @@ class ConstructorResolver {
 							"] - did you specify the correct bean references as arguments?");
 				}
 				try {
+
+					//todo important 获取自动注入参数  2020-11-09
 					Object autowiredArgument = resolveAutowiredArgument(
 							methodParam, beanName, autowiredBeanNames, converter, fallback);
 					args.rawArguments[paramIndex] = autowiredArgument;
+
 					args.arguments[paramIndex] = autowiredArgument;
 					args.preparedArguments[paramIndex] = new AutowiredArgumentMarker();
 					args.resolveNecessary = true;

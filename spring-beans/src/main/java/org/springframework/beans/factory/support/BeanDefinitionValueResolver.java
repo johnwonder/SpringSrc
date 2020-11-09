@@ -349,6 +349,7 @@ class BeanDefinitionValueResolver {
 		return actualInnerBeanName;
 	}
 
+	//todo 解析xml配置中的ref属性 引用 2020-11-09
 	/**
 	 * Resolve a reference to another bean in the factory.
 	 */

@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
  * @Author: johnwonder
  * @Date: 2020/11/6
  */
-@Component
+@Component("index")
 public class IndexService {
 
 	private ArticleService b;
+
+	//todo 通过AutowiredAnnotationBeanPostProcessor 注入构造函数
 	public IndexService(ObjectProvider<ArticleService> b) {
 		this.b = b.getIfAvailable();
 	}

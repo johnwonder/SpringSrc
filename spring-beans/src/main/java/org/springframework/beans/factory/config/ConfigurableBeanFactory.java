@@ -30,6 +30,11 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
 
+
+//1.配置接口将由大多数bean工厂实现。
+//2.除了BeanFactory接口中的BeanFactory客户端方法外，还提供了配置BeanFactory的工具
+//3.这个BeanFactory接口并不打算在普通的应用程序代码中使用：对于典型的需求，请坚持使用BeanFactory或ListableBeanFactory。
+//4.这个扩展接口只是为了允许框架内部即插即用和对bean工厂配置方法的特殊访问
 /**
  * Configuration interface to be implemented by most bean factories. Provides
  * facilities to configure a bean factory, in addition to the bean factory
@@ -50,6 +55,7 @@ import org.springframework.util.StringValueResolver;
  */
 public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
 
+	//todo 自定义scope可以通过registerScope方法添加
 	/**
 	 * Scope identifier for the standard singleton scope: "singleton".
 	 * Custom scopes can be added via {@code registerScope}.
@@ -65,6 +71,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	String SCOPE_PROTOTYPE = "prototype";
 
 
+	//请注意，不能更改父级：只有在工厂实例化时它不可用时，才应该在构造函数外部设置它。
 	/**
 	 * Set the parent of this bean factory.
 	 * <p>Note that the parent cannot be changed: It should only be set outside
@@ -76,6 +83,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 */
 	void setParentBeanFactory(BeanFactory parentBeanFactory) throws IllegalStateException;
 
+	//请注意，这个类装入器将只应用于尚未携带已解析bean类的bean定义。
+	// 默认情况下，Spring2.0就是这样：Bean定义只携带Bean类名，一旦工厂处理了Bean定义，就解决这个问题
 	/**
 	 * Set the class loader to use for loading bean classes.
 	 * Default is the thread context class loader.
@@ -96,6 +105,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	@Nullable
 	ClassLoader getBeanClassLoader();
 
+	//如果涉及到加载时编织，则通常只指定一个临时类加载器，以确保实际的bean类尽可能延迟地加载。
+	// 一旦BeanFactory完成引导阶段，临时加载程序就会被移除
 	/**
 	 * Specify a temporary ClassLoader to use for type matching purposes.
 	 * Default is none, simply using the standard bean ClassLoader.
@@ -115,6 +126,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	@Nullable
 	ClassLoader getTempClassLoader();
 
+	//设置是否缓存bean元数据，例如给定的bean定义（以合并方式）和已解析的bean类。默认为启用
+	//关闭此标志以启用bean定义对象（尤其是bean类）的热刷新。
+	// 如果这个标志是关闭的，任何bean实例的创建都将重新查询bean类加载器中新解析的类
 	/**
 	 * Set whether to cache bean metadata such as given bean definitions
 	 * (in merged fashion) and resolved bean classes. Default is on.
@@ -130,6 +144,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 */
 	boolean isCacheBeanMetadata();
 
+	//默认情况下，BeanFactory中没有活动的表达式支持。
+	// ApplicationContext通常会在这里设置标准表达式策略，以统一的EL兼容样式支持“#{…}”表达式
 	/**
 	 * Specify the resolution strategy for expressions in bean definition values.
 	 * <p>There is no expression support active in a BeanFactory by default.
@@ -160,6 +176,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	@Nullable
 	ConversionService getConversionService();
 
+	//这样的注册器会创建新的PropertyEditor实例，并在给定的注册表中注册它们，
+	// 每次bean创建尝试都是新的。这就避免了在自定义编辑器上进行同步的需要；
+	// 因此，通常最好使用此方法而不是registerCustomEditor(java.lang.Class<?>,
 	/**
 	 * Add a PropertyEditorRegistrar to be applied to all bean creation processes.
 	 * <p>Such a registrar creates new PropertyEditor instances and registers them
@@ -170,6 +189,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 */
 	void addPropertyEditorRegistrar(PropertyEditorRegistrar registrar);
 
+	//请注意，此方法将注册一个共享的自定义编辑器实例；为了线程安全，将同步访问该实例。
+	// 通常最好使用addPropertyEditorRegistrar(org.springframework.beans.PropertyEditorRegistrar）而不是此方法，
+	// 以避免在自定义编辑器上进行同步
 	/**
 	 * Register the given custom property editor for all properties of the
 	 * given type. To be invoked during factory configuration.
@@ -216,6 +238,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 */
 	void addEmbeddedValueResolver(StringValueResolver valueResolver);
 
+	//确定是否已向此bean工厂注册了要通过resolveEmbeddedValue（字符串）应用的嵌入式值解析器。
 	/**
 	 * Determine whether an embedded value resolver has been registered with this
 	 * bean factory, to be applied through {@link #resolveEmbeddedValue(String)}.
@@ -293,6 +316,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 */
 	void copyConfigurationFrom(ConfigurableBeanFactory otherFactory);
 
+	//给定一个bean名称，创建一个别名。我们通常使用这种方法来支持xml ids（用于bean名称）中非法的名称。
+
+	//通常在工厂配置期间调用，但也可用于别名的运行时注册。因此，工厂实现应该同步别名访问。
 	/**
 	 * Given a bean name, create an alias. We typically use this method to
 	 * support names that are illegal within XML ids (used for bean names).
@@ -305,6 +331,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 */
 	void registerAlias(String beanName, String alias) throws BeanDefinitionStoreException;
 
+	//解析此工厂中注册的所有别名目标名称和别名，并对其应用给定的StringValueResolver。
+	//例如，值解析器可以解析目标bean名称甚至别名中的占位符
 	/**
 	 * Resolve all alias target names and aliases registered in this
 	 * factory, applying the given StringValueResolver to them.

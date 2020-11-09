@@ -241,6 +241,8 @@ final class PostProcessorRegistrationDelegate {
 
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+
+		//todo CommonAnnotationBeanPostProcessor 和 AutowiredAnnotationBeanPostProcessor 会在这里注册 2020-11-09
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
 		// Next, register the BeanPostProcessors that implement Ordered.

@@ -960,6 +960,7 @@ public abstract class StringUtils {
 		return array;
 	}
 
+	//todo 复制给定的collection 到 string 数组
 	/**
 	 * Copy the given {@code Collection} into a {@code String} array.
 	 * <p>The {@code Collection} must contain {@code String} elements only.

@@ -270,7 +270,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// Check if bean definition exists in this factory.
 			BeanFactory parentBeanFactory = getParentBeanFactory();
-			//如果当前工厂不存在bean 那么就检查父工厂
+			//todo 如果当前工厂不存在bean 才会去检查父工厂 2020-11-09
 			//BeanFactory接口中：Will ask the parent factory if the bean cannot be found in this factory instance
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -304,6 +304,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				//https://blog.csdn.net/andy_zhang2007/article/details/86514320
 				//todo important RootBeanDefinition 2020-10-17
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+				//这里args好像没用到
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
@@ -330,7 +331,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				//从头开始加载 bean，这个过程由 getSingleton() 实现。
 				if (mbd.isSingleton()) {
 					//https://www.cnblogs.com/leihuazhe/p/9481018.html
-					////todo getSingleton 2020-08-30
+					////todo 如果有单例那直接返回了 ， args参数也就没啥用处了 2020-08-30
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							return createBean(beanName, mbd, args);
@@ -702,6 +703,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return this.parentBeanFactory;
 	}
 
+	//忽略层级结构 只查询当前BeanFactory
 	@Override
 	public boolean containsLocalBean(String name) {
 		String beanName = transformedBeanName(name);
