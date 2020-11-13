@@ -559,6 +559,7 @@ public class BeanDefinitionParserDelegate {
 			// 解析 qualifier 子元素
 			parseQualifierElements(ele, bd);
 
+			//为了知道beanDefinition是从哪个资源来的
 			bd.setResource(this.readerContext.getResource());
 			bd.setSource(extractSource(ele));
 

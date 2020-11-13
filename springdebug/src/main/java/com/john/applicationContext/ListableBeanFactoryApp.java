@@ -3,6 +3,7 @@ package com.john.applicationContext;
 import com.john.aop.Person;
 import com.john.aop.test.Landlord;
 import com.john.beanFactory.SimpleTarget;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -115,6 +116,10 @@ public class ListableBeanFactoryApp
 
 		//输出Person类的 bean集合 为空
 		System.out.println(childBeanFactory.getBeansOfType(Person.class));
+
+
+		//通过BeanFactoryUtils类的方法可以获取parentFactory中的bean
+		System.out.println("BeanFactoryUtils:" + BeanFactoryUtils.beansOfTypeIncludingAncestors(childBeanFactory, Person.class));
 
 		//输出容器中BeanDefinition 的总数 只有当前beanFactory中的bean 为 ChineseFemaleSinger，Jane，Bibi
 		System.out.println(childBeanFactory.getBeanDefinitionCount());

@@ -510,16 +510,20 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Check manually registered singletons.
 		Object beanInstance = getSingleton(beanName, false);
 		if (beanInstance != null && beanInstance.getClass() != NullBean.class) {
+
+			//判读是FactoryBean
 			if (beanInstance instanceof FactoryBean) {
 				if (!BeanFactoryUtils.isFactoryDereference(name)) {
 					Class<?> type = getTypeForFactoryBean((FactoryBean<?>) beanInstance);
 					return (type != null && typeToMatch.isAssignableFrom(type));
 				}
 				else {
+
 					return typeToMatch.isInstance(beanInstance);
 				}
 			}
 			else if (!BeanFactoryUtils.isFactoryDereference(name)) {
+				//不是工厂bean本身
 				if (typeToMatch.isInstance(beanInstance)) {
 					// Direct match for exposed instance?
 					return true;
