@@ -4,7 +4,7 @@ public class CarFactory {
 	//非静态方法
 	public Car createCar(Brand brand){
 
-		System.out.println(brand);
+		//System.out.println(brand);
 		Car car = new Car();
 		car.setBrand("BMW");
 		return car;
@@ -13,7 +13,7 @@ public class CarFactory {
 	//静态方法
 	public static Car createStaticCar(Brand brand){
 
-		System.out.println(brand);
+		//System.out.println(brand);
 		Car car = new Car();
 		return car;
 	}

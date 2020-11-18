@@ -34,6 +34,7 @@ import org.springframework.web.context.ConfigurableWebEnvironment;
 import org.springframework.web.context.ServletConfigAware;
 import org.springframework.web.context.ServletContextAware;
 
+//todo 提供“configLocations”属性，将在web应用程序启动时通过ConfigurableWebApplicationContext接口*填充
 /**
  * {@link org.springframework.context.support.AbstractRefreshableApplicationContext}
  * subclass which implements the

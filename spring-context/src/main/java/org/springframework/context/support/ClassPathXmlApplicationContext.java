@@ -213,6 +213,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		for (int i = 0; i < paths.length; i++) {
 			this.configResources[i] = new ClassPathResource(paths[i], clazz);
 		}
+		//直接刷新了 不给选择。。
 		refresh();
 	}
 

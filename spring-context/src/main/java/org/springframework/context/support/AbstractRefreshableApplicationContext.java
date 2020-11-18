@@ -142,6 +142,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 
 			//加载Bean定义
 			//todo AbstractXmlApplicationContext 子类实现 放入beandefinitionMap中
+			//todo 只有BeanFactory的话 那就要手动去loadBeanDefinition
 			loadBeanDefinitions(beanFactory);
 
 			//beanFactory

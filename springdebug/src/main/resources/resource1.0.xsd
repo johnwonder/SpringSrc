@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns="http://www.john.com/resource"
+			targetNamespace="http://www.john.com/resource">
+	<!-- 定义一个类型，该类型内可以指定一个或多个标签 -->
+	<xsd:complexType name="annotationType">
+		<!-- 定义属性，名字叫id，可以理解成我们定义bean标签的时候写的 id 那个属性 -->
+		<xsd:attribute name="id" type="xsd:ID">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ The unique identifier for a bean. ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<!-- 定义属性，，名字叫name -->
+		<xsd:attribute name="name" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ The name of bean. ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<!-- 定义属性，名字叫myPackage -->
+		<xsd:attribute name="myPackage" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation><![CDATA[ The scan package. ]]></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!-- 定义一个标签，名字叫annotation，对应的类型是我们上面定义的annotationType类型 -->
+	<!-- 即annotation标签包含了 id、name、myPackage 三个属性 -->
+	<xsd:element name="annotation" type="annotationType">
+		<xsd:annotation>
+			<xsd:documentation><![CDATA[ The annotation config ]]></xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>

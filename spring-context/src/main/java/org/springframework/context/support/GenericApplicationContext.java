@@ -39,6 +39,9 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//todo 通用 应用上下文的实现，持有一个DefaultListableBeanFactory，不假定特定的bean定义格式
+//todo 实现了BeanDefinitionRegistry 接口 为了应用任何BeanDefinitionReader
+//todo 比如 AnnotatedBeanDefinitionReader
 /**
  * Generic ApplicationContext implementation that holds a single internal
  * {@link org.springframework.beans.factory.support.DefaultListableBeanFactory}
@@ -262,6 +265,8 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws IllegalStateException {
+
+		//todo 如果当前值是false 那么更新成true 否则就报错
 		if (!this.refreshed.compareAndSet(false, true)) {
 			throw new IllegalStateException(
 					"GenericApplicationContext does not support multiple refresh attempts: just call 'refresh' once");

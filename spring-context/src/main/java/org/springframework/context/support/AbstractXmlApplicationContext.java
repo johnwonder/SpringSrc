@@ -134,6 +134,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	//这个方法只是 去加载和注册 bean定义
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
 		//ClassPathXmlApplicationContext
+		//todo 先加载ConfigResources 2020-11-14
 		Resource[] configResources = getConfigResources();
 		if (configResources != null) {
 			reader.loadBeanDefinitions(configResources);

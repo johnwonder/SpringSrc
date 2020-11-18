@@ -16,6 +16,7 @@
 
 package org.springframework.context.annotation;
 
+//todo 例如，检查bean是否已注册的条件可能选择只在REGISTER_BEAN阶段
 /**
  * A {@link Condition} that offers more fine-grained control when used with
  * {@code @Configuration}. Allows certain {@link Condition Conditions} to adapt when they match
@@ -65,6 +66,9 @@ public interface ConfigurationCondition extends Condition {
 		 * bean注册阶段，如果为false，bean将不会被注册
 		 */
 		REGISTER_BEAN
+
+		//todo 判断bean存不存在的问题，通常会使用ConfigurationCondition这个接口，阶段为：REGISTER_BEAN，这样可以确保条件判断是在bean注册阶段执行的。
+		//todo https://zhuanlan.zhihu.com/p/136706525
 	}
 
 }

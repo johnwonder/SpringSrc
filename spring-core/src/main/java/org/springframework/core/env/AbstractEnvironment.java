@@ -49,7 +49,7 @@ import org.springframework.util.StringUtils;
  * See {@link ConfigurableEnvironment} javadoc for usage examples.
  * 子类应该通过customizePropertySources 方法钩子 贡献property sources
  * 客户端应该通过ConfigurableEnvironment 接口的 getPropertySources 方法 处理  MutablePropertySources 的api.
- * @author Chris Beams
+ * @author Chris Beams (https://chris.beams.io) 比特币开发
  * @author Juergen Hoeller
  * @since 3.1
  * @see ConfigurableEnvironment
@@ -64,7 +64,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * <p>The default is "false", falling back to system environment variable checks if a
 	 * Spring environment property (e.g. a placeholder in a configuration String) isn't
 	 * resolvable otherwise.
-	 * 永远不要试图通过{@link System#getenv（）}检索这样的变量。
+	 * 永远不去试图通过{@link System#getenv（）}检索这样的变量。
 	 * 默认值为“false”，返回系统环境变量 如果检查Spring环境属性不可解析（例如配置字符串中的占位符）
 	 * Consider switching this flag to "true" if you experience
 	 * log warnings from {@code getenv} calls coming from Spring, e.g. on WebSphere
@@ -373,6 +373,8 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	protected boolean isProfileActive(String profile) {
 		validateProfile(profile);
 		Set<String> currentActiveProfiles = doGetActiveProfiles();
+
+		//当当前激活的profile为空时才会检查defaultProfiles
 		return (currentActiveProfiles.contains(profile) ||
 				(currentActiveProfiles.isEmpty() && doGetDefaultProfiles().contains(profile)));
 	}

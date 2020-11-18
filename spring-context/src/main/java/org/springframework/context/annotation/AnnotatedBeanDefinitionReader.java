@@ -33,6 +33,8 @@ import org.springframework.core.env.StandardEnvironment;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+
+//todo 注册 ConfigurationClassPostProcessor 2020-11-17
 /**
  * Convenient adapter(方便的适配器) for programmatic registration of annotated bean classes.
  * This is an alternative to {@link ClassPathBeanDefinitionScanner}, applying
@@ -85,6 +87,8 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+
+
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 
@@ -215,6 +219,8 @@ public class AnnotatedBeanDefinitionReader {
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
 
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
+
+		//
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}

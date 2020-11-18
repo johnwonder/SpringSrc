@@ -38,6 +38,8 @@ public class ResourceUtilsTests {
 		assertTrue(ResourceUtils.isJarURL(new URL(null, "jar:war:file:mywar.war*/myjar.jar!/mypath", new DummyURLStreamHandler())));
 		assertFalse(ResourceUtils.isJarURL(new URL("file:myjar.jar")));
 		assertFalse(ResourceUtils.isJarURL(new URL("http:myserver/myjar.jar")));
+
+		System.out.println(new URL("http:myserver/myjar.jar").toURI().isAbsolute());
 	}
 
 	@Test

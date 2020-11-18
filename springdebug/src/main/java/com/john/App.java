@@ -44,6 +44,7 @@ public class App
 		//1.8.0_144spring-config.xml 从System.getProperties解析占位符
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");//${${java.version}}
 
+		//System.out.println(applicationContext.getEnvironment().resolvePlaceholders("${java.version}"));
 
 //		applicationContext
 		Landlord landlord = (Landlord) applicationContext.getBean("landlord", Landlord.class);

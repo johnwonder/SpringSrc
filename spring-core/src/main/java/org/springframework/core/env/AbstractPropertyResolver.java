@@ -208,6 +208,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 
+	//创建一个占位符的helper去解析
 	@Override
 	public String resolveRequiredPlaceholders(String text) throws IllegalArgumentException {
 		if (this.strictHelper == null) {
@@ -247,7 +248,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 
 		//PlaceholderResolver function interface
 
-
+		//todo important 重要的是这个getPropertyAsRawString
 		return helper.replacePlaceholders(text, this::getPropertyAsRawString);
 	}
 
@@ -278,6 +279,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 
+	//todo 以原始字符串形式检索指定的属性,不解析嵌套占位符
 	/**
 	 * Retrieve the specified property as a raw String,
 	 * i.e. without resolution of nested placeholders.

@@ -197,6 +197,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		return loadBeanDefinitions(location, null);
 	}
 
+	//todo 从指定资源路径加载BeanDefinitions
 	/**
 	 * Load bean definitions from the specified resource location.
 	 * <p>The location can also be a location pattern, provided that the
@@ -215,14 +216,15 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
 
 		//AbstractXmlApplicationContext 也实现了resourceLoader
-		//应该说它的抽象父类AbstractApplicationContext继承了 DefaultResourceLoader
+		//todo 应该说它的抽象父类AbstractApplicationContext继承了 DefaultResourceLoader 2020-11-17
+		//XmlBeanDefinitionReader 实例化的时候会设置它的ResourceLoader 2020-11-17
 		ResourceLoader resourceLoader = getResourceLoader();
 		if (resourceLoader == null) {
 			throw new BeanDefinitionStoreException(
 					"Cannot load bean definitions from location [" + location + "]: no ResourceLoader available");
 		}
-		//DefaultResourceLoader 没实现 ResourcePatternResolver
-		//但是 AbstractApplicationContext  实现了 ResourcePatternResolver
+		//todo DefaultResourceLoader 没实现 ResourcePatternResolver
+		//todo 但是 AbstractApplicationContext  实现了 ResourcePatternResolver
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {

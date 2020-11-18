@@ -27,8 +27,6 @@ public class ListableBeanFactoryApp
 		ListableBeanFactory parentBeanFactory = parentContext.getBeanFactory();
 
 
-
-
 		//循环输出BeanDefinition的 名字，只获取当前BeanFactory，不考虑父子关系。
 		//DefaultListableBeanFactory
 		String[] parentBeanDefinitionNames = parentBeanFactory.getBeanDefinitionNames();

@@ -26,6 +26,11 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//独立的应用程序上下文，接受带注释的类作为输入-特别是@Configuration注释的类，但是也接受普通的@Component类型和JSR-330兼容的类，使用javax.注入注解。
+// 允许使用register（Class…）逐个注册类，也允许使用scan（String…）扫描类路径。
+
+//如果有多个@Configuration类，在后面的类中定义的@Bean方法将覆盖先前类中定义的方法。
+// 这可以通过一个额外的@Configuration类故意覆盖某些bean定义
 /**
  * Standalone application context, accepting annotated classes as input - in particular
  * {@link Configuration @Configuration}-annotated classes, but also plain
@@ -73,6 +78,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(DefaultListableBeanFactory beanFactory) {
 		super(beanFactory);
+		//todo 很关键 这里直接实例化AnnotatedBeanDefinitionReader 然后会注册 registerAnnotationConfigProcessors 2020-11-17
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}

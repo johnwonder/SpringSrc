@@ -37,7 +37,9 @@
 
 	<!--<bean id="autowireTest2" class="com.john.autowire.AutowireTest2">-->
 	<!--</bean>-->
-	<bean id="person" class="com.john.aop.Person">
+	<bean id="outerPerson" class="com.john.aop.Person">
+		 <property name="firstName" value="john"/>
+		<property name="lastName" value="wonder"/>
 	</bean>
 	<!--<context:component-scan base-package="com.john" />-->
 	<!--<context:component-scan base-package="com.john" />-->

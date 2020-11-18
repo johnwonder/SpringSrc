@@ -16,6 +16,25 @@
 
 package org.springframework.core.env;
 
+
+//这个接口表示当前应用程序正在其中运行的环境。为应用程序环境的两个关键方面建模：profiles和properties。
+// 与properties访问相关的方法通过PropertyResolver上接口公开。
+
+//profiles是一个命名的、逻辑的bean定义组，只有在给定的profile处于active时才会注册到容器中。
+// bean可以被分配给一个profile，不管是用XML定义的还是通过注释定义的；
+// 语法细节请参见spring-beans3.1模式或@profile注释。
+// 与profile相关的Environment对象的角色是确定哪些profile（如果有的话）当前处于活动状态，
+// 以及哪些profile（如果有的话）在默认情况下应该处于活动状态。
+
+//properties在几乎所有的应用程序中都扮演着重要的角色，并且可能来自各种来源：属性文件、JVM系统属性、系统环境变量、JNDI、servlet上下文参数、特殊属性对象、Maps等等。
+// 与属性相关的Environment对象的作用是为用户提供一个方便的服务接口，用于配置属性源并从中解析属性。
+
+
+//在ApplicationContext中管理的bean可以注册为环境感知(EnvironmentAware)的，
+// 或者@inject environment，以便直接查询profile状态或解析properties。
+
+//环境对象的配置必须通过ConfigurableEnvironment接口完成，该接口从所有AbstractApplicationContext子类getEnvironment（）方法返回。
+// 请参阅ConfigurableEnvironment Javadoc，以获取在应用程序上下文refresh()之前操作属性源的用法示例。
 /**
  * Interface representing the environment in which the current application is running.
  * Models two key aspects of the application environment: <em>profiles</em> and
@@ -70,6 +89,9 @@ package org.springframework.core.env;
  */
 public interface Environment extends PropertyResolver {
 
+	//返回对此环境显式激活的配置文件集。概要文件用于创建要有条件注册的bean定义的逻辑分组，例如基于部署环境。
+	// 可通过设置“激活配置文件”spring.profiles.active“作为系统属性或通过调用
+	// todo ConfigurableEnvironment.setActiveProfiles(String...).
 	/**
 	 * Return the set of profiles explicitly made active for this environment. Profiles
 	 * are used for creating logical groupings of bean definitions to be registered
@@ -85,6 +107,7 @@ public interface Environment extends PropertyResolver {
 	 */
 	String[] getActiveProfiles();
 
+	//如果没有显式设置活动概要文件，则返回默认情况下处于活动状态的配置文件集
 	/**
 	 * Return the set of profiles to be active by default when no active profiles have
 	 * been set explicitly.
@@ -94,6 +117,9 @@ public interface Environment extends PropertyResolver {
 	 */
 	String[] getDefaultProfiles();
 
+	//返回一个或多个给定配置文件是否处于活动状态，或者在没有显式活动配置文件的情况下，是否将一个或多个给定配置文件包含在默认配置文件集中。
+	// 如果配置文件以“！”开头逻辑是颠倒的，也就是说，如果给定的配置文件未激活，方法将返回true。
+	// 例如，环境接受程序配置文件（“p1”，“！p2") 如果配置文件“p1”激活或“p2”未激活，则返回true。
 	/**
 	 * Return whether one or more of the given profiles is active or, in the case of no
 	 * explicit active profiles, whether one or more of the given profiles is included in

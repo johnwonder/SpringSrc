@@ -29,7 +29,7 @@ import org.springframework.lang.Nullable;
  * @see PropertySources
  * @see AbstractEnvironment
  */
-//属性值分解器
+//属性源集合的分解器
 public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 
 	@Nullable

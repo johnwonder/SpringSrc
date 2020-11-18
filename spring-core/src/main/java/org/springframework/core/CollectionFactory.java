@@ -328,6 +328,7 @@ public final class CollectionFactory {
 		}
 	}
 
+	//不是字符串的也直接用toString 来表现
 	/**
 	 * Create a variant of {@code java.util.Properties} that automatically adapts
 	 * non-String values to String representations on {@link Properties#getProperty}.

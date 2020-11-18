@@ -1,6 +1,12 @@
 buildscript {
 	repositories {
-		maven { url "https://repo.spring.io/plugins-release" }
+		//mavenCentral()
+		maven { url "https://repo.springsource.org/plugins-release" }
+//		maven { url "https://repo.spring.io/libs-release" }
+//		maven { url "https://repo.spring.io/milestone" } // Reactor
+		maven { url "https://repo.spring.io/libs-spring-framework-build" }
+		maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
+
 	}
 	dependencies {
 		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
@@ -60,7 +66,7 @@ configure(allprojects) { project ->
 	apply plugin: "java"
 	apply plugin: "kotlin"
 	apply plugin: "checkstyle"
-	apply plugin: "propdeps"
+	//apply plugin: "propdeps"
 	apply plugin: "test-source-set-dependencies"
 	apply plugin: "io.spring.dependency-management"
 	apply from: "${gradleScriptDir}/ide.gradle"
@@ -147,7 +153,8 @@ configure(allprojects) { project ->
 	}
 
 	repositories {
-		maven { url "https://repo.spring.io/libs-release" }
+		maven { url "https://repo.springsource.org/plugins-release" }
+		//maven { url "https://repo.spring.io/libs-release" }
 	}
 
 	dependencies {
@@ -269,7 +276,7 @@ configure(rootProject) {
 		testCompile(project(":spring-expression"))
 		testCompile(project(":spring-jdbc"))
 		testCompile(project(":spring-orm"))
-		testCompile(project(":spring-test"))
+//		testCompile(project(":spring-test"))
 		testCompile(project(":spring-tx"))
 		testCompile(project(":spring-web"))
 		testCompile("javax.inject:javax.inject:1")

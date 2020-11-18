@@ -15,7 +15,9 @@ public class ImportRegistrarDemo {
 
 		applicationContext.register(ImportConfig.class);
 
+		//不刷新还会报错。。
 		applicationContext.refresh();
+
 		applicationContext.getBean(UserService.class).test();
 	}
 }

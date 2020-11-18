@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
  *
  * <p>Requires SnakeYAML 1.18 or higher, as of Spring Framework 5.0.6.
  *
- * @author Dave Syer
+ * @author Dave Syer (https://github.com/dsyer)
  * @author Juergen Hoeller
  * @since 4.1
  */
@@ -221,6 +221,7 @@ public abstract class YamlProcessor {
 		Properties properties = CollectionFactory.createStringAdaptingProperties();
 		properties.putAll(getFlattenedMap(map));
 
+		//默认为空
 		if (this.documentMatchers.isEmpty()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Merging document (no matchers set): " + map);

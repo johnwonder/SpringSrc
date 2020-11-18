@@ -121,6 +121,9 @@ public class YamlPropertiesFactoryBean extends YamlProcessor implements FactoryB
 	}
 
 
+	//子类可以重写以构造此工厂返回的对象
+	//默认实现返回包含所有资源内容的属性。
+	//如果是共享单例实例，则在第一次调用getObject（）时延迟调用；否则，在每次getObject（）调用中调用
 	/**
 	 * Template method that subclasses may override to construct the object
 	 * returned by this factory. The default implementation returns a

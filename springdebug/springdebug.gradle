@@ -10,8 +10,11 @@ dependencies {
 	compile(project(":spring-core"))
 	compile(project(":spring-instrument"))
 	compile(project(":spring-aop"))
+	compile(project(":spring-web"))
+
 //	compile(project(":spring-aop"))
 	compile("javax.inject:javax.inject:1")
+//	compile("org.yaml:snakeyaml:1.23")
 	//compile name: 'rt'
 	compile fileTree(dir:'lib',includes:['*jar'])
 }

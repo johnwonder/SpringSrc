@@ -139,7 +139,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * 以BeanDefinitionRegistry的形式
 	 */
 	public XmlBeanDefinitionReader(BeanDefinitionRegistry registry) {
-		//调用AbstractBeanDefinitionReader
+		//调用AbstractBeanDefinitionReader 包装registry
 		super(registry);
 	}
 
@@ -339,6 +339,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
+				//TODO 最终还是通过InputSource来加载xml配置文件
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
 			finally {
@@ -398,7 +399,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		try {
 			//todo important 获取Document对象 2020-09-05
 			Document doc = doLoadDocument(inputSource, resource);
+
+			//todo 开始注册BeanDefinitions
 			int count = registerBeanDefinitions(doc, resource);
+
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
 			}
@@ -519,6 +523,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
 
+		//也就是说XmlBeanDefinitionReader类负责 包装documentReader 。
 		//默认是DefaultBeanDefinitionDocumentReader
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();

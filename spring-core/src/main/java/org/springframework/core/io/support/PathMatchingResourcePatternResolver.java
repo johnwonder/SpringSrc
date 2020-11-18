@@ -283,6 +283,19 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				return findPathMatchingResources(locationPattern);
 			}
 			else {
+
+				//todo AppClassLoader 2020-11-16
+//				final String var1 = System.getProperty("java.class.path");
+//				final File[] var2 = var1 == null ? new File[0] : Launcher.getClassPath(var1);
+//				return (ClassLoader)AccessController.doPrivileged(new PrivilegedAction<Launcher.AppClassLoader>() {
+//					public Launcher.AppClassLoader run() {
+//						URL[] var1x = var1 == null ? new URL[0] : Launcher.pathToURLs(var2);
+//						return new Launcher.AppClassLoader(var1x, var0);
+//					}
+//				});
+
+				//todo classpath*:  2020-11-16
+				//会调用ClassLoader.getResources 返回全部
 				// all class path resources with the given name
 				return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
 			}
@@ -292,11 +305,15 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			// and on Tomcat only after the "*/" separator for its "war:" protocol.
 			int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/") + 1 :
 					locationPattern.indexOf(':') + 1);
+
+			//*通配符或者? 号
 			if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
 				// a file pattern
 				return findPathMatchingResources(locationPattern);
 			}
 			else {
+				//todo classpath: 2020-11-16
+				//调用ClassLoader.getResource 找到一个 classes path 就直接返回了
 				// a single resource with the given name
 				return new Resource[] {getResourceLoader().getResource(locationPattern)};
 			}
@@ -334,6 +351,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {
 		Set<Resource> result = new LinkedHashSet<>(16);
 		ClassLoader cl = getClassLoader();
+		//todo important 能够获取resources路径
 		Enumeration<URL> resourceUrls = (cl != null ? cl.getResources(path) : ClassLoader.getSystemResources(path));
 		while (resourceUrls.hasMoreElements()) {
 			URL url = resourceUrls.nextElement();
@@ -784,6 +802,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			logger.trace("Searching directory [" + dir.getAbsolutePath() +
 					"] for files matching pattern [" + fullPattern + "]");
 		}
+		//遍历文件夹
 		for (File content : listDirectory(dir)) {
 			String currPath = StringUtils.replace(content.getAbsolutePath(), File.separator, "/");
 			if (content.isDirectory() && getPathMatcher().matchStart(fullPattern, currPath + "/")) {
@@ -797,6 +816,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 					doRetrieveMatchingFiles(fullPattern, content, result);
 				}
 			}
+			//TODO 这里会匹配通配符的文件 2020-11-16
 			if (getPathMatcher().match(fullPattern, currPath)) {
 				result.add(content);
 			}

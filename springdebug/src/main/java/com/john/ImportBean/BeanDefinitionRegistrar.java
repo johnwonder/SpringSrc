@@ -36,6 +36,7 @@ public class BeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
 //			if(mapper ==UserMapper.class)
 //			beanDefinition.setPrimary(true);
 //			System.out.println(mapper.getSimpleName());
+			//todo 这里注册了两个 UserMapper Bean 2020-11-17
 			registry.registerBeanDefinition(mapper.getSimpleName(),beanDefinition);
 		}
 	}

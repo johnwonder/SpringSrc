@@ -128,6 +128,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	 * @see org.springframework.core.env.Environment#resolveRequiredPlaceholders(String)
 	 */
 	protected String resolvePath(String path) {
+		//通过当前环境去 解析 必要的占位符
 		return getEnvironment().resolveRequiredPlaceholders(path);
 	}
 

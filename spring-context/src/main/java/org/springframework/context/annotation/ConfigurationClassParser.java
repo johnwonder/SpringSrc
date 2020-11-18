@@ -284,6 +284,7 @@ class ConfigurationClassParser {
 			}
 		}
 
+		//todo 处理ComponentScan 注解 2020-11-17
 		// Process any @ComponentScan annotations
 		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
@@ -306,6 +307,7 @@ class ConfigurationClassParser {
 			}
 		}
 
+		//todo 处理@Import 注解 2020-11-17
 		// Process any @Import annotations
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
@@ -516,10 +518,12 @@ class ConfigurationClassParser {
 	private Set<SourceClass> getImports(SourceClass sourceClass) throws IOException {
 		Set<SourceClass> imports = new LinkedHashSet<>();
 		Set<SourceClass> visited = new LinkedHashSet<>();
+		//todo 收集Import注解里的类。。 2020-11-17
 		collectImports(sourceClass, imports, visited);
 		return imports;
 	}
 
+	//todo 很重要 收集Import 注解 2020-11-17
 	/**
 	 * Recursively collect all declared {@code @Import} values. Unlike most
 	 * meta-annotations it is valid to have several {@code @Import}s declared with
@@ -632,6 +636,7 @@ class ConfigurationClassParser {
 						}
 					}
 					else if (candidate.isAssignable(ImportBeanDefinitionRegistrar.class)) {
+						//todo ImportBeanDefinitionRegistrar 解析 2020-11-17
 						// Candidate class is an ImportBeanDefinitionRegistrar ->
 						// delegate to it to register additional bean definitions
 						Class<?> candidateClass = candidate.loadClass();
@@ -904,6 +909,7 @@ class ConfigurationClassParser {
 
 		public boolean isAssignable(Class<?> clazz) throws IOException {
 			if (this.source instanceof Class) {
+				//todo clazz是父类 2020-11-17
 				return clazz.isAssignableFrom((Class<?>) this.source);
 			}
 			return new AssignableTypeFilter(clazz).match((MetadataReader) this.source, metadataReaderFactory);
@@ -997,6 +1003,8 @@ class ConfigurationClassParser {
 				return Collections.emptySet();
 			}
 			String[] classNames = (String[]) annotationAttributes.get(attribute);
+
+			//放入LinkedHashSet
 			Set<SourceClass> result = new LinkedHashSet<>();
 			for (String className : classNames) {
 				result.add(getRelated(className));

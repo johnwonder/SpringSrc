@@ -1431,7 +1431,7 @@ public class BeanDefinitionParserDelegate {
 		//resolve里有初始化过程
 		//根据命名空间uri获取 NamespaceHandler
 
-		//比如 ContextNamespaceHandler
+		//todo 获取命名空间下的自定义handler 比如 ContextNamespaceHandler
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 		if (handler == null) {
 			//todo 如果在spring.handlers配置文件 里没有定义这个命令空间的handler就会 报这个错 2020-09-14

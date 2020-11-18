@@ -39,6 +39,7 @@ import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 import org.springframework.util.StringUtils;
 
+//简单properties格式的BeanDefinition的读取器
 /**
  * Bean definition reader for a simple properties format.
  *
@@ -424,6 +425,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 		for (Map.Entry<?, ?> entry : map.entrySet()) {
 			String key = StringUtils.trimWhitespace((String) entry.getKey());
 			if (key.startsWith(prefix + SEPARATOR)) {
+				//截取属性字符串
 				String property = key.substring(prefix.length() + SEPARATOR.length());
 				if (CLASS_KEY.equals(property)) {
 					className = StringUtils.trimWhitespace((String) entry.getValue());
@@ -488,6 +490,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 			parent = this.defaultParentBean;
 		}
 
+		//最后通过BeanDefinitionReaderUtils创建一个BeanDefinition
 		try {
 			AbstractBeanDefinition bd = BeanDefinitionReaderUtils.createBeanDefinition(
 					parent, className, getBeanClassLoader());

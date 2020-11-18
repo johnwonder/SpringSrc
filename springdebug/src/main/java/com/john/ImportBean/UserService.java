@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class UserService {
 
 	@Autowired
-//	@Qualifier("UserMapper")
+	@Qualifier("UserMapper")
 	private UserMapper userMapper;
 
 //	@Autowired

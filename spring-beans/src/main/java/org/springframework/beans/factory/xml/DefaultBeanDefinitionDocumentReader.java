@@ -71,6 +71,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 	public static final String IMPORT_ELEMENT = "import";
 
+	//用于import标签
 	public static final String RESOURCE_ATTRIBUTE = "resource";
 
 	public static final String PROFILE_ATTRIBUTE = "profile";
@@ -209,7 +210,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	}
 
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
-		// 对 import 标签的解析
+		//todo  对 import 标签的解析 2020-11-17
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
 			importBeanDefinitionResource(ele);
 		}
@@ -284,7 +285,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				int importCount;
 				Resource relativeResource = getReaderContext().getResource().createRelative(location);
 
-				//如果相对路径 这个资源存在 那么就加载这个bean 定义
+				//todo 如果相对路径 这个资源存在 那么就加载这个bean 定义 2020-11-17
 				if (relativeResource.exists()) {
 					importCount = getReaderContext().getReader().loadBeanDefinitions(relativeResource);
 					actualResources.add(relativeResource);

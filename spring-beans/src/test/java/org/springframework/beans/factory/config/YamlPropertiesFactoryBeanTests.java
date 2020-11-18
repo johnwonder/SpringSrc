@@ -106,10 +106,12 @@ public class YamlPropertiesFactoryBeanTests {
 	public void testLoadResourceWithSelectedDocuments() {
 		YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
 		factory.setResources(new ByteArrayResource(
-				"foo: bar\nspam: baz\n---\nfoo: bag\nspam: bad".getBytes()));
+				"foo: bar\nspam: baz\n---\nfoo: bag\nspam: bad\nspam1: bad1".getBytes()));
 		factory.setDocumentMatchers(properties -> ("bag".equals(properties.getProperty("foo")) ?
 				MatchStatus.FOUND : MatchStatus.NOT_FOUND));
 		Properties properties = factory.getObject();
+
+		System.out.println(properties);
 		assertThat(properties.getProperty("foo"), equalTo("bag"));
 		assertThat(properties.getProperty("spam"), equalTo("bad"));
 	}
@@ -127,6 +129,7 @@ public class YamlPropertiesFactoryBeanTests {
 			return ("bag".equals(properties.getProperty("foo")) ?
 					MatchStatus.FOUND : MatchStatus.NOT_FOUND);
 		});
+
 		Properties properties = factory.getObject();
 		assertThat(properties.getProperty("foo"), equalTo("bag"));
 		assertThat(properties.getProperty("spam"), equalTo("bad"));

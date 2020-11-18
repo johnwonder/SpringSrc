@@ -27,7 +27,7 @@ import org.springframework.lang.Nullable;
  * <p>To be used with the {@link JmsTemplate#execute(SessionCallback)} method,
  * often implemented as an anonymous inner class or as a lambda expression.
  *
- * @author Mark Pollack
+ * @author Mark Pollack (https://www.csdn.net/article/a/2012-12-07/2812580)
  * @since 1.1
  * @param <T> the result type
  * @see JmsTemplate#execute(SessionCallback)
