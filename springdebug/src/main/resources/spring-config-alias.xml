@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:property-placeholder  ignore-unresolvable="true"   location="classpath:alias.properties"/>
+
+
+	<bean id="school" name="school1,school2" class="com.john.xmlconfig.SchoolName">
+	  		<property name="name" value="good school"/>
+	</bean>
+
+	<!--bean别名 name为bean名称 alias为别名-->
+	<alias name="school1" alias="aliaslschool"/>
+	<alias name="school1" alias="${aliasName}"/>
+
+	<bean id="teachers"  name="teach" class="com.john.xmlconfig.Teachers">
+		<property name="name">
+			<value type="java.lang.String">zhangsan</value>
+		</property>
+	</bean>
+
+</beans>

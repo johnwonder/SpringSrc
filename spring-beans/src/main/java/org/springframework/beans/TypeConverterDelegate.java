@@ -152,9 +152,11 @@ class TypeConverterDelegate {
 	public <T> T convertIfNecessary(@Nullable String propertyName, @Nullable Object oldValue, @Nullable Object newValue,
 			@Nullable Class<T> requiredType, @Nullable TypeDescriptor typeDescriptor) throws IllegalArgumentException {
 
+		//todo 1。 查找这个类型是否有自定义的属性编辑器 2020-12-23
 		// Custom editor for this type?
 		PropertyEditor editor = this.propertyEditorRegistry.findCustomEditor(requiredType, propertyName);
 
+		//定义尝试转换失败发生的异常
 		ConversionFailedException conversionAttemptEx = null;
 
 		// No custom editor but custom ConversionService specified?
@@ -174,6 +176,7 @@ class TypeConverterDelegate {
 
 		Object convertedValue = newValue;
 
+		//todo 编辑器不为空 或者 转换过后的值 不是需要的类型 2020-12-23
 		// Value not of required type?
 		if (editor != null || (requiredType != null && !ClassUtils.isAssignableValue(requiredType, convertedValue))) {
 			if (typeDescriptor != null && requiredType != null && Collection.class.isAssignableFrom(requiredType) &&
@@ -186,6 +189,7 @@ class TypeConverterDelegate {
 					}
 				}
 			}
+			//todo 自定义的属性编辑器为空才会去 找默认的属性编辑器 2020-12-23
 			if (editor == null) {
 				editor = findDefaultEditor(requiredType);
 			}
@@ -378,6 +382,8 @@ class TypeConverterDelegate {
 			// No custom editor -> check BeanWrapperImpl's default editors.
 			editor = this.propertyEditorRegistry.getDefaultEditor(requiredType);
 			if (editor == null && String.class != requiredType) {
+
+				//todo 还会检查标准的javabean editor 2020-12-23
 				// No BeanWrapper default editor -> check standard JavaBean editor.
 				editor = BeanUtils.findEditorByConvention(requiredType);
 			}

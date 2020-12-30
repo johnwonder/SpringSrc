@@ -41,7 +41,9 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 2.5.1
  */
-//todo 抽象类可以继承 普通类
+//todo 抽象类可以继承 普通类 2020-11-23
+//todo 抽象类还可以有私有变量	2020-12-15
+//竟然继承自	DefaultSingletonBeanRegistry
 public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanRegistry {
 
 	/** Cache of singleton objects created by FactoryBeans: FactoryBean name to object. */
@@ -99,11 +101,15 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 
 		if (factory.isSingleton() && containsSingleton(beanName)) {
 			synchronized (getSingletonMutex()) {
+				//1.首先尝试从缓存中获取
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
 					object = doGetObjectFromFactoryBean(factory, beanName);
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)
+					//todo 只有在上面调用getObject的时候 没有放入factoryBeanObjectCache 才会再调用 post-process 和放入缓存
+					//因为自定义的getBean调用 会触发循环引用的处理
+					//也就是说 getObject里可能会调用getBean 从而触发循环引用
 					Object alreadyThere = this.factoryBeanObjectCache.get(beanName);
 					if (alreadyThere != null) {
 						object = alreadyThere;
@@ -116,6 +122,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 							}
 							beforeSingletonCreation(beanName);
 							try {
+								//默认返回object
 								object = postProcessObjectFromFactoryBean(object, beanName);
 							}
 							catch (Throwable ex) {
@@ -126,6 +133,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 								afterSingletonCreation(beanName);
 							}
 						}
+						//todo 为啥还要再判断下是否包含呢？ 2020-12-15
+						//可能会再postProcess中被remove吧
 						if (containsSingleton(beanName)) {
 							this.factoryBeanObjectCache.put(beanName, object);
 						}

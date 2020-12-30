@@ -688,6 +688,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
+		//在于为实现*Aware接口的bean调用该Aware接口定义的方法，并传入对应的参数。
+		// 比如实现EnvironmentAware接口的bean在该Processor内部会调用EnvironmentAware接口的setEnvironment方法，
+		// 并把Spring容器内部的ConfigurableEnvironment传递进去
+		//http://fangjian0423.github.io/2017/06/24/spring-embedded-bean-post-processor/
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);

@@ -76,6 +76,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.StringValueResolver;
 
+//继承自FactoryBeanRegistrySupport
 /**
  * Abstract base class for {@link org.springframework.beans.factory.BeanFactory}
  * implementations, providing the full capabilities of the
@@ -840,6 +841,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			// Build default TypeConverter, registering custom editors.
 			SimpleTypeConverter typeConverter = new SimpleTypeConverter();
 			typeConverter.setConversionService(getConversionService());
+
 			registerCustomEditors(typeConverter);
 			return typeConverter;
 		}
@@ -879,6 +881,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		this.beanPostProcessors.remove(beanPostProcessor);
 		// Track whether it is instantiation/destruction aware
 		if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
+			//如果有 InstantiationAwareBeanPostProcessor
 			this.hasInstantiationAwareBeanPostProcessors = true;
 		}
 		if (beanPostProcessor instanceof DestructionAwareBeanPostProcessor) {
@@ -1176,6 +1179,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//todo BeanWrapperImpl 继承了 AbstractNestablePropertyAccessor
 		//todo AbstractNestablePropertyAccessor 的父类 AbstractPropertyAccessor 继承了 TypeConverterSupport 又继承了 PropertyEditorRegistrySupport 2020-09-29
 		bw.setConversionService(getConversionService());
+
+		//todo 会为当前BeanWrapper 注册自定义属性编辑器 2020-12-23
 		registerCustomEditors(bw);
 	}
 
@@ -1692,6 +1697,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// If it's a FactoryBean, we use it to create a bean instance, unless the
 		// caller actually wants a reference to the factory.
 		//我们使用它来创建一个bean实例，除非调用者实际上想要引用工厂
+		//todo 如果是获取FactoryBean本身 那就直接返回这个工厂
 		if (!(beanInstance instanceof FactoryBean) || BeanFactoryUtils.isFactoryDereference(name)) {
 			return beanInstance;
 		}

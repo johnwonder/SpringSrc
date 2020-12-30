@@ -418,15 +418,20 @@ public class BeanDefinitionParserDelegate {
 		//todo MULTI_VALUE_ATTRIBUTE_DELIMITERS dependsOn 注解  profile 都用到了
 		List<String> aliases = new ArrayList<>();
 		if (StringUtils.hasLength(nameAttr)) {
+			//name的值可以通过,;或者空格分割，
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
+		//todo https://mp.weixin.qq.com/s?__biz=MzA5MTkxMDQ4MQ%3D%3D&chksm=88621e07bf1597119d8df91702f7bece9fa64659b5cbb8fed311b314fa64b0465eaa080712fc&idx=1&lang=zh_CN&mid=2648933945&scene=21&sn=f9a3355a60f33a0bbf56d013adbf94ca&token=298797737#wechat_redirect
+		//当id存在的时候，不管name有没有，取id为bean的名称
 		//// 分割 name 属性
 		//beanName 的命名规则：如果 id 不为空，则 beanName = id；
 		// 如果 id 为空，但是 alias 不空，
 		// 则 beanName 为 alias 的第一个元素，如果两者都为空，则根据默认规则来设置 beanName。
 		String beanName = id;
+		//当id不存在，此时需要看name，name的值可以通过,;或者空格分割，
+		// 最后会按照分隔符得到一个String数组，数组的第一个元素作为bean的名称，其他的作为bean的别名
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
 			if (logger.isTraceEnabled()) {
@@ -447,6 +452,8 @@ public class BeanDefinitionParserDelegate {
 		//todo 内部生成的是一个 GenericBeanDefinition 2020-09-16
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
+
+			//todo 当id和name都不指定的时候，bean名称自动生成，生成规则下面详细说明 2020-11-27
 			if (!StringUtils.hasText(beanName)) {
 				try {
 					//todo Spring文档中说的 框架会自动生成一个beanName 2020-08-31
@@ -962,7 +969,8 @@ public class BeanDefinitionParserDelegate {
 		// Should only have one child element: ref, value, list, etc.
 		NodeList nl = ele.getChildNodes();
 		Element subElement = null;
-		//不能有多个子节点
+
+		//todo 不能有多个子节点 2020-12-24
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
 			if (node instanceof Element && !nodeNameEquals(node, DESCRIPTION_ELEMENT) &&
@@ -1000,12 +1008,13 @@ public class BeanDefinitionParserDelegate {
 			return ref;
 		}
 		else if (hasValueAttribute) {
+			//value 属性
 			TypedStringValue valueHolder = new TypedStringValue(ele.getAttribute(VALUE_ATTRIBUTE));
 			valueHolder.setSource(extractSource(ele));
 			return valueHolder;
 		}
 		else if (subElement != null) {
-			//todo 解析子节点 比如list节点 2020-09-14
+			//todo 解析各种子节点 比如list节点 2020-09-14
 			return parsePropertySubElement(subElement, bd);
 		}
 		else {
@@ -1038,10 +1047,14 @@ public class BeanDefinitionParserDelegate {
 			if (nestedBd != null) {
 				nestedBd = decorateBeanDefinitionIfRequired(ele, nestedBd, bd);
 			}
+
+			//返回一个BeanDefinitionHolder 作为占位符吗？
+			//Can be registered as a placeholder for an inner bean
 			return nestedBd;
 		}
 		else if (nodeNameEquals(ele, REF_ELEMENT)) {
 			// A generic reference to any name of any bean.
+			//bean属性名称
 			String refName = ele.getAttribute(BEAN_REF_ATTRIBUTE);
 			boolean toParent = false;
 			if (!StringUtils.hasLength(refName)) {
@@ -1102,6 +1115,7 @@ public class BeanDefinitionParserDelegate {
 	@Nullable
 	public Object parseIdRefElement(Element ele) {
 		// A generic reference to any name of any bean.
+		//bean 属性名称
 		String refName = ele.getAttribute(BEAN_REF_ATTRIBUTE);
 		if (!StringUtils.hasLength(refName)) {
 			error("'bean' is required for <idref> element", ele);
@@ -1123,6 +1137,7 @@ public class BeanDefinitionParserDelegate {
 	public Object parseValueElement(Element ele, @Nullable String defaultTypeName) {
 		// It's a literal value.
 		String value = DomUtils.getTextValue(ele);
+		//todo type属性名称 2020-12-23
 		String specifiedTypeName = ele.getAttribute(TYPE_ATTRIBUTE);
 		String typeName = specifiedTypeName;
 		if (!StringUtils.hasText(typeName)) {

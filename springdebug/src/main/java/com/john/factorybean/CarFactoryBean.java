@@ -7,6 +7,7 @@ public class CarFactoryBean  implements FactoryBean<Car> {
 
 	public  Car getObject()  throws  Exception {
 
+		System.out.println("start new car");
 		Car car = new Car();
 		String[] infos = carInfo.split(",");
 		car.setBrand(infos[0]);

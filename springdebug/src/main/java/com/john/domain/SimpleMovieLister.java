@@ -1,6 +1,7 @@
 package com.john.domain;
 
 
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -8,7 +9,7 @@ import org.springframework.context.ApplicationContext;
  * @Author: johnwonder
  * @Date: 2020/9/22
  */
-public class SimpleMovieLister {
+public class SimpleMovieLister implements BeanNameAware{
 
 	private MovieFinder finder;
 
@@ -28,5 +29,11 @@ public class SimpleMovieLister {
 	public void setMoviefinder(MovieFinder movieFinder) {
 		System.out.println("setter method"+ movieFinder);
 		this.finder = movieFinder;
+	}
+
+	@Override
+	public void setBeanName(String name) {
+
+		System.out.println("setBeanName: " +name);
 	}
 }

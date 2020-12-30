@@ -24,7 +24,7 @@ public class Test {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config-pe.xml");
 		Boss boss = (Boss) applicationContext.getBean("boss");
 
-		System.out.println(boss.getCar().brand + boss.getCar().getPrice());
+		//System.out.println(boss.getCar().brand + boss.getCar().getPrice());
 	}
 
 	public  enum  MyEnum{

@@ -108,6 +108,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	@Nullable
 	private Map<Class<?>, PropertyEditor> customEditors;
 
+	//todo 存放的是 一个CustomEditorHolder
 	@Nullable
 	private Map<String, CustomEditorHolder> customEditorsForPath;
 
@@ -180,9 +181,12 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	 */
 	@Nullable
 	public PropertyEditor getDefaultEditor(Class<?> requiredType) {
+
+		//默认编辑器没激活 直接返回
 		if (!this.defaultEditorsActive) {
 			return null;
 		}
+		//先从覆盖默认编辑器中查找，如果没查到再查默认编辑器
 		if (this.overriddenDefaultEditors != null) {
 			PropertyEditor editor = this.overriddenDefaultEditors.get(requiredType);
 			if (editor != null) {
@@ -290,6 +294,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 		registerCustomEditor(requiredType, null, propertyEditor);
 	}
 
+	//如果属性路径不为空，就注册一个 customEditorsForPath
 	@Override
 	public void registerCustomEditor(@Nullable Class<?> requiredType, @Nullable String propertyPath, PropertyEditor propertyEditor) {
 		if (requiredType == null && propertyPath == null) {
@@ -306,14 +311,23 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 				this.customEditors = new LinkedHashMap<>(16);
 			}
 			this.customEditors.put(requiredType, propertyEditor);
+
+			//todo 只根据 requriedType注册时会清空 customEditorCache
+			//todo 因为注册了 requiredType 的editor之后  要尽可能根据requiredType再获取editor的时候获取到正确的editor
 			this.customEditorCache = null;
 		}
 	}
 
+	//1. 先根据propertyPath 找customEditor
+	//2. 没找到 再根据strippedPaths 找
+	//3. 如果上面两步都没找到 加上 requiedType为空再根据propertyPath获取 requiredType
+
+	//4. 都没找到 再根据requiredType
 	@Override
 	@Nullable
 	public PropertyEditor findCustomEditor(@Nullable Class<?> requiredType, @Nullable String propertyPath) {
 		Class<?> requiredTypeToUse = requiredType;
+		//todo 如果propertyPath不为空先会根据propertyPath查找 2020-12-23
 		if (propertyPath != null) {
 			if (this.customEditorsForPath != null) {
 				// Check property-specific editor first.
@@ -321,8 +335,11 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 				if (editor == null) {
 					List<String> strippedPaths = new ArrayList<>();
 					addStrippedPropertyPaths(strippedPaths, "", propertyPath);
+
+					//遍历strppedPaths 根据strippedPath 查找 customEditor
 					for (Iterator<String> it = strippedPaths.iterator(); it.hasNext() && editor == null;) {
 						String strippedPath = it.next();
+						//根据propertyPath获取自定义编辑器
 						editor = getCustomEditor(strippedPath, requiredType);
 					}
 				}
@@ -413,6 +430,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 				// Find editor for superclass or interface.
 				for (Iterator<Class<?>> it = this.customEditors.keySet().iterator(); it.hasNext() && editor == null;) {
 					Class<?> key = it.next();
+					//todo 判断是否是requiredType的基类 2020-12-18
 					if (key.isAssignableFrom(requiredType)) {
 						editor = this.customEditors.get(key);
 						// Cache editor for search type, to avoid the overhead
@@ -496,14 +514,18 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	 * @param propertyPath the property path to check for keys/indexes to strip
 	 */
 	private void addStrippedPropertyPaths(List<String> strippedPaths, String nestedPath, String propertyPath) {
+
+		//找到[
 		int startIndex = propertyPath.indexOf(PropertyAccessor.PROPERTY_KEY_PREFIX_CHAR);
 		if (startIndex != -1) {
+			//找到]
 			int endIndex = propertyPath.indexOf(PropertyAccessor.PROPERTY_KEY_SUFFIX_CHAR);
 			if (endIndex != -1) {
+				//todo 可能存在多维数组的情况 2020-12-12
 				String prefix = propertyPath.substring(0, startIndex);
 				String key = propertyPath.substring(startIndex, endIndex + 1);
 				String suffix = propertyPath.substring(endIndex + 1, propertyPath.length());
-				// Strip the first key.
+				// Strip the first key. 剥离第一个key
 				strippedPaths.add(nestedPath + prefix + suffix);
 				// Search for further keys to strip, with the first key stripped.
 				addStrippedPropertyPaths(strippedPaths, nestedPath + prefix, suffix);

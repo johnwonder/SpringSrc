@@ -1,11 +1,11 @@
-package com.john.domain;
+package com.john.xmlconfig;
 
 /**
  * @Description: SpringSrc
  * @Author: johnwonder
- * @Date: 2020/10/21
+ * @Date: 2020/8/11
  */
-public class Brand {
+public class SchoolName {
 
 	private String name;
 
@@ -19,7 +19,7 @@ public class Brand {
 
 	@Override
 	public String toString() {
-		return "Brand{" +
+		return "SchoolName{" +
 				"name='" + name + '\'' +
 				'}';
 	}

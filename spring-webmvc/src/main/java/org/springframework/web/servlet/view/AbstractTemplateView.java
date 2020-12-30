@@ -120,7 +120,7 @@ public abstract class AbstractTemplateView extends AbstractUrlBasedView {
 			for (Enumeration<String> en = request.getAttributeNames(); en.hasMoreElements();) {
 				String attribute = en.nextElement();
 				if (model.containsKey(attribute) && !this.allowRequestOverride) {
-					throw new ServletException("Cannot expose request attribute '" + attribute +
+						throw new ServletException("Cannot expose request attribute '" + attribute +
 						"' because of an existing model object of the same name");
 				}
 				Object attributeValue = request.getAttribute(attribute);

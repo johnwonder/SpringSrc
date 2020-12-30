@@ -11,4 +11,9 @@ public class Car {
 	public String getBrand() {
 		return brand;
 	}
+
+	@Override
+	public String toString() {
+		return  "car and brand is" +brand;
+	}
 }

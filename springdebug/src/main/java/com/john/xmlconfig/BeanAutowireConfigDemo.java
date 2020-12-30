@@ -8,17 +8,18 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @Author: johnwonder
  * @Date: 2020/8/11
  */
-public class BeanAliasNameDemo {
+public class BeanAutowireConfigDemo {
 
 	public static void main( String[] args ) {
 
 
 		//https://www.cnblogs.com/zhuyeshen/p/12936912.html
-		ApplicationContext context=new ClassPathXmlApplicationContext("spring-config-alias.xml");
+		ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("spring-config-alias.xml");
 		SchoolName school=(SchoolName)context.getBean("seniorSchool");
 
 		System.out.println("school name:"+school.getName());
 
+		//context.getBeanFactory().addPropertyEditorRegistrar();
 
 //	    String[] aliases =	context.getAliases("school");
 //

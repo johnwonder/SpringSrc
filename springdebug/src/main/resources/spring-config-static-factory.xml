@@ -15,10 +15,12 @@
 	<!--实例工厂方法创建bean-->
 	<!--<bean id="instanceCar" factory-bean="carFactory" factory-method="createCar">-->
 	<!--</bean>-->
-	<bean id="brand" class="com.john.domain.Brand" />
+	<bean id="brand" class="com.john.domain.Brand">
+		<property name="name" value="black"/>
+	</bean>
 
 	<bean id="staticCar" class="com.john.domain.CarFactory" factory-method="createStaticCar">
-			<constructor-arg ref="brand"/>
+			<!--<constructor-arg ref="brand"/>-->
 	</bean>
 
 	<!--通过FactoryBean类来返回的bean -->

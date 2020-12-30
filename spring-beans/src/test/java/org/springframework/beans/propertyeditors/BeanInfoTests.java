@@ -18,7 +18,6 @@ package org.springframework.beans.propertyeditors;
 
 import java.beans.*;
 
-import org.apache.tomcat.util.IntrospectionUtils;
 import org.junit.Test;
 
 import org.springframework.beans.BeanWrapper;

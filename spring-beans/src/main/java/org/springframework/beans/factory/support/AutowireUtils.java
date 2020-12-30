@@ -100,6 +100,7 @@ abstract class AutowireUtils {
 		if (wm == null) {
 			return false;
 		}
+		//todo 不是CGLIB方法就不能排除依赖检查 2020-12-17
 		if (!wm.getDeclaringClass().getName().contains("$$")) {
 			// Not a CGLIB method so it's OK.
 			return false;
@@ -107,9 +108,11 @@ abstract class AutowireUtils {
 		// It was declared by CGLIB, but we might still want to autowire it
 		// if it was actually declared by the superclass.
 		Class<?> superclass = wm.getDeclaringClass().getSuperclass();
+		//父类定义了这个方法 就需要检查
 		return !ClassUtils.hasMethod(superclass, wm.getName(), wm.getParameterTypes());
 	}
 
+	//todo 判断接口中是否定义了此方法
 	/**
 	 * Return whether the setter method of the given bean property is defined
 	 * in any of the given interfaces.
@@ -118,10 +121,14 @@ abstract class AutowireUtils {
 	 * @return whether the setter method is defined by an interface
 	 */
 	public static boolean isSetterDefinedInInterface(PropertyDescriptor pd, Set<Class<?>> interfaces) {
+
+		//获取此属性的写方法
 		Method setter = pd.getWriteMethod();
 		if (setter != null) {
+			//获取set方法的定义类
 			Class<?> targetClass = setter.getDeclaringClass();
 			for (Class<?> ifc : interfaces) {
+				//如果该定义类 实现了此接口 并且 此方法是 接口定义的方法 那就返回true
 				if (ifc.isAssignableFrom(targetClass) &&
 						ClassUtils.hasMethod(ifc, setter.getName(), setter.getParameterTypes())) {
 					return true;

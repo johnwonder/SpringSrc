@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
  */
 abstract class AbstractPropertyLoadingBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
+	//todo 这里重置为true了 所以 PropertyPlaceholderConfigurer 自动生成了BeanName 2020-11-20
 	@Override
 	protected boolean shouldGenerateId() {
 		return true;

@@ -33,6 +33,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+//针对泛型的属性描述器
 /**
  * Extension of the standard JavaBeans {@link PropertyDescriptor} class,
  * overriding {@code getPropertyType()} such that a generically declared

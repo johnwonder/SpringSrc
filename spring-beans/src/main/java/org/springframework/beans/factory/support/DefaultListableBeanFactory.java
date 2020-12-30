@@ -859,11 +859,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		//todo 遍历所有不是延迟初始化的 单例 bean 2020-08-28
 		for (String beanName : beanNames) {
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
+			//不是抽象的 且是单例的 且不是懒加载的
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
+				//todo 如果是factorybean 那还得去判断 是不是eagerInit
 				if (isFactoryBean(beanName)) {
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
 					if (bean instanceof FactoryBean) {
 						final FactoryBean<?> factory = (FactoryBean<?>) bean;
+						//判断是不是渴望初始化的。。
 						boolean isEagerInit;
 						if (System.getSecurityManager() != null && factory instanceof SmartFactoryBean) {
 							isEagerInit = AccessController.doPrivileged((PrivilegedAction<Boolean>)
@@ -874,6 +877,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							isEagerInit = (factory instanceof SmartFactoryBean &&
 									((SmartFactoryBean<?>) factory).isEagerInit());
 						}
+						//渴望初始化的时候才会初始化bean
 						if (isEagerInit) {
 							getBean(beanName);
 						}

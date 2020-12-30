@@ -133,6 +133,7 @@ public class XmlReaderContext extends ReaderContext {
 	 * @see org.springframework.beans.factory.support.BeanNameGenerator#generateBeanName
 	 */
 	public String generateBeanName(BeanDefinition beanDefinition) {
+		//todo 默认是 DefaultBeanNameGenerator 2020-11-27
 		return this.reader.getBeanNameGenerator().generateBeanName(beanDefinition, getRegistry());
 	}
 

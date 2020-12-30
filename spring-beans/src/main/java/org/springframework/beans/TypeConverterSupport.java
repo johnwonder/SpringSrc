@@ -24,6 +24,8 @@ import org.springframework.core.convert.ConverterNotFoundException;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+
+//todo TypeConverter接口的基础实现，使用一个私有的delegate 类
 /**
  * Base implementation of the {@link TypeConverter} interface, using a package-private delegate.
  * Mainly serves as base class for {@link BeanWrapperImpl}.

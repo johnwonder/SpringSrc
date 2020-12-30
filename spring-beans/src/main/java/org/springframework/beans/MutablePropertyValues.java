@@ -350,6 +350,7 @@ public class MutablePropertyValues implements PropertyValues, Serializable {
 		}
 	}
 
+	//不需要运行时再转换了
 	/**
 	 * Mark this holder as containing converted values only
 	 * (i.e. no runtime resolution needed anymore).

@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
+//字符串 所对应类型的 持有者
 /**
  * Holder for a typed String value. Can be added to bean definitions
  * in order to explicitly specify a target type for a String value,
@@ -200,6 +201,7 @@ public class TypedStringValue implements BeanMetadataElement {
 		return this.specifiedTypeName;
 	}
 
+	//包含表达式
 	/**
 	 * Mark this value as dynamic, i.e. as containing an expression
 	 * and hence not being subject to caching.

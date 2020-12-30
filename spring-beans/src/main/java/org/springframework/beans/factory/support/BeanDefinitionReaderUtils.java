@@ -173,6 +173,7 @@ public abstract class BeanDefinitionReaderUtils {
 		//todo 放入 beandefinitionMap中 2020-09-11
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
+		//todo 获取bean name 注册到alias中 2020-11-20
 		// Register aliases for bean name, if any.
 		String[] aliases = definitionHolder.getAliases();
 		if (aliases != null) {

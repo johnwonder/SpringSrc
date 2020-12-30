@@ -127,6 +127,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
+	//是否自动尝试解决循环依赖
 	/** Whether to automatically try to resolve circular references between beans. */
 	private boolean allowCircularReferences = true;
 
@@ -1396,10 +1397,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// to support styles of field injection.
 		boolean continueWithPropertyPopulation = true;
 
+		// 1。会执行 InstantiationAwareBeanPostProcessor的 postProcessAfterInstantiation
+		//如果bean不是合成的 且有InstantiationAwareBeanPostProcessors
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
+			//遍历BeanPostProcessors
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+
+					//如果执行postProcessAfterInstantiation方法失败 就返回
 					if (!ibp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) {
 						continueWithPropertyPopulation = false;
 						break;
@@ -1412,23 +1418,28 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			return;
 		}
 
+		//todo 获取BeanDefinition的属性值集合 2020-12-17
 		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 
 		if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_NAME || mbd.getResolvedAutowireMode() == AUTOWIRE_BY_TYPE) {
 			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 			// Add property values based on autowire by name if applicable.
 			if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_NAME) {
+
+				//todo 根据名称自动装配 2020-12-16
 				autowireByName(beanName, mbd, bw, newPvs);
 			}
 
 			// Add property values based on autowire by type if applicable.
 			//todo 根据类型添加基于autowire的特性值（如果适用） 2020-10-17
 			if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_TYPE) {
+				//todo 该bean下的属性值根据类型自动注入 2020-12-21
 				autowireByType(beanName, mbd, bw, newPvs);
 			}
 			pvs = newPvs;
 		}
 
+		//会执行  InstantiationAwareBeanPostProcessor的  postProcessProperties 和 postProcessPropertyValues
 		//todo 判断是否有 InstantiationAwareBeanPostProcessor 2020-11-03
 		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
 		boolean needsDepCheck = (mbd.getDependencyCheck() != AbstractBeanDefinition.DEPENDENCY_CHECK_NONE);
@@ -1441,6 +1452,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+					//todo 执行postProcessProperties 方法 2020-12-16
+					//todo postProcessPropertyValues 换成 postProcessProperties 了 2020-12-17
 					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
 					if (pvsToUse == null) {
 						if (filteredPds == null) {
@@ -1451,14 +1464,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 							return;
 						}
 					}
+
+					//这里还真有可能 变成不是MutablePropertyValues了
 					pvs = pvsToUse;
 				}
 			}
 		}
 		if (needsDepCheck) {
 			if (filteredPds == null) {
+				//过滤下属性描述器
 				filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
 			}
+			//检查需要写的属性值是否可以设置
 			checkDependencies(beanName, mbd, filteredPds, pvs);
 		}
 
@@ -1519,6 +1536,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		Set<String> autowiredBeanNames = new LinkedHashSet<>(4);
+		//属性值
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (String propertyName : propertyNames) {
 			try {
@@ -1564,9 +1582,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected String[] unsatisfiedNonSimpleProperties(AbstractBeanDefinition mbd, BeanWrapper bw) {
 		Set<String> result = new TreeSet<>();
+		//获取属性值
 		PropertyValues pvs = mbd.getPropertyValues();
 		PropertyDescriptor[] pds = bw.getPropertyDescriptors();
 		for (PropertyDescriptor pd : pds) {
+			//如果 写方法不为空 且不是排除的依赖属性  且 属性集合里不包含此属性名称
 			if (pd.getWriteMethod() != null && !isExcludedFromDependencyCheck(pd) && !pvs.contains(pd.getName()) &&
 					!BeanUtils.isSimpleProperty(pd.getPropertyType())) {
 				result.add(pd.getName());
@@ -1628,6 +1648,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				AutowireUtils.isSetterDefinedInInterface(pd, this.ignoredDependencyInterfaces));
 	}
 
+	//执行依赖项检查，确保所有公开的属性都已设置
 	/**
 	 * Perform a dependency check that all properties exposed have been set,
 	 * if desired. Dependency checks can be objects (collaborating beans),
@@ -1644,6 +1665,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		int dependencyCheck = mbd.getDependencyCheck();
 		for (PropertyDescriptor pd : pds) {
+			//如果写方法不为空 但是属性值没有的情况下
 			if (pd.getWriteMethod() != null && (pvs == null || !pvs.contains(pd.getName()))) {
 				boolean isSimple = BeanUtils.isSimpleProperty(pd.getPropertyType());
 				boolean unsatisfied = (dependencyCheck == AbstractBeanDefinition.DEPENDENCY_CHECK_ALL) ||
@@ -1668,6 +1690,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	//https://blog.csdn.net/zhuqiuhui/article/details/82391836
 	protected void applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs) {
+
+		//todo pvs 代表新的属性值
 		if (pvs.isEmpty()) {
 			return;
 		}
@@ -1681,6 +1705,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		if (pvs instanceof MutablePropertyValues) {
 			mpvs = (MutablePropertyValues) pvs;
+
+			//这里判断如果转换过了 就直接设置了
 			if (mpvs.isConverted()) {
 				// Shortcut: use the pre-converted values as-is.
 				try {
@@ -1695,6 +1721,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			original = mpvs.getPropertyValueList();
 		}
 		else {
+			//变成List类型
 			original = Arrays.asList(pvs.getPropertyValues());
 		}
 
@@ -1707,6 +1734,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		//todo 这里每次都new一个BeanDefinitionValueResolver 去解析Bean 的属性值 2020-10-13
 		BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this, beanName, mbd, converter);
 
+		//todo 创建一个深拷贝 list 解析值引用 为了不修改原来的
 		// Create a deep copy, resolving any references for values.
 		List<PropertyValue> deepCopy = new ArrayList<>(original.size());
 		boolean resolveNecessary = false;
@@ -1718,6 +1746,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				//todo 获取属性名称和值 准备 转换 2020-09-29
 				//https://blog.csdn.net/cuichunchi/article/details/90407632
 				String propertyName = pv.getName();
+				//原始值
 				Object originalValue = pv.getValue();
 
 				//todo important 这里很重要 ManagedList等都在这边解析 2020-11-09
@@ -1733,6 +1762,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				// Possibly store converted value in merged bean definition,
 				// in order to avoid re-conversion for every created bean instance.
 				//为了避免对每个创建的bean实例进行重新转换
+				//如果 通过valueResolver 解析过后的值 等于原始值
 				if (resolvedValue == originalValue) {
 					if (convertible) {
 						pv.setConvertedValue(convertedValue);
@@ -1742,16 +1772,20 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				else if (convertible && originalValue instanceof TypedStringValue &&
 						!((TypedStringValue) originalValue).isDynamic() &&
 						!(convertedValue instanceof Collection || ObjectUtils.isArray(convertedValue))) {
+
+					//如果 originalValue 是TypedStringValue 且 不包含 动态表达式 且 convertedValue 不是集合 且不是数组
 					pv.setConvertedValue(convertedValue);
 					deepCopy.add(pv);
 				}
 				else {
+					//todo 代表需要 resolve
 					resolveNecessary = true;
 					deepCopy.add(new PropertyValue(pv, convertedValue));
 				}
 			}
 		}
 		if (mpvs != null && !resolveNecessary) {
+			//设置成只包含转换过后的值了。。
 			mpvs.setConverted();
 		}
 
@@ -1811,6 +1845,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}, getAccessControlContext());
 		}
 		else {
+			//todo 调用 1.BeanNameAware 2.BeanClassLoaderAware 3.BeanFactoryAware 2020-12-21
 			invokeAwareMethods(beanName, bean);
 		}
 

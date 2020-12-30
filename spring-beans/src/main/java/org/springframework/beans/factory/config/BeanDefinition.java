@@ -242,6 +242,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 		return !getConstructorArgumentValues().isEmpty();
 	}
 
+	//返回的实例可以在BeanFactory后处理期间修改
 	/**
 	 * Return the property values to be applied to a new instance of the bean.
 	 * <p>The returned instance can be modified during bean factory post-processing.

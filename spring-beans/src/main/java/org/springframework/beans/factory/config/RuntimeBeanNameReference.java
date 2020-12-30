@@ -19,6 +19,9 @@ package org.springframework.beans.factory.config;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//todo 不可变占位符类 这就解释了 BeanDefinitionHolder中提到的
+// todo Can be registered as a placeholder for an inner bean(可以注册为内部bean的占位符)
+//
 /**
  * Immutable placeholder class used for a property value object when it's a
  * reference to another bean name in the factory, to be resolved at runtime.

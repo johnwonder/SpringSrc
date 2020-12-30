@@ -1,4 +1,4 @@
-package com.john.dependency.injection;
+package com.john.dependency.autowire;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -7,18 +7,16 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @Author: johnwonder
  * @Date: 2020/10/21
  */
-public class InstanceFactoryMethodInjectionDemo {
+public class AutowireInjectionDemo {
 
 	public static void main(String[] args) {
 
 		ClassPathXmlApplicationContext ac =new ClassPathXmlApplicationContext();
-		ac.setConfigLocations("spring-config-instance-factory.xml");
+		ac.setConfigLocations("spring-config-autowire-di.xml");
 		ac.refresh();
-		System.out.println(ac.getBean("instanceCar"));
-		//System.out.println(ac.getBean("car1"));
 
-		System.out.println(ac.getBean("&carFactory"));
+	    TestBean testBean =	ac.getBean(TestBean.class);
 
-
+		System.out.println(testBean);
 	}
 }

@@ -134,6 +134,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 		synchronized (this.aliasMap) {
 			retrieveAliases(name, result);
 		}
+		//todo hashMap是无序的 ，所以取出顺序不一定和注册顺序一样 2020-11-19
 		return StringUtils.toStringArray(result);
 	}
 
@@ -165,6 +166,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 			aliasCopy.forEach((alias, registeredName) -> {
 				String resolvedAlias = valueResolver.resolveStringValue(alias);
 				String resolvedName = valueResolver.resolveStringValue(registeredName);
+				//名称与别名相同就移除呗！
 				if (resolvedAlias == null || resolvedName == null || resolvedAlias.equals(resolvedName)) {
 					this.aliasMap.remove(alias);
 				}
@@ -182,7 +184,9 @@ public class SimpleAliasRegistry implements AliasRegistry {
 								registeredName + "'.");
 					}
 					checkForAliasCircle(resolvedName, resolvedAlias);
+					//todo 移除占位符 2020-11-20
 					this.aliasMap.remove(alias);
+					//放入真正的别名
 					this.aliasMap.put(resolvedAlias, resolvedName);
 				}
 				else if (!registeredName.equals(resolvedName)) {

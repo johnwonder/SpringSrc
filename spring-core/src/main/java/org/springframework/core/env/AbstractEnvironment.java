@@ -374,7 +374,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 		validateProfile(profile);
 		Set<String> currentActiveProfiles = doGetActiveProfiles();
 
-		//当当前激活的profile为空时才会检查defaultProfiles
+		//当前激活的profile为空时才会检查defaultProfiles
 		return (currentActiveProfiles.contains(profile) ||
 				(currentActiveProfiles.isEmpty() && doGetDefaultProfiles().contains(profile)));
 	}

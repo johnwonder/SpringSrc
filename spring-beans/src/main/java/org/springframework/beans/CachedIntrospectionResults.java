@@ -309,6 +309,7 @@ public final class CachedIntrospectionResults {
 				this.propertyDescriptorCache.put(pd.getName(), pd);
 			}
 
+			//显示检查实现的接口 java8 有默认的方法
 			// Explicitly check implemented interfaces for setter/getter methods as well,
 			// in particular for Java 8 default methods...
 			Class<?> currClass = beanClass;
@@ -378,6 +379,7 @@ public final class CachedIntrospectionResults {
 
 	private PropertyDescriptor buildGenericTypeAwarePropertyDescriptor(Class<?> beanClass, PropertyDescriptor pd) {
 		try {
+			//todo 根据PropertyDescritor获取 读方法 和写方法
 			return new GenericTypeAwarePropertyDescriptor(beanClass, pd.getName(), pd.getReadMethod(),
 					pd.getWriteMethod(), pd.getPropertyEditorClass());
 		}

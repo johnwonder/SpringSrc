@@ -66,12 +66,13 @@ public final class GenericTypeResolver {
 		return methodParameter.getParameterType();
 	}
 
+	//确定给定方法的泛型返回类型的目标类型
 	/**
 	 * Determine the target type for the generic return type of the given method,
 	 * where formal type variables are declared on the given class.
 	 * @param method the method to introspect
 	 * @param clazz the class to resolve type variables against
-	 * @return the corresponding generic parameter or return type
+	 * @return the corresponding generic parameter or return type 相应的泛型参数或返回类型
 	 */
 	public static Class<?> resolveReturnType(Method method, Class<?> clazz) {
 		Assert.notNull(method, "Method must not be null");

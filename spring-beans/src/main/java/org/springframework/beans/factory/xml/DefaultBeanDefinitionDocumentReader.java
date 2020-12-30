@@ -39,6 +39,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
+//就实现了一个registerBeanDefinitions接口
 /**
  * Default implementation of the {@link BeanDefinitionDocumentReader} interface that
  * reads bean definitions according to(根据) the "spring-beans" DTD and XSD format
@@ -61,6 +62,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	//"bean"
 	public static final String BEAN_ELEMENT = BeanDefinitionParserDelegate.BEAN_ELEMENT;
 
+	//嵌套bean
 	public static final String NESTED_BEANS_ELEMENT = "beans";
 
 	public static final String ALIAS_ELEMENT = "alias";
@@ -130,6 +132,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// the new (child) delegate with a reference to the parent for fallback purposes,
 		// then ultimately reset this.delegate back to its original (parent) reference.
 		// this behavior emulates a stack of delegates without actually necessitating one.
+		//这种行为模拟了一堆委托，实际上并不需要一个
 		BeanDefinitionParserDelegate parent = this.delegate;
 		//todo 为啥又创建一个代理呢
 		this.delegate = createDelegate(getReaderContext(), root, parent);

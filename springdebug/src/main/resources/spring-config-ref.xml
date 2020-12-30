@@ -9,6 +9,10 @@
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:property-placeholder ignore-unresolvable="true"   location="classpath:alias.properties"/>
+
+
 	<bean id="school" name="school1" class="com.john.xmlconfig.School">
 		<constructor-arg ><!-- ref="students"-->
 			<!--<ref bean="students"></ref>-->
@@ -24,7 +28,8 @@
 	</bean>
 
 	<!--bean别名 name为bean名称 alias为别名-->
-	<alias name="school1" alias="lschool"/>
+	<alias name="school1" alias="aliaslschool"/>
+	<alias name="school1" alias="${aliasName}"/>
 	<bean id="students" class="com.john.xmlconfig.Students" >
 		<property name="name">
 			<value type="java.lang.String">yiwen</value>

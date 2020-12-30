@@ -7,7 +7,7 @@ package com.john.propertyEditor;
  */
 public class Boss {
 	private String name;
-	private Car car = new Car();
+	private Car[] car;
 	//省略get/setter
 
 
@@ -19,11 +19,11 @@ public class Boss {
 		this.name = name;
 	}
 
-	public Car getCar() {
+	public Car[] getCar() {
 		return car;
 	}
 
-	public void setCar(Car car) {
+	public void setCar(Car[] car) {
 		this.car = car;
 	}
 }
