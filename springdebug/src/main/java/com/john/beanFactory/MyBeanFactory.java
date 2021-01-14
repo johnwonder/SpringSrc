@@ -13,7 +13,7 @@ public class MyBeanFactory implements BeanFactoryAware {
 	//回调方法
 	public void setBeanFactory(BeanFactory factory) throws BeansException {
 		// TODO Auto-generated method stub
-		this.beanFactory = factory;
+		//this.beanFactory = factory;
 		System.out.println("==>>>>setBeanFactory<<<<<<==");
 	}
 

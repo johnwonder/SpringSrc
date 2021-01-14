@@ -201,7 +201,7 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	 * before-instantiation callbacks (e.g. for annotation-driven injection).
 	 * <p>Does <i>not</i> apply standard {@link BeanPostProcessor BeanPostProcessors}
 	 * callbacks or perform any further initialization of the bean. This interface
-	 * offers distinct, fine-grained operations for those purposes, for example
+	 * offers distinct, fine-grained operations for those purposes(这个接口为这些目的提供了独特的细粒度操作), for example
 	 * {@link #initializeBean}. However, {@link InstantiationAwareBeanPostProcessor}
 	 * callbacks are applied, if applicable to the construction of the instance.
 	 * @param beanClass the class of the bean to instantiate

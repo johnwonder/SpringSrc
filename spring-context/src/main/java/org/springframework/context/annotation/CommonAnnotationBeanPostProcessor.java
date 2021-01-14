@@ -150,6 +150,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	private static Class<? extends Annotation> ejbRefClass;
 
 	static {
+		//todo 最新版本放到私有静态方法去 加载了
 		try {
 			@SuppressWarnings("unchecked")
 			Class<? extends Annotation> clazz = (Class<? extends Annotation>)
@@ -198,6 +199,8 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 	 * respectively.
 	 */
 	public CommonAnnotationBeanPostProcessor() {
+		//todo 构造函数里去设置 order  比 AutowiredAnnotationBeanPostProcessor 优先级高一级 2020-12-30
+		//AutowiredAnnotationBeanPostProcessor 在定义字段的时候 设置了优先级 Ordered.LOWEST_PRECEDENCE - 2
 		setOrder(Ordered.LOWEST_PRECEDENCE - 3);
 		//todo PostConstruct 注解 2020-09-17
 		setInitAnnotationType(PostConstruct.class);
@@ -495,6 +498,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 			throw new NoSuchBeanDefinitionException(element.lookupType,
 					"No resource factory configured - specify the 'resourceFactory' property");
 		}
+		//todo 注入以@Resource注解的 Bean 2020-12-30
 		return autowireResource(this.resourceFactory, element, requestingBeanName);
 	}
 
@@ -524,6 +528,7 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 			}
 		}
 		else {
+			//todo 根据 名称  和查找类型获取 对应的 Bean  2020-12-30
 			resource = factory.getBean(name, element.lookupType);
 			autowiredBeanNames = Collections.singleton(name);
 		}

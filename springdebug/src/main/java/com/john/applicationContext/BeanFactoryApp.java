@@ -48,10 +48,10 @@ public class BeanFactoryApp
 		//https://www.jianshu.com/p/aff3f01f3641
 		//打印出true
 
-		Landlord landlord = (Landlord) applicationContext.getBean("landlord", Landlord.class);
+		Landlord landlord =  applicationContext.getBean("landlord", Landlord.class);
 		landlord.service();
 		landlord.setId(5);
-		Person albert = (Person) applicationContext.getBean("person", Person.class);
+		Person albert =  applicationContext.getBean("person", Person.class);
 		//Person albert = new Person(1, "Albert", "Camus");
 		//Person audrey = new Person(2, "Audrey", "Hepburn");
 		//System.out.println(albert);

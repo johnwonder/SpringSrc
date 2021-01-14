@@ -94,10 +94,12 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	@Nullable
 	private ConversionService conversionService;
 
+	//默认编辑器 默认是不激活的
 	private boolean defaultEditorsActive = false;
 
 	private boolean configValueEditorsActive = false;
 
+	//todo 默认属性编辑器 HashMap 集合
 	@Nullable
 	private Map<Class<?>, PropertyEditor> defaultEditors;
 

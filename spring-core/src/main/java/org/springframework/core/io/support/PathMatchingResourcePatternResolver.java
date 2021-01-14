@@ -315,6 +315,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				//todo classpath: 2020-11-16
 				//调用ClassLoader.getResource 找到一个 classes path 就直接返回了
 				// a single resource with the given name
+				//todo DefaultResourceLoader下的getResource方法
 				return new Resource[] {getResourceLoader().getResource(locationPattern)};
 			}
 		}
@@ -352,6 +353,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		Set<Resource> result = new LinkedHashSet<>(16);
 		ClassLoader cl = getClassLoader();
 		//todo important 能够获取resources路径
+		//todo 在 AppClassLoader中可以看到 其实还是通过 System.getProperty("java.class.path")) 获取的 2020-1-5
 		Enumeration<URL> resourceUrls = (cl != null ? cl.getResources(path) : ClassLoader.getSystemResources(path));
 		while (resourceUrls.hasMoreElements()) {
 			URL url = resourceUrls.nextElement();
@@ -493,6 +495,8 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		}
 	}
 
+	//todo 如果不是相对路径 直接用诸如spring-config*.xml的话 会调用findPathMatchingResources
+	//根据rootDirResource 去找 资源 但是偏偏rootDirResource返回代表classes目录下的资源文件路径，导致找不到
 	/**
 	 * Find all resources that match the given location pattern via the
 	 * Ant-style PathMatcher. Supports resources in jar files and zip files
@@ -507,10 +511,16 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {
 		String rootDirPath = determineRootDir(locationPattern);
 		String subPattern = locationPattern.substring(rootDirPath.length());
+
+		//如果带上相对路径，那么会返回带resources目录并且带上父目录的资源路径
 		Resource[] rootDirResources = getResources(rootDirPath);
 		Set<Resource> result = new LinkedHashSet<>(16);
 		for (Resource rootDirResource : rootDirResources) {
 			rootDirResource = resolveRootDirResource(rootDirResource);
+
+			//https://blog.csdn.net/zhangshk_/article/details/82704010
+			//todo 如果不是相对路径 直接用诸如spring-config*.xml的话 会直接返回代表classes目录下的资源文件路径，导致找不到 2021-1-13
+			//调用ClassPathResource的 getURL  方法
 			URL rootDirUrl = rootDirResource.getURL();
 			if (equinoxResolveMethod != null && rootDirUrl.getProtocol().startsWith("bundle")) {
 				URL resolvedUrl = (URL) ReflectionUtils.invokeMethod(equinoxResolveMethod, null, rootDirUrl);

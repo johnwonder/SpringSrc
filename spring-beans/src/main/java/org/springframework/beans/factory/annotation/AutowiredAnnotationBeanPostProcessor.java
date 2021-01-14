@@ -126,6 +126,8 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 	private boolean requiredParameterValue = true;
 
+	//todo 构造函数里去设置 order  比 CommonAnnotationBeanPostProcessor 优先级低一级 2020-12-30
+	//CommonAnnotationBeanPostProcessor 在构造函数的时候 设置了优先级 Ordered.LOWEST_PRECEDENCE - 3
 	private int order = Ordered.LOWEST_PRECEDENCE - 2;
 
 	@Nullable

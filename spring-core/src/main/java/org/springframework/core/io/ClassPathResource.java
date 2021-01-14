@@ -155,6 +155,8 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	 */
 	@Nullable
 	protected URL resolveURL() {
+
+		//todo 如果clazz不为空
 		if (this.clazz != null) {
 			//通过class的classLoader 来加载
 			//https://blog.csdn.net/zhangshk_/article/details/82704010

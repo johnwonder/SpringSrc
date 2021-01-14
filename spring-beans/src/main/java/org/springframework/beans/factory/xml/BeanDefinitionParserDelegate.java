@@ -74,6 +74,7 @@ import org.springframework.util.xml.DomUtils;
 //BeanDefinition的解析代理
 public class BeanDefinitionParserDelegate {
 
+	//写死了默认的bean命名空间
 	public static final String BEANS_NAMESPACE_URI = "http://www.springframework.org/schema/beans";
 
 	//多值分隔符
@@ -300,6 +301,8 @@ public class BeanDefinitionParserDelegate {
 	 */
 	public void initDefaults(Element root, @Nullable BeanDefinitionParserDelegate parent) {
 		populateDefaults(this.defaults, (parent != null ? parent.defaults : null), root);
+
+		//todo 发送默认注册事件 2021-1-12
 		this.readerContext.fireDefaultsRegistered(this.defaults);
 	}
 
@@ -1478,7 +1481,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		// Decorate based on custom nested elements.
-		//自定义标签
+		//自定义 嵌套元素
 		NodeList children = ele.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
@@ -1489,10 +1492,12 @@ public class BeanDefinitionParserDelegate {
 		return finalDefinition;
 	}
 
+	//不是自定义命名空间才会去 decorate 2021-1-13
 	public BeanDefinitionHolder decorateIfRequired(
 			Node node, BeanDefinitionHolder originalDef, @Nullable BeanDefinition containingBd) {
 
 		String namespaceUri = getNamespaceURI(node);
+		//todo 不是默认命名空间才会去 decorate 2021-1-13
 		if (namespaceUri != null && !isDefaultNamespace(namespaceUri)) {
 			//DefaultNamespaceHandlerResolver
 			NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);

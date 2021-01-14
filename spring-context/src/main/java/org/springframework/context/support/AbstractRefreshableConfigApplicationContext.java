@@ -23,6 +23,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+//AbstractRefreshableApplicationContext的子类
+//添加指定配置文件路径的常用处理
+//还实现了 BeanNameAware和 InitializingBean接口
 /**
  * {@link AbstractRefreshableApplicationContext} subclass that adds common handling
  * of specified config locations. Serves as base class for XML-based application
@@ -69,9 +72,14 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	 * <p>If not set, the implementation may use a default as appropriate.
 	 */
 	public void setConfigLocation(String location) {
+		//支持 location 以分号后者空格来分割 比如 "config1.xml,config2.xml"
+		//ConfigurableApplicationContext 定义 CONFIG_LOCATION_DELIMITERS
+		//String CONFIG_LOCATION_DELIMITERS = ",; \t\n";
 		setConfigLocations(StringUtils.tokenizeToStringArray(location, CONFIG_LOCATION_DELIMITERS));
 	}
 
+	//java1.5就引入了可变参数
+	//https://www.cnblogs.com/Beansczm/p/9508326.html
 	/**
 	 * Set the config locations for this application context.
 	 * <p>If not set, the implementation may use a default as appropriate.
@@ -92,6 +100,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 		}
 	}
 
+	//子类可以重写这个方法：提供 资源路径的集合
 	/**
 	 * Return an array of resource locations, referring to the XML bean definition
 	 * files that this context should be built with. Can also include location
@@ -107,6 +116,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 		return (this.configLocations != null ? this.configLocations : getDefaultConfigLocations());
 	}
 
+	//返回默认的配置路径。 如果没有指定 显示的配置路径
 	/**
 	 * Return the default config locations to use, for the case where no
 	 * explicit config locations have been specified.

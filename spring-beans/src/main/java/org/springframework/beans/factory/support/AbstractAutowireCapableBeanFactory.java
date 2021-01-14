@@ -418,6 +418,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws BeansException {
 
 		Object result = existingBean;
+		//todo 遍历BeanPostProcessor 调用postProcessBeforeInitialization 2021-1-12
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
 			Object current = processor.postProcessBeforeInitialization(result, beanName);
 			if (current == null) {
@@ -486,7 +487,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Prepare method overrides.
-		//准备重写方法
+		//准备检查 methodOverrides 判断有无重载
 		try {
 			mbdToUse.prepareMethodOverrides();
 		}
@@ -1194,10 +1195,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				return autowireConstructor(beanName, mbd, null, null);
 			}
 			else {
+				//todo 里面可能会调用 methodOverride 方法去实例化
 				return instantiateBean(beanName, mbd);
 			}
 		}
 
+		//todo 如果 autowireMode 是 AUTOWIRE_CONSTRUCTOR 肯定会调用 autowireConstructor 2020-1-11
 		// Candidate constructors for autowiring?
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
@@ -1321,6 +1324,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 
 			//todo important 初始化 typeConverterDelegate 2020-09-17
+			//todo 会调用 AbstractNestablePropertyAccessor 构造函数 并且会激活 注册默认属性编辑器 defaultEditorsActive 2021-1-12
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
 			//todo important 设置 conversionSevice 2020-09-17
 			//todo 注册自定义属性编辑器 2020-09-29
@@ -1818,6 +1822,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 
+	//todo 先执行 applyBeanPostProcessorsBeforeInitialization
+	//todo 后执行 afterPropertiesSet
+	//todo 再执行 applyBeanPostProcessorsAfterInitialization
 	/**
 	 * Initialize the given bean instance, applying factory callbacks
 	 * as well as init methods and bean post processors.

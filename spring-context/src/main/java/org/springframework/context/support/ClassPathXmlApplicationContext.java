@@ -20,9 +20,13 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//独立的XMl 应用上下文，从class path 加载定义的文件
+
+//默认的配置文件路径 可以通过getConfigLocations方法重写。
 /**
  * Standalone XML application context, taking the context definition files
  * from the class path, interpreting plain paths as class path resource names
@@ -116,6 +120,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		this(configLocations, true, parent);
 	}
 
+	//可以传入refresh为false 在配置完context之后 再手动调用refresh方法。
 	/**
 	 * Create a new ClassPathXmlApplicationContext, loading the definitions
 	 * from the given XML files.
@@ -217,6 +222,17 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		refresh();
 	}
 
+	//AbstractApplicationContext
+//	@Override
+//	protected ResourcePatternResolver getResourcePatternResolver() {
+//		return super.getResourcePatternResolver();
+//	}
+
+	//DefaultResourceLoader
+	//	@Override
+//	protected Resource getResourceByPath(String path) {
+//		return super.getResourceByPath(path);
+//	}
 
 	@Override
 	@Nullable
@@ -224,4 +240,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		return this.configResources;
 	}
 
+//	@Override
+//	protected ResourcePatternResolver getResourcePatternResolver() {
+//		return super.getResourcePatternResolver();
+//	}
 }

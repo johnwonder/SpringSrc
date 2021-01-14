@@ -1,8 +1,12 @@
-description = "Spring debug"
+
 
 //repositories {
 //	flatDir { dirs "${System.env.JAVA_HOME}/jre/lib" }
 //}
+plugins {
+	id 'java'
+}
+
 dependencies {
 
 	compile(project(":spring-context"))
@@ -10,7 +14,7 @@ dependencies {
 	compile(project(":spring-core"))
 	compile(project(":spring-instrument"))
 	compile(project(":spring-aop"))
-	compile(project(":spring-web"))
+//	optional(project(":spring-web"))
 
 //	compile(project(":spring-aop"))
 	compile("javax.inject:javax.inject:1")
@@ -18,12 +22,12 @@ dependencies {
 	//compile name: 'rt'
 	compile fileTree(dir:'lib',includes:['*jar'])
 }
-apply plugin: 'java'
-compileJava {
-	options.compilerArgs << '-XDignore.symbol.file'
+
+//compileJava {
+	//options.compilerArgs << '-XDignore.symbol.file'
 	//https://blog.csdn.net/am_Sun/article/details/106374866?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param
-	options.bootClasspath = "${System.env.JAVA_HOME}/jre/lib/rt.jar"
-}
+	//options.bootClasspath = "${System.env.JAVA_HOME}/jre/lib/rt.jar"
+//}
 
 //tasks.withType(JavaCompile){
 //	options.encoding= "UTF-8"

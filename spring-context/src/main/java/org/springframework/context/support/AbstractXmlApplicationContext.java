@@ -26,6 +26,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
+//ApplicationContext的基类实现
+//子类只需要实现getConfigLocations方法
+//子类可以重写getResourceByPath 拦截 特定环境的相对路径
 /**
  * Convenient base class for {@link org.springframework.context.ApplicationContext}
  * implementations, drawing configuration from XML documents containing bean definitions
@@ -95,6 +98,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		beanDefinitionReader.setResourceLoader(this);
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
+		//todo 允许子类提供 reader的 自定义初始化
 		// Allow a subclass to provide custom initialization of the reader,
 		// then proceed with actually loading the bean definitions.
 		//初始化beanReader
@@ -113,6 +117,8 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 */
 	protected void initBeanDefinitionReader(XmlBeanDefinitionReader reader) {
 
+
+		//reader.setDocumentReaderClass();
 		//设置验证xml文档
 		//可以使用不同的 xmlBeanDefinitionParser 实现
 		reader.setValidating(this.validating);

@@ -57,6 +57,8 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	}
 
 
+	//todo 如果有 methodOverrides 那么就会调用 instantiateWithMethodInjection 方法 cglib 去返回bean 2020-1-8
+	//
 	@Override
 	public Object instantiate(RootBeanDefinition bd, @Nullable String beanName, BeanFactory owner) {
 		// Don't override the class with CGLIB if no overrides.
@@ -87,6 +89,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {
+			//todo 像lookup replace等 需要用cglib 代理来实例化
 			// Must generate CGLIB subclass.
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}

@@ -341,6 +341,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				getReaderContext().error("Failed to register alias '" + alias +
 						"' for bean with name '" + name + "'", ele, ex);
 			}
+			//todo 2021-1-12 触发别名注册事件 2021-1-12
 			getReaderContext().fireAliasRegistered(name, alias, extractSource(ele));
 		}
 	}

@@ -101,6 +101,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 	 * @param object object wrapped by this BeanWrapper
 	 */
 	public BeanWrapperImpl(Object object) {
+		//AbstractNestablePropertyAccessor defaultEditorsActive为true
 		super(object);
 	}
 

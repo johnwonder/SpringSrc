@@ -72,7 +72,7 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	@Nullable
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 
-		//为元素找到解析器
+		//todo 为元素找到解析器 然后调用具体的解析器去 解析自定义标签
 		BeanDefinitionParser parser = findParserForElement(element, parserContext);
 		return (parser != null ? parser.parse(element, parserContext) : null);
 	}

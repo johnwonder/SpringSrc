@@ -80,9 +80,13 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 
 				//todo PropertyPlaceholderBeanDefinition 注册BeanDefinition开始
 				registerBeanDefinition(holder, parserContext.getRegistry());
+				//todo 判断是否应该触发 事件 2021-1-12
 				if (shouldFireEvents()) {
 					BeanComponentDefinition componentDefinition = new BeanComponentDefinition(holder);
+
 					postProcessComponentDefinition(componentDefinition);
+
+					//todo 内部会触发事件 2021-1-12
 					parserContext.registerComponent(componentDefinition);
 				}
 			}

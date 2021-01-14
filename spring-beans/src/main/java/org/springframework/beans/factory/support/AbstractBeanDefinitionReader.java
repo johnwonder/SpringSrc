@@ -252,6 +252,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		}
 		else {
 			// Can only load single resources by absolute URL.
+			//todo 一般返回的都是 ClasspathResource 2021-1-13
 			Resource resource = resourceLoader.getResource(location);
 
 			//还是交给子类去实现加载bean

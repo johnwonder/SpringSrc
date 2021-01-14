@@ -72,6 +72,7 @@ public class LookupOverride extends MethodOverride {
 		return this.beanName;
 	}
 
+	//todo 在 重载 并且不是抽象的方法情况下，只有没有参数的方法才会 转为 容器驱动的lookup 方法。 2020-1-8
 	/**
 	 * Match the specified method by {@link Method} reference or method name.
 	 * <p>For backwards compatibility reasons, in a scenario with overloaded
@@ -86,6 +87,7 @@ public class LookupOverride extends MethodOverride {
 			return method.equals(this.method);
 		}
 		else {
+			//方法名称一样 且 ( 不是重载 或者不是抽象的 或者  参数个数为0） 可以匹配上
 			return (method.getName().equals(getMethodName()) && (!isOverloaded() ||
 					Modifier.isAbstract(method.getModifiers()) || method.getParameterCount() == 0));
 		}

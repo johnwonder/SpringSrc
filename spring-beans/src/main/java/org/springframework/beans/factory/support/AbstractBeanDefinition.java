@@ -547,6 +547,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		return this.autowireMode;
 	}
 
+	//如果autowireMode是 自动检测，那么会遍历bean类的构造函数列表看 是否有构造函数
+	//如果构造函数参数个数为0 ，那么会通过类型注入，
 	/**
 	 * Return the resolved autowire code,
 	 * (resolving AUTOWIRE_AUTODETECT to AUTOWIRE_CONSTRUCTOR or AUTOWIRE_BY_TYPE).
@@ -1052,7 +1054,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 				((BeanDefinitionResource) this.resource).getBeanDefinition() : null);
 	}
 
-	/**
+	//todo 如果既有 factory-method 又有methodOverrides 那么会报错 2021-1-8
+	 /**
 	 * Validate this bean definition.
 	 * @throws BeanDefinitionValidationException in case of validation failure
 	 */
@@ -1103,6 +1106,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 					"' on class [" + getBeanClassName() + "]");
 		}
 		else if (count == 1) {
+			//todo 有两个方法名称一样的 就默认 Overloaded为 true了。 就代表有重载方法
 			//避免arg类型检查的开销
 			//在设置重载的时候其实这里做了一个小小优化，那就是当 count == 1 时，设置 overloaded = false，这样表示该方法没有重载，这样在后续调用的时候便可以直接找到方法而不需要进行方法参数的校验。
 			// Mark override as not overloaded, to avoid the overhead of arg type checking.

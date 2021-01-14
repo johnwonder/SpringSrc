@@ -11,6 +11,7 @@
 	<test:testBean id="testBean" name="Rob Harrop" age="23"/>
 
 	<bean id="customisedTestBean" class="org.springframework.tests.sample.beans.TestBean">
+		<!-- 自定义标签加 自定义属性 -->
 		<test:set name="Rob Harrop" age="23"/>
 	</bean>
 

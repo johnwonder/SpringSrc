@@ -30,6 +30,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
+//AbstractApplicationContext的默认实现，也可以独立使用
 /**
  * Default implementation of the {@link ResourceLoader} interface.
  * Used by {@link ResourceEditor}, and serves as base class for
@@ -155,6 +156,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 			}
 		}
 
+		//以/开头的
 		if (location.startsWith("/")) {
 			return getResourceByPath(location);
 		}
@@ -176,6 +178,8 @@ public class DefaultResourceLoader implements ResourceLoader {
 		}
 	}
 
+	//返回一个Resource对象
+	//默认实现支持class path 路径
 	/**
 	 * Return a Resource handle for the resource at the given path.
 	 * <p>The default implementation supports class path locations. This should
@@ -192,6 +196,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	}
 
 
+	//todo 多了个 getPathWithinContext
 	/**
 	 * ClassPathResource that explicitly expresses a context-relative path
 	 * through implementing the ContextResource interface.

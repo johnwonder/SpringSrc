@@ -16,11 +16,12 @@
 
 package org.springframework.core.io;
 
+//resource的扩展接口 不带前缀的 从封闭上下文中加载资源的 接口
 /**
  * Extended interface for a resource that is loaded from an enclosing
  * 'context', e.g. from a {@link javax.servlet.ServletContext} but also
  * from plain classpath paths or relative file system paths (specified
- * without an explicit prefix, hence applying relative to the local
+ * without an explicit prefix, hence(因此) applying relative to the local
  * {@link ResourceLoader}'s context).
  *
  * @author Juergen Hoeller
@@ -29,6 +30,7 @@ package org.springframework.core.io;
  */
 public interface ContextResource extends Resource {
 
+	//todo 返回在封闭上下文中的指定路径 2021-1-5
 	/**
 	 * Return the path within the enclosing 'context'.
 	 * <p>This is typically path relative to a context-specific root directory,
