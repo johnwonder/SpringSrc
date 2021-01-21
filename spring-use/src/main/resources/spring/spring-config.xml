@@ -52,6 +52,16 @@
 		<!--<property name="gender" value="女"/>-->
 
 	</bean>
+
+	<bean id="user1" class="org.wonder.frame.objectProvider.UserObject">
+
+	</bean>
+	<bean id="user2" class="org.wonder.frame.objectProvider.UserObject">
+
+	</bean>
+	<bean id="user3" class="org.wonder.frame.objectProvider.UserObject">
+
+	</bean>
 	<!--<bean id="Jane" parent="ChineseFemaleSinger">-->
 	<!--<property name="name" value="张靓颖"/>-->
 	<!--</bean>-->
