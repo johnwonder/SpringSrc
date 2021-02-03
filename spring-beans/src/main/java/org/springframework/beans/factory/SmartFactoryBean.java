@@ -16,6 +16,16 @@
 
 package org.springframework.beans.factory;
 
+//FactoryBean接口的扩展。实现可能会指出它们是否总是返回独立的实例，
+// 例如FactoryBean.isSingleton（）返回false的实现并不清楚地表示独立实例
+
+//没有实现这个扩展接口的普通FactoryBean实现被简单地假设为总是返回独立的实例，
+// 如果它们的FactoryBean.isSingleton 实现返回false；
+// 仅根据需要访问公开的对象
+
+//此接口是一个专用接口，主要用于框架内和协作框架内的内部使用。
+// 一般来说，应用程序提供的FactoryBeans应该简单地实现普通FactoryBean接口。
+// 即使在点版本中，新方法也可能添加到此扩展接口
 /**
  * Extension of the {@link FactoryBean} interface. Implementations may
  * indicate whether they always return independent instances, for the
@@ -60,6 +70,10 @@ public interface SmartFactoryBean<T> extends FactoryBean<T> {
 		return false;
 	}
 
+	//一个标准的FactoryBean不需要急于初始化
+	//仅在实际访问时调用，即使是在单例对象的情况下也是如此。
+	// 从这个方法返回true表明FactoryBean.getObject（）应该急切地调用，
+	// 也应该急切地应用后处理器。这在单例对象的情况下可能是有意义的，特别是当后处理器希望在启动时应用时。
 	/**
 	 * Does this FactoryBean expect eager initialization, that is,
 	 * eagerly initialize itself as well as expect eager initialization

@@ -115,6 +115,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 * @return new instance of the dynamically generated subclass
 		 */
 		public Object instantiate(@Nullable Constructor<?> ctor, Object... args) {
+			//todo 根据beanDefinition类来创建子类 2021-1-14
 			Class<?> subclass = createEnhancedSubclass(this.beanDefinition);
 			Object instance;
 			if (ctor == null) {
@@ -295,6 +296,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 						this.owner.getBean(lo.getBeanName()));
 			}
 			else {
+				//如果没有beanName 那就根据方法返回类型来查找Bean
 				return (argsToUse != null ? this.owner.getBean(method.getReturnType(), argsToUse) :
 						this.owner.getBean(method.getReturnType()));
 			}
@@ -302,6 +304,8 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 	}
 
 
+	//Lookup 和ReplaceMethod的区别是 Lookup只管找 bean
+	//ReplaceMethod 找到Bean后 会调用 它的 reimplement  方法
 	/**
 	 * CGLIB MethodInterceptor to override methods, replacing them with a call
 	 * to a generic MethodReplacer.
@@ -322,6 +326,7 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 			Assert.state(ro != null, "ReplaceOverride not found");
 			// TODO could cache if a singleton for minor performance optimization
 			MethodReplacer mr = this.owner.getBean(ro.getMethodReplacerBeanName(), MethodReplacer.class);
+			//
 			return mr.reimplement(obj, method, args);
 		}
 	}

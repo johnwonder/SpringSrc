@@ -1477,6 +1477,8 @@ public class BeanDefinitionParserDelegate {
 		NamedNodeMap attributes = ele.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Node node = attributes.item(i);
+			//todo Attr类型的Decorator  2021-2-1
+			//通过BeanDefinition的 beanDefinition.getAttribute 获取
 			finalDefinition = decorateIfRequired(node, finalDefinition, containingBd);
 		}
 
@@ -1492,7 +1494,7 @@ public class BeanDefinitionParserDelegate {
 		return finalDefinition;
 	}
 
-	//不是自定义命名空间才会去 decorate 2021-1-13
+	//不是默认命名空间才会去 decorate 2021-1-13
 	public BeanDefinitionHolder decorateIfRequired(
 			Node node, BeanDefinitionHolder originalDef, @Nullable BeanDefinition containingBd) {
 

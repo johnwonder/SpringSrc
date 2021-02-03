@@ -30,6 +30,8 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
+//https://blog.csdn.net/yangliuhbhd/article/details/80803464
+//https://blog.csdn.net/zknxx/article/details/78388862
 /**
  * Servlet 3.0 {@link ServletContainerInitializer} designed to support code-based
  * configuration of the servlet container using Spring's {@link WebApplicationInitializer}
@@ -167,6 +169,8 @@ public class SpringServletContainerInitializer implements ServletContainerInitia
 
 		servletContext.log(initializers.size() + " Spring WebApplicationInitializers detected on classpath");
 		AnnotationAwareOrderComparator.sort(initializers);
+
+		//todo 遍历WebApplicationInitializer 调用onStartup方法 2021-1-21
 		for (WebApplicationInitializer initializer : initializers) {
 			initializer.onStartup(servletContext);
 		}

@@ -291,6 +291,8 @@ public class ContextLoader {
 					configureAndRefreshWebApplicationContext(cwac, servletContext);
 				}
 			}
+
+			//todo 很重要的一步 设置了ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE 2021-1-21
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, this.context);
 
 			ClassLoader ccl = Thread.currentThread().getContextClassLoader();

@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 
+//https://objcoding.blog.csdn.net/article/details/106824391
 /**
  * Enables Spring's asynchronous method execution capability, similar to functionality
  * found in Spring's {@code <task:*>} XML namespace.
@@ -187,6 +188,7 @@ public @interface EnableAsync {
 	 */
 	boolean proxyTargetClass() default false;
 
+	//默认是jdk 代理
 	/**
 	 * Indicate how async advice should be applied.
 	 * <p><b>The default is {@link AdviceMode#PROXY}.</b>

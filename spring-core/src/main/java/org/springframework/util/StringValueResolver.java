@@ -18,6 +18,7 @@ package org.springframework.util;
 
 import org.springframework.lang.Nullable;
 
+//https://blog.csdn.net/f641385712/article/details/91380598
 /**
  * Simple strategy interface for resolving a String value.
  * Used by {@link org.springframework.beans.factory.config.ConfigurableBeanFactory}.

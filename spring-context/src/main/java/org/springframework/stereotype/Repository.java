@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 
 import org.springframework.core.annotation.AliasFor;
 
+//2.0就引入了
 /**
  * Indicates that an annotated class is a "Repository", originally defined by
  * Domain-Driven Design (Evans, 2003) as "a mechanism for encapsulating storage,
@@ -61,6 +62,8 @@ import org.springframework.core.annotation.AliasFor;
 @Component
 public @interface Repository {
 
+	//该值可能表示逻辑组件名称的建议
+	//在自动检测到组件的情况下变成Spring Bean
 	/**
 	 * The value may indicate a suggestion for a logical component name,
 	 * to be turned into a Spring bean in case of an autodetected component.

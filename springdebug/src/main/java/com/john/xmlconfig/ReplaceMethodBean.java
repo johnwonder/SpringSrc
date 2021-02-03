@@ -6,7 +6,9 @@ package com.john.xmlconfig;
  * @Date: 2021/1/11
  */
 public class ReplaceMethodBean {
-	public void test(){
+	public String  test(){
 		System.out.println("原始方法!");
+
+		return  "";
 	}
 }

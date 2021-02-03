@@ -10,9 +10,9 @@
 
 	<test:testBean id="testBean" name="Rob Harrop" age="23"/>
 
-	<bean id="customisedTestBean" class="org.springframework.tests.sample.beans.TestBean">
+	<bean id="customisedTestBean"  name="johnwonder" test:object-name="30" class="org.springframework.tests.sample.beans.TestBean">
 		<!-- 自定义标签加 自定义属性 -->
-		<test:set name="Rob Harrop" age="23"/>
+<!--		<test:set name="Rob Harrop" age="23"/>-->
 	</bean>
 
 	<bean id="debuggingTestBean" class="org.springframework.tests.sample.beans.TestBean">
@@ -32,6 +32,7 @@
 		<property name="age" value="23"/>
 	</bean>
 
+	<!--为bean设置自定义Attr-->
 	<bean id="decorateWithAttribute" class="org.springframework.tests.sample.beans.TestBean" test:object-name="foo"/>
 
 	<util:list id="list.of.things">

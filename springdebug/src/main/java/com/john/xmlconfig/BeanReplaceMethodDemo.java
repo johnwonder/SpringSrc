@@ -14,6 +14,8 @@ public class BeanReplaceMethodDemo {
 
 		ApplicationContext app = new ClassPathXmlApplicationContext("classpath:spring-config-replace.xml");
 
-		app.getBean("testBean",ReplaceMethodBean.class).test();
+		String returnMsg = (String)app.getBean("testBean",ReplaceMethodBean.class).test();
+
+		System.out.println(returnMsg);
 	}
 }

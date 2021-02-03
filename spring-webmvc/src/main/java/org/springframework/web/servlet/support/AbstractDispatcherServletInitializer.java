@@ -59,7 +59,11 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
+		//todo 父类去注册ContextLoaderListener 有可能没有注册 2021-1-21
 		super.onStartup(servletContext);
+
+		//https://cloud.tencent.com/developer/article/1129894
+		//todo 注册DispatcherServlet 2021-1-21
 		registerDispatcherServlet(servletContext);
 	}
 
@@ -78,13 +82,20 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 		String servletName = getServletName();
 		Assert.hasLength(servletName, "getServletName() must not return null or empty");
 
+		//todo 子类创建一个AnnotationConfigWebApplicationContext 2021-1-21
+		//只是代表是 ServletApplicationContext 给到下面的 dispatcherServlet 2021-1-21
 		WebApplicationContext servletAppContext = createServletApplicationContext();
 		Assert.notNull(servletAppContext, "createServletApplicationContext() must not return null");
 
+		//todo https://blog.csdn.net/zknxx/article/details/78388862 2021-1-21
+		//https://www.cnblogs.com/yangyabo/p/5365578.html
+		//可以有多个DispatcherServlet
+		//todo 新建一个 DispatcherServlet 2021-1-21
 		FrameworkServlet dispatcherServlet = createDispatcherServlet(servletAppContext);
 		Assert.notNull(dispatcherServlet, "createDispatcherServlet(WebApplicationContext) must not return null");
 		dispatcherServlet.setContextInitializers(getServletApplicationContextInitializers());
 
+		//todo 把FrameworkServlet放入 servletContext 2021-1-21
 		ServletRegistration.Dynamic registration = servletContext.addServlet(servletName, dispatcherServlet);
 		if (registration == null) {
 			throw new IllegalStateException("Failed to register servlet with name '" + servletName + "'. " +

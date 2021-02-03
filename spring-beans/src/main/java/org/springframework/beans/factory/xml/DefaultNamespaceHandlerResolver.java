@@ -49,6 +49,7 @@ import org.springframework.util.CollectionUtils;
  */
 public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver {
 
+	//指定了默认的handler路径 ，可以传入指定路径改变
 	/**
 	 * The location to look for the mapping files. Can be present in multiple JAR files.
 	 */

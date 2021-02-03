@@ -262,6 +262,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 		}
 	}
 
+	//todo aop里使用 注册由这个bean定义修饰的目标定义
 	/**
 	 * Register a target definition that is being decorated by this bean definition.
 	 */

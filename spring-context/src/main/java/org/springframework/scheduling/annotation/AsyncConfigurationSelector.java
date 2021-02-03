@@ -37,6 +37,7 @@ public class AsyncConfigurationSelector extends AdviceModeImportSelector<EnableA
 			"org.springframework.scheduling.aspectj.AspectJAsyncConfiguration";
 
 
+	//为了注入 ProxyAsyncConfiguration 自动配置类
 	/**
 	 * Returns {@link ProxyAsyncConfiguration} or {@code AspectJAsyncConfiguration}
 	 * for {@code PROXY} and {@code ASPECTJ} values of {@link EnableAsync#mode()},

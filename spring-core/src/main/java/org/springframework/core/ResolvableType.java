@@ -41,6 +41,11 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+//https://www.iteye.com/blog/jinnianshilongnian-1993608 Spring4 新特性
+//封装java type ,提供 getSuperType ，getInterfaces，getGeneric，
+//以及最终对Class的 resolve()
+
+//类上的大多数方法都会返回ResolvableType
 /**
  * Encapsulates a Java {@link java.lang.reflect.Type}, providing access to
  * {@link #getSuperType() supertypes}, {@link #getInterfaces() interfaces}, and
@@ -79,6 +84,7 @@ import org.springframework.util.StringUtils;
  * @see #forInstance(Object)
  * @see ResolvableTypeProvider
  */
+//todo https://cloud.tencent.com/developer/article/1656249 2021-1-19
 //https://blog.csdn.net/shenchaohao12321/article/details/80282833
 @SuppressWarnings("serial")
 public class ResolvableType implements Serializable {
@@ -162,6 +168,7 @@ public class ResolvableType implements Serializable {
 		this.variableResolver = variableResolver;
 		this.componentType = null;
 		this.hash = hash;
+		//todo resolveClass 会 执行instanceOf检查
 		this.resolved = resolveClass();
 	}
 
@@ -177,12 +184,14 @@ public class ResolvableType implements Serializable {
 		this.variableResolver = variableResolver;
 		this.componentType = componentType;
 		this.hash = null;
+		//todo resolveClass 会 执行instanceOf检查
 		this.resolved = resolveClass();
 	}
 
+	//避免所有的instanceOf检查
 	/**
 	 * Private constructor used to create a new {@link ResolvableType} on a {@link Class} basis.
-	 * Avoids all {@code instanceof} checks in order to create a straight {@link Class} wrapper.
+	 * Avoids all {@code instanceof} checks in order to create a straight(直接的) {@link Class} wrapper.
 	 * @since 4.2
 	 */
 	private ResolvableType(@Nullable Class<?> clazz) {
@@ -202,6 +211,8 @@ public class ResolvableType implements Serializable {
 		return SerializableTypeWrapper.unwrap(this.type);
 	}
 
+	//返回正在管理的底层Java 类
+	//todo 比如 Service<String, Double> 返回Service
 	/**
 	 * Return the underlying Java {@link Class} being managed, if available;
 	 * otherwise {@code null}.
@@ -222,6 +233,7 @@ public class ResolvableType implements Serializable {
 			//private Map<String, ParameterizedTypeTest> map;
 			rawType = ((ParameterizedType) rawType).getRawType();
 		}
+		//todo Class 实现了Type接口 2021-1-18
 		return (rawType instanceof Class ? (Class<?>) rawType : null);
 	}
 
@@ -357,6 +369,7 @@ public class ResolvableType implements Serializable {
 		}
 
 		if (checkGenerics) {
+			//todo 递归检查每个泛型参数 2021-1-21
 			// Recursively check each generic
 			ResolvableType[] ourGenerics = getGenerics();
 			ResolvableType[] typeGenerics = other.as(ourResolved).getGenerics();
@@ -871,6 +884,7 @@ public class ResolvableType implements Serializable {
 			TypeVariable<?>[] variables = resolved.getTypeParameters();
 			for (int i = 0; i < variables.length; i++) {
 				if (ObjectUtils.nullSafeEquals(variables[i].getName(), variable.getName())) {
+					//todo important 这里会解析到实际的类型 2021-1-21
 					Type actualType = parameterizedType.getActualTypeArguments()[i];
 					return forType(actualType, this.variableResolver);
 				}
@@ -962,6 +976,7 @@ public class ResolvableType implements Serializable {
 		if (isArray()) {
 			return getComponentType() + "[]";
 		}
+		//例如泛型类里的参数有可能就返回?
 		if (this.resolved == null) {
 			return "?";
 		}
@@ -976,6 +991,7 @@ public class ResolvableType implements Serializable {
 		StringBuilder result = new StringBuilder(this.resolved.getName());
 		if (hasGenerics()) {
 			result.append('<');
+			//todo getGenerics 获取泛型参数
 			result.append(StringUtils.arrayToDelimitedString(getGenerics(), ", "));
 			result.append('>');
 		}
@@ -984,7 +1000,7 @@ public class ResolvableType implements Serializable {
 
 
 	// Factory methods
-
+	//using the full generic type information for assignability checks
 	/**
 	 * Return a {@link ResolvableType} for the specified {@link Class},
 	 * using the full generic type information for assignability checks.
@@ -999,6 +1015,8 @@ public class ResolvableType implements Serializable {
 		return new ResolvableType(clazz);
 	}
 
+	//仅对原始类执行可分配性检查
+	//checks against the raw class only
 	/**
 	 * Return a {@link ResolvableType} for the specified {@link Class}, doing
 	 * assignability(可分配性) checks against the raw class only (analogous to
@@ -1366,6 +1384,7 @@ public class ResolvableType implements Serializable {
 	public static ResolvableType forType(@Nullable Type type, @Nullable ResolvableType owner) {
 		VariableResolver variableResolver = null;
 		if (owner != null) {
+			//todo imporant 获取到当前owner的VariableResolver 2021-1-21
 			variableResolver = owner.asVariableResolver();
 		}
 		return forType(type, variableResolver);
@@ -1469,6 +1488,7 @@ public class ResolvableType implements Serializable {
 		@Override
 		@Nullable
 		public ResolvableType resolveVariable(TypeVariable<?> variable) {
+			//todo 很重要 这里的this 指向了 泛型类型本身 2021-1-21
 			return ResolvableType.this.resolveVariable(variable);
 		}
 

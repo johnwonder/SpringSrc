@@ -42,6 +42,9 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+//todo 从2013-10-15 号开始 支持 Autowiring of generic types
+//本来是实现了接口 implements AutowireCandidateResolver, BeanFactoryAware
+//改为 extends GenericTypeAwareAutowireCandidateResolver
 /**
  * {@link AutowireCandidateResolver} implementation that matches bean definition qualifiers
  * against {@link Qualifier qualifier annotations} on the field or parameter to be autowired.

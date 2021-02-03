@@ -27,6 +27,7 @@ import org.springframework.lang.Nullable;
  */
 public interface AttributeAccessor {
 
+	//通常来说，用户应该注意通过使用完全限定名来防止与其他元数据属性重叠
 	/**
 	 * Set the attribute defined by {@code name} to the supplied	{@code value}.
 	 * If {@code value} is {@code null}, the attribute is {@link #removeAttribute removed}.

@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 
 import org.springframework.core.annotation.AliasFor;
 
+//2.5引入
 /**
  * Indicates that an annotated class is a "Service", originally defined by Domain-Driven
  * Design (Evans, 2003) as "an operation offered as an interface that stands alone in the

@@ -16,6 +16,7 @@
 
 package org.springframework.context;
 
+//ApplicationContext接口的父接口
 /**
  * Interface that encapsulates event publication functionality.
  * Serves as super-interface for {@link ApplicationContext}.

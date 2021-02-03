@@ -16,7 +16,7 @@
 <!--		<property name="aqlSessionTemplate" ref="aqlSessionTemplate"/>-->
 
 	</bean>
-	<bean id="aqlSessionTemplate" class="org.wonder.frame.beanPropertiesOrder.AqlSessionTemplate"/>
+	<bean id="aqlSessionTemplate" class="org.wonder.frame.beanPropertiesOrder.SqlSessionTemplate"/>
  	<bean id="sqlSessionFactory" class="org.wonder.frame.beanPropertiesOrder.SqlSessionFactory"/>
 
 </beans>

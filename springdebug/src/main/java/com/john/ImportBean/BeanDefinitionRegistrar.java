@@ -28,6 +28,7 @@ public class BeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
 			BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition();
 			AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
 
+
 			beanDefinition.setBeanClass(ImportBeanFactory.class);
 
 			//如果写死UserMapper的话 因为autowired默认是根据 type来注入的 所以会报如下错误

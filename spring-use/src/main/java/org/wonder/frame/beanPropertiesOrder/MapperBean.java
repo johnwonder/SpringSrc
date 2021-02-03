@@ -1,7 +1,5 @@
 package org.wonder.frame.beanPropertiesOrder;
 
-import org.springframework.stereotype.Component;
-
 /**
  * @Description: SpringSrc
  * @Author: zhangjiong
@@ -10,9 +8,9 @@ import org.springframework.stereotype.Component;
 public class MapperBean {
 
 	private SqlSessionFactory sqlSessionFactory;
-	private AqlSessionTemplate aqlSessionTemplate;
+	private SqlSessionTemplate aqlSessionTemplate;
 
-	public AqlSessionTemplate getAqlSessionTemplate() {
+	public SqlSessionTemplate getAqlSessionTemplate() {
 		return aqlSessionTemplate;
 	}
 
@@ -21,20 +19,20 @@ public class MapperBean {
 		return sqlSessionFactory;
 	}
 
-	public void setAqlSessionTemplate(AqlSessionTemplate aqlSessionTemplate) {
+	public void setAqlSessionTemplate(SqlSessionTemplate aqlSessionTemplate) {
 
 		System.out.println("aqlSessionFactory");
 
 		if(this.aqlSessionTemplate != null)
 			System.out.println("aqlSessionFactory 已存在,会被覆盖");
-		this.aqlSessionTemplate = new AqlSessionTemplate();
+		this.aqlSessionTemplate = new SqlSessionTemplate();
 
 	}
 
 
 	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
 		System.out.println("sqlSessionFactory");
-		this.aqlSessionTemplate = new AqlSessionTemplate();
+		this.aqlSessionTemplate = new SqlSessionTemplate();
 
 	}
 }

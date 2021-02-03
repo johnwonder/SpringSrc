@@ -5,5 +5,5 @@ package org.wonder.frame.beanPropertiesOrder;
  * @Author: johnwonder
  * @Date: 2021/1/21
  */
-public class AqlSessionTemplate {
+public class SqlSessionTemplate {
 }

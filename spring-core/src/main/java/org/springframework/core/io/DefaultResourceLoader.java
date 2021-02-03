@@ -178,7 +178,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 		}
 	}
 
-	//返回一个Resource对象
+	//todo 返回一个ClassPathContextResource对象
 	//默认实现支持class path 路径
 	/**
 	 * Return a Resource handle for the resource at the given path.
@@ -207,11 +207,13 @@ public class DefaultResourceLoader implements ResourceLoader {
 			super(path, classLoader);
 		}
 
+		//获取上下文中的路径
 		@Override
 		public String getPathWithinContext() {
 			return getPath();
 		}
 
+		//todo 返回一个新的ClassPathContextResource对象 2021-1-18
 		@Override
 		public Resource createRelative(String relativePath) {
 			String pathToUse = StringUtils.applyRelativePath(getPath(), relativePath);

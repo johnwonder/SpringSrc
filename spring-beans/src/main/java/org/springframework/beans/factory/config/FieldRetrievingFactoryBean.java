@@ -41,6 +41,7 @@ import org.springframework.util.StringUtils;
  *   &lt;property name="staticField" value="java.sql.Connection.TRANSACTION_SERIALIZABLE"/&gt;
  * &lt;/bean&gt;
  *
+ * //将静态字段模式指定为bean名称的方便版本
  * // convenience version that specifies a static field pattern as bean name
  * &lt;bean id="java.sql.Connection.TRANSACTION_SERIALIZABLE"
  *       class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/&gt;
@@ -191,9 +192,11 @@ public class FieldRetrievingFactoryBean
 						"staticField must be a fully qualified class plus static field name: " +
 						"e.g. 'example.MyExampleClass.MY_EXAMPLE_FIELD'");
 			}
+			//todo 获取targetClass 2021-2-2
 			String className = this.staticField.substring(0, lastDotIndex);
 			String fieldName = this.staticField.substring(lastDotIndex + 1);
 			this.targetClass = ClassUtils.forName(className, this.beanClassLoader);
+			//设置targetField
 			this.targetField = fieldName;
 		}
 
@@ -204,10 +207,13 @@ public class FieldRetrievingFactoryBean
 
 		// Try to get the exact method first.
 		Class<?> targetClass = (this.targetObject != null ? this.targetObject.getClass() : this.targetClass);
+
+		//todo 获取类的成员变量
 		this.fieldObject = targetClass.getField(this.targetField);
 	}
 
 
+	//获取类的Field
 	@Override
 	@Nullable
 	public Object getObject() throws IllegalAccessException {
@@ -217,9 +223,11 @@ public class FieldRetrievingFactoryBean
 		ReflectionUtils.makeAccessible(this.fieldObject);
 		if (this.targetObject != null) {
 			// instance field
+			//获取 实例 成员变量 值
 			return this.fieldObject.get(this.targetObject);
 		}
 		else {
+			//获取 类的 静态变量 值
 			// class field
 			return this.fieldObject.get(null);
 		}
@@ -230,6 +238,7 @@ public class FieldRetrievingFactoryBean
 		return (this.fieldObject != null ? this.fieldObject.getType() : null);
 	}
 
+	//默认不是singleton
 	@Override
 	public boolean isSingleton() {
 		return false;

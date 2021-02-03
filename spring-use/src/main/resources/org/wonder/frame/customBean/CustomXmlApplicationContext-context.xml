@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:test="http://www.john.com/resource"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+       http://www.john.com/resource http://www.john.com/resource/org/wonder/frame/customBean/CustomXmlApplicationContext.xsd"
+	default-lazy-init="true">
+
+	<test:testBean id="testBean" name="Rob Harrop" age="23"/>
+
+	<bean id="customisedTestBean" class="org.wonder.frame.customBean.CustomBean">
+		<!-- 自定义标签加 自定义属性 -->
+		<test:set name="John wonder" age="36"/>
+	</bean>
+
+</beans>

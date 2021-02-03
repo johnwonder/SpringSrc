@@ -14,9 +14,10 @@ public class FactoryBeanInjectionDemo {
 		ClassPathXmlApplicationContext ac =new ClassPathXmlApplicationContext();
 		ac.setConfigLocations("spring-config-locatorfactory.xml");
 		ac.refresh();
+
 		//System.out.println(ac.getBean("car"));
 
-		//System.out.println(ac.getBean("&car"));
+		System.out.println(ac.getBean("&car"));
 
 		String[] aliases =  ac.getAliases("&car");
 

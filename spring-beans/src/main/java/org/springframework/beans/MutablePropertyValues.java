@@ -215,6 +215,7 @@ public class MutablePropertyValues implements PropertyValues, Serializable {
 		this.propertyValueList.set(i, pv);
 	}
 
+	//如果value 不实现Mergeable 那么直接返回新值
 	/**
 	 * Merges the value of the supplied 'new' {@link PropertyValue} with that of
 	 * the current {@link PropertyValue} if merging is supported and enabled.

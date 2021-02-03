@@ -54,6 +54,8 @@ public abstract class AbstractAsyncConfiguration implements ImportAware {
 
 	@Override
 	public void setImportMetadata(AnnotationMetadata importMetadata) {
+
+		//todo 查找EnableAsync 2021-1-15
 		this.enableAsync = AnnotationAttributes.fromMap(
 				importMetadata.getAnnotationAttributes(EnableAsync.class.getName(), false));
 		if (this.enableAsync == null) {
@@ -62,6 +64,8 @@ public abstract class AbstractAsyncConfiguration implements ImportAware {
 		}
 	}
 
+	//https://objcoding.blog.csdn.net/article/details/106824391
+	//todo 收集任何通过自动注入的 AsyncConfigurer
 	/**
 	 * Collect any {@link AsyncConfigurer} beans through autowiring.
 	 */

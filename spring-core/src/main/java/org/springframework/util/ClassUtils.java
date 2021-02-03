@@ -1247,7 +1247,7 @@ public abstract class ClassUtils {
 	 * this method does <i>not</i> resolve Java 5 bridge methods automatically.
 	 * Call {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
 	 * if bridge method resolution is desirable (e.g. for obtaining metadata from
-	 * the original method definition).
+	 * the original method definition).用于从原始方法定义获取元数据
 	 * <p><b>NOTE:</b> Since Spring 3.1.1, if Java security settings disallow reflective
 	 * access (e.g. calls to {@code Class#getDeclaredMethods} etc, this implementation
 	 * will fall back to returning the originally provided method.
@@ -1263,6 +1263,7 @@ public abstract class ClassUtils {
 			try {
 				if (Modifier.isPublic(method.getModifiers())) {
 					try {
+						//
 						return targetClass.getMethod(method.getName(), method.getParameterTypes());
 					}
 					catch (NoSuchMethodException ex) {

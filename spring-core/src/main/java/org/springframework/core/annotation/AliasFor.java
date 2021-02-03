@@ -202,6 +202,8 @@ public @interface AliasFor {
 	@AliasFor("value")
 	String attribute() default "";
 
+	//声明别名属性（）的批注类型
+	//默认为Annotation，这意味着别名属性在与此属性相同的注释中声明
 	/**
 	 * The type of annotation in which the aliased {@link #attribute} is declared.
 	 * <p>Defaults to {@link Annotation}, implying that the aliased attribute is

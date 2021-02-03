@@ -12,8 +12,8 @@ import java.lang.reflect.Method;
 public class MethodReplace  implements MethodReplacer {
 
 	@Override
-	public Object reimplement(Object obj, Method method, Object[] args) throws Throwable {
+	public String reimplement(Object obj, Method method, Object[] args) throws Throwable {
 		System.out.println("方法已经被替换!");
-		return null;
+		return "123";
 	}
 }

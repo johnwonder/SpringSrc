@@ -77,6 +77,7 @@ public class CustomNamespaceHandlerTests {
 	private static final String FQ_PATH = "org/springframework/beans/factory/xml/support";
 
 	private static final String NS_PROPS = format("%s/%s.properties", FQ_PATH, CLASSNAME);
+	//配置文件
 	private static final String NS_XML = format("%s/%s-context.xml", FQ_PATH, CLASSNAME);
 	private static final String TEST_XSD = format("%s/%s.xsd", FQ_PATH, CLASSNAME);
 
@@ -85,11 +86,15 @@ public class CustomNamespaceHandlerTests {
 
 	@Before
 	public void setUp() throws Exception {
+
 		NamespaceHandlerResolver resolver = new DefaultNamespaceHandlerResolver(CLASS.getClassLoader(), NS_PROPS);
 		this.beanFactory = new GenericApplicationContext();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this.beanFactory);
+		//1.设置resolver
 		reader.setNamespaceHandlerResolver(resolver);
+		//2.设置验证模式
 		reader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
+		//3.设置entityResolver
 		reader.setEntityResolver(new DummySchemaResolver());
 		reader.loadBeanDefinitions(getResource());
 		this.beanFactory.refresh();
@@ -182,6 +187,7 @@ public class CustomNamespaceHandlerTests {
 	}
 
 
+	//todo 笨的。。。
 	private final class DummySchemaResolver extends PluggableSchemaResolver {
 
 		public DummySchemaResolver() {
@@ -192,6 +198,7 @@ public class CustomNamespaceHandlerTests {
 		public InputSource resolveEntity(String publicId, String systemId) throws IOException {
 			InputSource source = super.resolveEntity(publicId, systemId);
 			if (source == null) {
+				//todo 指定了xsd路径
 				Resource resource = new ClassPathResource(TEST_XSD);
 				source = new InputSource(resource.getInputStream());
 				source.setPublicId(publicId);
@@ -213,12 +220,17 @@ final class TestNamespaceHandler extends NamespaceHandlerSupport {
 
 	@Override
 	public void init() {
+
+		//注册parser
 		registerBeanDefinitionParser("testBean", new TestBeanDefinitionParser());
 		registerBeanDefinitionParser("person", new PersonDefinitionParser());
 
+		//注册decorater
 		registerBeanDefinitionDecorator("set", new PropertyModifyingBeanDefinitionDecorator());
 		registerBeanDefinitionDecorator("debug", new DebugBeanDefinitionDecorator());
 		registerBeanDefinitionDecorator("nop", new NopInterceptorBeanDefinitionDecorator());
+
+		//为Attribute 注册decorator
 		registerBeanDefinitionDecoratorForAttribute("object-name", new ObjectNameBeanDefinitionDecorator());
 	}
 
@@ -261,6 +273,7 @@ final class TestNamespaceHandler extends NamespaceHandlerSupport {
 		@Override
 		public BeanDefinitionHolder decorate(Node node, BeanDefinitionHolder definition, ParserContext parserContext) {
 			Element element = (Element) node;
+			//1.获取BeanDefinition
 			BeanDefinition def = definition.getBeanDefinition();
 
 			MutablePropertyValues mpvs = (def.getPropertyValues() == null) ? new MutablePropertyValues() : def.getPropertyValues();

@@ -23,6 +23,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.lang.Nullable;
 
+//从任意复杂的Xml创建一个 single BeanDefinition
 /**
  * Base class for those {@link BeanDefinitionParser} implementations that
  * need to parse and define just a <i>single</i> {@code BeanDefinition}.
@@ -62,12 +63,13 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 	protected final AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
 
 		//todo 构造一个 new GenericBeanDefinition() 2020-09-11
+		//内部会实例化一个BeanDefinitionBuilder 且把一个genericBeanDefinition放进去
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition();
 		String parentName = getParentName(element);
 		if (parentName != null) {
 			builder.getRawBeanDefinition().setParentName(parentName);
 		}
-		//调用子类获取 PropertyPlaceholderConfigurer.class
+		//todo 调用子类获取 比如 PropertyPlaceholderConfigurer.class
 		Class<?> beanClass = getBeanClass(element);
 		if (beanClass != null) {
 			builder.getRawBeanDefinition().setBeanClass(beanClass);

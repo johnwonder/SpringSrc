@@ -20,6 +20,9 @@ import org.w3c.dom.Node;
 
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 
+//用于处理自定义嵌套 bean 标记下
+
+//装饰也可以基于应用于 bean 标记的自定义属性进行
 /**
  * Interface used by the {@link DefaultBeanDefinitionDocumentReader}
  * to handle custom, nested (directly under a {@code <bean>}) tags.

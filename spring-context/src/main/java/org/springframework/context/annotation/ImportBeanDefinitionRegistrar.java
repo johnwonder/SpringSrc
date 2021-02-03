@@ -20,6 +20,12 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.core.type.AnnotationMetadata;
 
+//todo 可以通过实现这个接口在处理@Configuration类时注册额外bean定义的类型实现  2021-1-15
+//bean定义级别（与@bean方法/实例级别相反）进行操作时非常有用。
+
+//与@Configuration和ImportSelector一起，这种类型的类可以提供给@Import注解（也可以从ImportSelector返回）
+
+//ImportBeanDefinitionRegistrar可以实现以下任何感知接口，它们各自的方法将在registerBeanDefinitions之前被调用
 /**
  * Interface to be implemented by types that register additional bean definitions when
  * processing @{@link Configuration} classes. Useful when operating at the bean definition
@@ -49,6 +55,9 @@ import org.springframework.core.type.AnnotationMetadata;
  */
 public interface ImportBeanDefinitionRegistrar {
 
+	//根据导入@Configuration类的给定注释元数据，根据需要注册bean定义
+	//请注意，由于与@Configuration class处理相关的生命周期限制，
+	// BeanDefinitionRegistryPostProcessor类型可能未在此处注册。
 	/**
 	 * Register bean definitions as necessary based on the given annotation metadata of
 	 * the importing {@code @Configuration} class.

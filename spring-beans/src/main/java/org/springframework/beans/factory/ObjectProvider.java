@@ -24,6 +24,14 @@ import java.util.stream.Stream;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.Nullable;
 
+//专门为注入点设计 ObjectFactory的一个变体
+//允许编程的可选性和宽大而不是唯一的处理
+
+//https://zhuanlan.zhihu.com/p/46023674 5.1正式发布
+//Programmatic ObjectProvider retrieval through the BeanFactory API.
+//https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-5.x
+//5.1开始实现Interable接口 并且提供Stream支持。
+//所以可以在for循环中使用 ，并且提供foreach 还有 集合样式的stream访问。
 /**
  * A variant of {@link ObjectFactory} designed specifically for injection points,
  * allowing for programmatic optionality and lenient not-unique handling.
@@ -122,6 +130,7 @@ public interface ObjectProvider<T> extends ObjectFactory<T>, Iterable<T> {
 		return (dependency != null ? dependency : defaultSupplier.get());
 	}
 
+	//todo 如果不是唯一的那么就不调用
 	/**
 	 * Consume an instance (possibly shared or independent) of the object
 	 * managed by this factory, if unique.

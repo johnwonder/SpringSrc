@@ -24,6 +24,7 @@ public class TestBean implements BeanNameAware{
 	}
 
 	public void setBeanDep(TestBeanDep beanDep) {
+		System.out.println("beanDep注入"+beanDep);
 		this.beanDep = beanDep;
 	}
 

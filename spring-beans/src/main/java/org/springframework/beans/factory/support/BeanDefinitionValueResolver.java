@@ -421,6 +421,7 @@ class BeanDefinitionValueResolver {
 		return resolved;
 	}
 
+	//todo 解析Map 元素
 	/**
 	 * For each element in the managed map, resolve reference if necessary.
 	 */
@@ -435,6 +436,7 @@ class BeanDefinitionValueResolver {
 	}
 
 
+	//私有静态类
 	/**
 	 * Holder class used for delayed toString building.
 	 */

@@ -116,10 +116,12 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	private BeanDefinitionDecorator findDecoratorForNode(Node node, ParserContext parserContext) {
 		BeanDefinitionDecorator decorator = null;
 		String localName = parserContext.getDelegate().getLocalName(node);
+		//1.元素的 decorator
 		if (node instanceof Element) {
 			decorator = this.decorators.get(localName);
 		}
 		else if (node instanceof Attr) {
+			//2. attr的 decorator
 			decorator = this.attributeDecorators.get(localName);
 		}
 		else {

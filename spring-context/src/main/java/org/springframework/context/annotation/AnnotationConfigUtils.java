@@ -47,7 +47,7 @@ import org.springframework.util.ClassUtils;
  *
  * @author Mark Fisher
  * @author Juergen Hoeller
- * @author Chris Beams
+ * @author Chris Beams  (https://github.com/cbeams)
  * @author Phillip Webb
  * @author Stephane Nicoll
  * @since 2.5
@@ -159,6 +159,7 @@ public abstract class AnnotationConfigUtils {
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
 				beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
 			}
+			//会注册 注解 自动装配的 resolver 解决泛型注入的问题 2021-1-21
 			if (!(beanFactory.getAutowireCandidateResolver() instanceof ContextAnnotationAutowireCandidateResolver)) {
 				beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
 			}

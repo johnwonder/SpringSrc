@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 
 import org.springframework.core.annotation.AliasFor;
 
+//2.5引入
 /**
  * Indicates that an annotated class is a "Controller" (e.g. a web controller).
  *

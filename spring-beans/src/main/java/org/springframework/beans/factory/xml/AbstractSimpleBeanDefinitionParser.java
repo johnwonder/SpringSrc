@@ -25,6 +25,7 @@ import org.springframework.core.Conventions;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+//当要分析的元素上的属性名与要配置的class上的属性名之间存在一对一映射时，使用方便的基类
 /**
  * Convenient base class for when there exists a one-to-one mapping
  * between attribute names on the element that is to be parsed and
@@ -125,10 +126,14 @@ public abstract class AbstractSimpleBeanDefinitionParser extends AbstractSingleB
 	 */
 	@Override
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
+
+		//获取元素的Attributes
 		NamedNodeMap attributes = element.getAttributes();
 		for (int x = 0; x < attributes.getLength(); x++) {
 			Attr attribute = (Attr) attributes.item(x);
+			//不是id的Attribute
 			if (isEligibleAttribute(attribute, parserContext)) {
+				//todo 从  transaction-manager} 到  transactionManager 2021-2-1
 				String propertyName = extractPropertyName(attribute.getLocalName());
 				Assert.state(StringUtils.hasText(propertyName),
 						"Illegal property name returned from 'extractPropertyName(String)': cannot be null or empty.");

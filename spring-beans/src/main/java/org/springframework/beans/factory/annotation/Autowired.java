@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// 2.5就引入了
+//构造函数，成员变量，setter方法，配置方法
 /**
  * Marks a constructor, field, setter method or config method as to be autowired
  * by Spring's dependency injection facilities.

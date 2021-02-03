@@ -22,6 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+//2.5引入
 /**
  * Indicates that an annotated class is a "component".
  * Such classes are considered as candidates for auto-detection

@@ -16,6 +16,8 @@ public class BeanPropertyOrderDemo {
 	//So prefixing names may work, but it may not work in an older or newer version of Java - the order is simply unspecified. If you want the properties in alphabetical order, you should sort the array returned by getPropertyDescriptors() yourself.
 	//
 	//There's no way to get the properties in the order as defined in the source code of the bean.
+
+	//https://stackoverflow.com/questions/36187063/instantiate-beans-in-order-in-spring
 	public static void main(String[] args) {
 
 		//https://www.cnblogs.com/zhuyeshen/p/12936912.html

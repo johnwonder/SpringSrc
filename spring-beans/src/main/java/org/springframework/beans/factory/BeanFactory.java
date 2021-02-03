@@ -206,6 +206,7 @@ public interface BeanFactory {
 	 */
 	<T> T getBean(Class<T> requiredType) throws BeansException;
 
+	//todo args参数 仅在创建新实例而不是检索现有实例时应用 2020-1-16
 	//1.允许指定显式构造函数参数/工厂方法参数，重写bean定义中指定的默认参数（如果有）
 	//2.此方法进入ListableBeanFactory按类型查找区域，但也可以转换为基于给定类型名称的conventional by-name lookup。
 	// 对于跨bean集的更广泛的检索操作，请使用ListableBeanFactory 和/或  BeanFactoryUtils。
@@ -242,8 +243,9 @@ public interface BeanFactory {
 	 */
 	<T> ObjectProvider<T> getBeanProvider(Class<T> requiredType);
 
-	//bean必须匹配的类型；可以是泛型类型声明。注意，这里不支持集合类型，与反射注入点不同。要以编程方式检索与特定类型匹配的bean列表，
-	// 请在此处指定实际的bean类型作为参数，然后使用ObjectProvider#toList（）或其延迟流式处理/迭代选项。
+	//bean必须匹配的类型；可以是泛型类型声明。注意，这里不支持集合类型，与反射注入点不同。
+	//
+	// todo 要以编程方式检索与特定类型匹配的bean列表，请在此处指定实际的bean类型作为参数，然后使用ObjectProvider#toList（）或其延迟流式处理/迭代选项。
 	/**
 	 * Return an provider for the specified bean, allowing for lazy on-demand retrieval
 	 * of instances, including availability and uniqueness options.
@@ -316,6 +318,10 @@ public interface BeanFactory {
 	 */
 	boolean isPrototype(String name) throws NoSuchBeanDefinitionException;
 
+	//检查指定名称的bean是否和指定类型匹配
+	//更具体的说 是检查 getBean调用返回的对象是否是指定类型
+	//todo 会转换别名到规范的bean名称
+	//如果在这个父的factory找不到会到父的beanfactory中去找。
 	/**
 	 * Check whether the bean with the given name matches the specified type.
 	 * More specifically, check whether a {@link #getBean} call for the given name
