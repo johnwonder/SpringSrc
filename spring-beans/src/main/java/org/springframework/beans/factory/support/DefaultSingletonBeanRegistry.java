@@ -108,7 +108,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/** Map between dependent bean names: bean name to Set of dependent bean names. */
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
-	//依赖其他bean的集合
+	//bean 依赖其他bean的集合
 	/** Map between depending bean names: bean name to Set of bean names for the bean's dependencies. */
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
 
@@ -400,6 +400,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		registerDependentBean(containedBeanName, containingBeanName);
 	}
 
+	//注册一个从属Bean
 	/**
 	 * Register a dependent bean for the given bean,
 	 * to be destroyed before the given bean is destroyed.
@@ -464,6 +465,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		return false;
 	}
 
+	//确定是否已为给定名称注册了从属bean
 	/**
 	 * Determine whether a dependent bean has been registered for the given name.
 	 * @param beanName the name of the bean to check
@@ -565,6 +567,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param bean the bean instance to destroy
 	 */
 	protected void destroyBean(String beanName, @Nullable DisposableBean bean) {
+		//先触发从属bean的销毁
 		// Trigger destruction of dependent beans first...
 		Set<String> dependencies;
 		synchronized (this.dependentBeanMap) {

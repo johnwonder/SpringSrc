@@ -27,6 +27,14 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
+//这样一个端点实例的生命周期将由JAX-WS运行时管理，
+// 因此这个基类需要基于当前Spring上下文提供{@code@Autowired}处理
+
+//这个基类的一个典型用法是JAX-WS端点类：
+// 这样一个基于Spring的JAX-WS端点实现将遵循端点类的标准JAX-WS契约，
+// 但由于它将实际工作委托给一个或多个Spring管理的servicebean，所以它将是“瘦”的
+//这个端点实例的生命周期将由JAX-WS运行时管理
+//
 /**
  * Convenient base class for self-autowiring classes that gets constructed
  * within a Spring-based web application. Resolves {@code @Autowired}

@@ -151,10 +151,15 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
+				//返回一个属性访问器，也就是一个BeanWrapper的实现 BeanWrapperImpl
 				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
+
+				//todo 注册一个自定义属性编辑器 2021-2-19
 				bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
 				initBeanWrapper(bw);
+
+				//默认就是为FrameworkServlet 对象中的 属性赋值了。。 2021-2-19
 				bw.setPropertyValues(pvs, true);
 			}
 			catch (BeansException ex) {
@@ -221,12 +226,15 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 			Set<String> missingProps = (!CollectionUtils.isEmpty(requiredProperties) ?
 					new HashSet<>(requiredProperties) : null);
 
+			//获取ServletConfig 的 初始化参数
 			Enumeration<String> paramNames = config.getInitParameterNames();
 			while (paramNames.hasMoreElements()) {
 				String property = paramNames.nextElement();
 				Object value = config.getInitParameter(property);
+				//添加属性值
 				addPropertyValue(new PropertyValue(property, value));
 				if (missingProps != null) {
+					//有了就从本来需要的移除呗 2021-2-19
 					missingProps.remove(property);
 				}
 			}

@@ -72,6 +72,9 @@ import org.springframework.util.ReflectionUtils;
  */
 class ConfigurationClassEnhancer {
 
+	//这些回调必须是无状态的？
+	//1. @Configuration 中的  @Bean 方法
+	//
 	// The callbacks to use. Note that these callbacks must be stateless.
 	private static final Callback[] CALLBACKS = new Callback[] {
 			new BeanMethodInterceptor(),
@@ -297,6 +300,7 @@ class ConfigurationClassEnhancer {
 	}
 
 
+	//todo @Bean注解 处理，如作用域和AOP代理
 	/**
 	 * Intercepts the invocation of any {@link Bean}-annotated methods in order to ensure proper
 	 * handling of bean semantics such as scoping and AOP proxying.
@@ -346,12 +350,14 @@ class ConfigurationClassEnhancer {
 				}
 			}
 
+			//@Configuration 的@Bean方法就被当作实例化FactoryMethod
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
 				// The factory is calling the bean method in order to instantiate and register the bean
 				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
 				// create the bean instance.
 				if (logger.isInfoEnabled() &&
 						BeanFactoryPostProcessor.class.isAssignableFrom(beanMethod.getReturnType())) {
+					//todo @Configuration 类中的 @Autowired ，@Resource，@PostConstruct 会失效
 					logger.info(String.format("@Bean method %s.%s is non-static and returns an object " +
 									"assignable to Spring's BeanFactoryPostProcessor interface. This will " +
 									"result in a failure to process annotations such as @Autowired, " +
@@ -433,6 +439,7 @@ class ConfigurationClassEnhancer {
 
 		@Override
 		public boolean isMatch(Method candidateMethod) {
+			//todo 这里有判断是否 有 @Bean 注解
 			return (candidateMethod.getDeclaringClass() != Object.class &&
 					!BeanFactoryAwareMethodInterceptor.isSetBeanFactory(candidateMethod) &&
 					BeanAnnotationHelper.isBeanAnnotated(candidateMethod));
@@ -465,6 +472,8 @@ class ConfigurationClassEnhancer {
 			return (beanFactory.containsBean(beanName) && !beanFactory.isCurrentlyInCreation(beanName));
 		}
 
+		//当前容器调用的Factory method 是否和 拦截的方法相同
+		//相同就代表是 自身实例化
 		/**
 		 * Check whether the given method corresponds to the container's currently invoked
 		 * factory method. Compares method name and parameter types only in order to work

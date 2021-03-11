@@ -76,6 +76,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.StringValueResolver;
 
+//todo 抽象类可以有方法实现，只是抽象方法不能实现而已。 2021-2-9
 //继承自FactoryBeanRegistrySupport
 /**
  * Abstract base class for {@link org.springframework.beans.factory.BeanFactory}
@@ -249,6 +250,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//todo getSingleton 2020-08-30
 		Object sharedInstance = getSingleton(beanName);
 		//args参数是为了创建一个新的对象 所以 不为null 的时候 就直接走else了
+		//todo sharedInstance不为空 有两种情况
+		// 1. 就是 singletonObjects 2. 还是  earlySingletonObjects
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
 				if (isSingletonCurrentlyInCreation(beanName)) {
@@ -259,6 +262,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
+			//用于FactoryBean的 getObject方法处理
 			//已经获取到单例了。。
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
@@ -272,7 +276,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// Check if bean definition exists in this factory.
 			BeanFactory parentBeanFactory = getParentBeanFactory();
-			//todo 如果当前工厂不存在bean 才会去检查父工厂 2020-11-09
+			//todo 如果存在父工厂 那么 当前工厂再 不存在bean的话 才会去检查父工厂 2020-11-09 2021-02-09
 			//BeanFactory接口中：Will ask the parent factory if the bean cannot be found in this factory instance
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -309,6 +313,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				//这里args好像没用到
 				checkMergedBeanDefinition(mbd, beanName, args);
 
+				//保证依赖bean先初始化
 				// Guarantee initialization of beans that the current bean depends on.
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
@@ -318,6 +323,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
 						}
+						//todo 注册从属bean  beanName依赖dep 2021-02-09
 						registerDependentBean(dep, beanName);
 						try {
 							getBean(dep);
@@ -332,6 +338,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// Create bean instance.
 				//从头开始加载 bean，这个过程由 getSingleton() 实现。
 				if (mbd.isSingleton()) {
+					//todo 到这边的时候 有两种情况
+					//1. 不存在单例 需要创建
+					// 2. 存在单例 要么是 singletonObjects 要么是 earlySingletonObjects 但是参数 args不为空
+
+					//3.如果是earlySingletonObjects 那么在下面的getSingleton方法中 如果成功创建出singletonObjects
+					// 最后会把 earlySingletonObjects 移除
 					//https://www.cnblogs.com/leihuazhe/p/9481018.html
 					////todo 如果有单例那直接返回了 ， args参数也就没啥用处了 2020-08-30
 					sharedInstance = getSingleton(beanName, () -> {
@@ -359,6 +371,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					finally {
 						afterPrototypeCreation(beanName);
 					}
+					//根据原型对象获取
 					bean = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
 				}
 
@@ -394,17 +407,21 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 		}
 
+		//todo 如果requiredType 不为空 那就根据requiredType 去转换为最终的bean对象 2021-2-9
 		// Check if required type matches the type of the actual bean instance.
 		//需要的类型和实际类型 需要convert
 		if (requiredType != null && !requiredType.isInstance(bean)) {
 			try {
+				//获取typeConverter 然后去转换
 				T convertedBean = getTypeConverter().convertIfNecessary(bean, requiredType);
 				if (convertedBean == null) {
 					throw new BeanNotOfRequiredTypeException(name, requiredType, bean.getClass());
 				}
+				//直接返回转换过后的bean
 				return convertedBean;
 			}
 			catch (TypeMismatchException ex) {
+				//类型不匹配时抛出
 				if (logger.isTraceEnabled()) {
 					logger.trace("Failed to convert bean '" + name + "' to required type '" +
 							ClassUtils.getQualifiedName(requiredType) + "'", ex);
@@ -1681,6 +1698,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return !this.alreadyCreated.isEmpty();
 	}
 
+	//bean实例本身或其创建的对象 对于FactoryBean来说
 	/**
 	 * Get the object for the given bean instance, either the bean
 	 * instance itself or its created object in case of a FactoryBean.

@@ -51,6 +51,7 @@ public abstract class AbstractContextLoaderInitializer implements WebApplication
 		registerContextLoaderListener(servletContext);
 	}
 
+	//https://www.zhihu.com/question/39061904
 	/**
 	 * Register a {@link ContextLoaderListener} against the given servlet context. The
 	 * {@code ContextLoaderListener} is initialized with the application context returned
@@ -61,10 +62,11 @@ public abstract class AbstractContextLoaderInitializer implements WebApplication
 		WebApplicationContext rootAppContext = createRootApplicationContext();
 		if (rootAppContext != null) {
 			//实例化一个ContextLoaderListener
-			//会把 rootAppContext放入ContextLoaderListener的父类 ContextLoader 2021-1-21
+			//todo 会把 rootAppContext放入ContextLoaderListener的父类 ContextLoader 2021-1-21
 			ContextLoaderListener listener = new ContextLoaderListener(rootAppContext);
 			listener.setContextInitializers(getRootApplicationContextInitializers());
 			//todo 添加ContextLoaderListener 2021-1-21
+			//监听contextInitialized 事件 contextDestroyed 事件
 			servletContext.addListener(listener);
 		}
 		else {

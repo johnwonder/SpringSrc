@@ -523,7 +523,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		long startTime = System.currentTimeMillis();
 
 		try {
+			//todo 很重要  初始化 applicationContext 2021-3-10
 			this.webApplicationContext = initWebApplicationContext();
+			//todo 初始化FrameworkServlet 2021-2-19
 			initFrameworkServlet();
 		}
 		catch (ServletException | RuntimeException ex) {
@@ -555,11 +557,12 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
 
-		//todo 获取根容器
+		//todo 很重要 获取根容器 2021-3-8
 		WebApplicationContext rootContext =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
 
+		//如果设置了webApplicationContext 就会配置并刷新
 		if (this.webApplicationContext != null) {
 			// A context instance was injected at construction time -> use it
 			wac = this.webApplicationContext;
@@ -571,7 +574,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					if (cwac.getParent() == null) {
 						// The context instance was injected without an explicit parent -> set
 						// the root application context (if any; may be null) as the parent
-						//todo 设置了父ApplicationContext 2020-11-16
+						//todo 很重要 设置了父ApplicationContext 2020-11-16
 						cwac.setParent(rootContext);
 					}
 					configureAndRefreshWebApplicationContext(cwac);
@@ -579,6 +582,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			}
 		}
 		if (wac == null) {
+			//根据conextAttribute 查找 有无 现成的 webApplicationContext
 			// No context instance was injected at construction time -> see if one
 			// has been registered in the servlet context. If one exists, it is assumed
 			// that the parent context (if any) has already been set and that the
@@ -658,6 +662,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 		wac.setEnvironment(getEnvironment());
 		wac.setParent(parent);
+
+		//todo 很重要 设置 容器的 配置文件 路径 2021-3-10
 		String configLocation = getContextConfigLocation();
 		if (configLocation != null) {
 			wac.setConfigLocation(configLocation);

@@ -24,6 +24,10 @@ import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
 
+//https://www.cnblogs.com/lvbinbin2yujie/p/10624584.html
+//https://blog.csdn.net/tales522/article/details/89736753
+
+//https://www.cnblogs.com/duanxz/p/4875153.html
 /**
  * Adding this annotation to an {@code @Configuration} class imports the Spring MVC
  * configuration from {@link WebMvcConfigurationSupport}, e.g.:

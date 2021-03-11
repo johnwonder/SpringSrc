@@ -25,6 +25,9 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
+//从spring4.2开始，
+// beanwrapper的绝大多数特性都被合并到了AbstractPropertyAccessor，
+// 这意味着这里也支持属性遍历、集合和map访问
 /**
  * {@link ConfigurablePropertyAccessor} implementation that directly accesses
  * instance fields. Allows for direct binding to fields instead of going through

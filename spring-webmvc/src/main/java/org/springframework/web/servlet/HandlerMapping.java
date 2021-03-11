@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.lang.Nullable;
 
+//如果在应用程序上下文中没有注册HandlerMapping bean，则BeanNameUrlHandlerMapping是默认值
 /**
  * Interface to be implemented by objects that define a mapping between
  * requests and handler objects.

@@ -41,12 +41,14 @@ public abstract class AdviceModeImportSelector<A extends Annotation> implements 
 	public static final String DEFAULT_ADVICE_MODE_ATTRIBUTE_NAME = "mode";
 
 
+	//子类能重写 自定义
 	/**
 	 * The name of the {@link AdviceMode} attribute for the annotation specified by the
 	 * generic type {@code A}. The default is {@value #DEFAULT_ADVICE_MODE_ATTRIBUTE_NAME},
 	 * but subclasses may override in order to customize.
 	 */
 	protected String getAdviceModeAttributeName() {
+
 		return DEFAULT_ADVICE_MODE_ATTRIBUTE_NAME;
 	}
 
@@ -64,9 +66,11 @@ public abstract class AdviceModeImportSelector<A extends Annotation> implements 
 	 */
 	@Override
 	public final String[] selectImports(AnnotationMetadata importingClassMetadata) {
+		//获取泛型参数的类型
 		Class<?> annType = GenericTypeResolver.resolveTypeArgument(getClass(), AdviceModeImportSelector.class);
 		Assert.state(annType != null, "Unresolvable type argument for AdviceModeImportSelector");
 
+		//获取注解上面的 Attributes
 		AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(importingClassMetadata, annType);
 		if (attributes == null) {
 			throw new IllegalArgumentException(String.format(

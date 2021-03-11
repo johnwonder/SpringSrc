@@ -44,6 +44,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 		extends AbstractDispatcherServletInitializer {
 
+	//如果配置了RootConfigClass 才会实例化一个 RootApplicationContext 2021-2-20
 	/**
 	 * {@inheritDoc}
 	 * <p>This implementation creates an {@link AnnotationConfigWebApplicationContext},

@@ -52,6 +52,7 @@ public interface PropertyAccessor {
 	 */
 	String PROPERTY_KEY_PREFIX = "[";
 
+	//todo 索引或者map 属性
 	/**
 	 * Marker that indicates the start of a property key for an
 	 * indexed or mapped property like "person.addresses[0]".

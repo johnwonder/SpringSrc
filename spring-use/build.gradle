@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'org.springframework'
+version '5.1.1.BUILD-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+
+    compile(project(":spring-context"))
+    compile(project(":spring-beans"))
+    compile(project(":spring-core"))
+    compile(project(":spring-instrument"))
+    compile(project(":spring-aop"))
+//	optional(project(":spring-web"))
+
+//	compile(project(":spring-aop"))
+    compile("javax.inject:javax.inject:1")
+//	compile("org.yaml:snakeyaml:1.23")
+    //compile name: 'rt'
+    compile fileTree(dir:'lib',includes:['*jar'])
+}

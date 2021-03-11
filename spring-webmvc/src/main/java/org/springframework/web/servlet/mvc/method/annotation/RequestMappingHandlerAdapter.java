@@ -505,6 +505,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		this.cacheSecondsForSessionAttributeHandlers = cacheSecondsForSessionAttributeHandlers;
 	}
 
+	//在许多情况下，HttpSession引用本身也是一个安全的互斥体，
+	// 因为对于相同的活动逻辑会话，它始终是相同的对象引用。
+	// 但是，在不同的servlet容器中不能保证这一点；唯一100%安全的方法是会话互斥
 	/**
 	 * Set if controller execution should be synchronized on the session,
 	 * to serialize parallel invocations from the same client.
@@ -634,6 +637,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				RequestResponseBodyAdviceChain.getAdviceByType(advice, ResponseBodyAdvice.class).size();
 	}
 
+	//todo 很重要 添加了N多的 HandlerMethodArgumentResolver
 	/**
 	 * Return the list of argument resolvers to use including built-in resolvers
 	 * and custom resolvers provided via {@link #setCustomArgumentResolvers}.

@@ -75,6 +75,8 @@ public abstract class ApplicationObjectSupport implements ApplicationContextAwar
 			}
 			this.applicationContext = context;
 			this.messageSourceAccessor = new MessageSourceAccessor(context);
+
+			//todo 很重要
 			initApplicationContext(context);
 		}
 		else {
@@ -121,6 +123,8 @@ public abstract class ApplicationObjectSupport implements ApplicationContextAwar
 	 * @see #setApplicationContext
 	 */
 	protected void initApplicationContext(ApplicationContext context) throws BeansException {
+
+		//todo 直接 调用 AbstractDetectingUrlHandlerMapping 2021-3-10
 		initApplicationContext();
 	}
 

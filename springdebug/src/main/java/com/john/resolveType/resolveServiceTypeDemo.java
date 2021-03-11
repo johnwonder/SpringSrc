@@ -41,7 +41,7 @@ public class resolveServiceTypeDemo {
 		//System.out.println(resolvableType1.getInterfaces()[0].getGeneric(1));
 
 		//我们知道在Java中一切都是对象，我们一般所使用的对象都直接或间接继承自Object类。
-		// Object类中包含一个方法名叫getClass，利用这个方法就可以获得一个实例的类型类。
+		// Object类中包含一个方法名叫getClass，利用这个方法就可以获得一个对象的类型类。
 		// 类型类指的是代表一个类型的类，因为一切皆是对象，
 		// 类型也不例外，在Java使用类型类来表示一个类型。所有的类型类都是Class类的实例
 		//https://www.cnblogs.com/Seachal/p/5371733.html

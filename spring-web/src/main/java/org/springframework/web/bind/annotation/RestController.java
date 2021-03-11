@@ -25,6 +25,8 @@ import java.lang.annotation.Target;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Controller;
 
+//https://www.iteye.com/blog/jinnianshilongnian-1989381
+//todo 也是从4。0 开始的
 /**
  * A convenience annotation that is itself annotated with
  * {@link Controller @Controller} and {@link ResponseBody @ResponseBody}.

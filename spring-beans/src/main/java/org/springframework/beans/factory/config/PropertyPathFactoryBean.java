@@ -161,9 +161,11 @@ public class PropertyPathFactoryBean implements FactoryBean<Object>, BeanNameAwa
 	}
 
 
+	//todo 需要根据beanFactory 获取 bean
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
+
 
 		if (this.targetBeanWrapper != null && this.targetBeanName != null) {
 			throw new IllegalArgumentException("Specify either 'targetObject' or 'targetBeanName', not both");
@@ -216,6 +218,8 @@ public class PropertyPathFactoryBean implements FactoryBean<Object>, BeanNameAwa
 			// Fetch prototype target bean...
 			Assert.state(this.beanFactory != null, "No BeanFactory available");
 			Assert.state(this.targetBeanName != null, "No target bean name specified");
+
+			//todo 获取targetBeanName所引用的Bean 2021-2-5
 			Object bean = this.beanFactory.getBean(this.targetBeanName);
 			target = PropertyAccessorFactory.forBeanPropertyAccess(bean);
 		}

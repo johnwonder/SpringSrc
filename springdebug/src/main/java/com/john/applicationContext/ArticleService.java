@@ -12,6 +12,6 @@ public class ArticleService {
 
 	@Override
 	public String toString() {
-		return "ArticleService{}";
+		return "ArticleService is Available";
 	}
 }

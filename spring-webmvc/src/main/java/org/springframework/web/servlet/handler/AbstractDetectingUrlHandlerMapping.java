@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.util.ObjectUtils;
 
+//todo 继承了 WebApplicationObjectSupport
 /**
  * Abstract implementation of the {@link org.springframework.web.servlet.HandlerMapping}
  * interface, detecting URL mappings for handler beans through introspection of all
@@ -49,12 +50,14 @@ public abstract class AbstractDetectingUrlHandlerMapping extends AbstractUrlHand
 	}
 
 
+	//todo ApplicationObjectSupport 实现了 ApplicationContextAware 接口 会调用
 	/**
 	 * Calls the {@link #detectHandlers()} method in addition to the
 	 * superclass's initialization.
 	 */
 	@Override
 	public void initApplicationContext() throws ApplicationContextException {
+		//先调用 AbstractHandlerMapping 的initApplicationContext
 		super.initApplicationContext();
 		detectHandlers();
 	}
@@ -73,6 +76,7 @@ public abstract class AbstractDetectingUrlHandlerMapping extends AbstractUrlHand
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(applicationContext, Object.class) :
 				applicationContext.getBeanNamesForType(Object.class));
 
+		//todo 取任何我们可以确定URL的bean名称
 		// Take any bean name that we can determine URLs for.
 		for (String beanName : beanNames) {
 			String[] urls = determineUrlsForHandler(beanName);

@@ -61,6 +61,7 @@ public class MutablePropertyValues implements PropertyValues, Serializable {
 		this.propertyValueList = new ArrayList<>(0);
 	}
 
+	//深拷贝
 	/**
 	 * Deep copy constructor. Guarantees PropertyValue references
 	 * are independent, although it can't deep copy objects currently

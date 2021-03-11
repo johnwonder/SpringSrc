@@ -47,6 +47,8 @@ import org.springframework.web.servlet.mvc.condition.RequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 
+//todo 从 @Controller 类中的类型和方法级别 @RequestMapping 注解创建 RequestMappingInfo 实例 2021-3-8
+//https://blog.csdn.net/zknxx/article/details/97052641
 /**
  * Creates {@link RequestMappingInfo} instances from type and method-level
  * {@link RequestMapping @RequestMapping} annotations in
@@ -195,6 +197,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	}
 
 
+	//todo important  判断类型是否注解了 @Controller 和@RequestMapping
 	/**
 	 * {@inheritDoc}
 	 * <p>Expects a handler to have either a type-level @{@link Controller}

@@ -30,12 +30,14 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
+//todo Spring boot 中就是TomcatStarter 实现了 ServletContainerInitializer 2021-2-21
 //https://blog.csdn.net/yangliuhbhd/article/details/80803464
 //https://blog.csdn.net/zknxx/article/details/78388862
+//https://my.oschina.net/u/3574106/blog/1819394
 /**
  * Servlet 3.0 {@link ServletContainerInitializer} designed to support code-based
  * configuration of the servlet container using Spring's {@link WebApplicationInitializer}
- * SPI as opposed to (or possibly in combination with) the traditional
+ * SPI as opposed to (or possibly in combination with 或者可能与) the traditional
  * {@code web.xml}-based approach.
  *
  * <h2>Mechanism of Operation</h2>
@@ -113,6 +115,11 @@ import org.springframework.util.ReflectionUtils;
 @HandlesTypes(WebApplicationInitializer.class)
 public class SpringServletContainerInitializer implements ServletContainerInitializer {
 
+	//todo Springboot 中的SpringBootServletInitializer 就是实现了WebApplicationInitializer接口
+	//https://www.cnkirito.moe/servlet-explore/
+	//ServletContainerInitializer 也是 Servlet 3.0 新增的一个接口，容器在启动时使用 JAR 服务 API(JAR Service API) 来发现 ServletContainerInitializer 的实现类，并且容器将 WEB-INF/lib 目录下 JAR 包中的类都交给该类的 onStartup()方法处理，
+	// 我们通常需要在该实现类上使用 @HandlesTypes 注解来指定希望被处理的类，
+	// 过滤掉不希望给 onStartup() 处理的类。
 	/**
 	 * Delegate the {@code ServletContext} to any {@link WebApplicationInitializer}
 	 * implementations present on the application classpath.
@@ -143,10 +150,13 @@ public class SpringServletContainerInitializer implements ServletContainerInitia
 	public void onStartup(@Nullable Set<Class<?>> webAppInitializerClasses, ServletContext servletContext)
 			throws ServletException {
 
+		//todo 使用了LinkedList
+		//LinkedList是一个双链表,在添加和删除元素时具有比ArrayList更好的性能
 		List<WebApplicationInitializer> initializers = new LinkedList<>();
 
 		if (webAppInitializerClasses != null) {
 			for (Class<?> waiClass : webAppInitializerClasses) {
+				//todo 不是接口且不是抽象类且实现了WebApplicationInitializer 接口 才会放到initializers中 2021-2-21
 				// Be defensive: Some servlet containers provide us with invalid classes,
 				// no matter what @HandlesTypes says...
 				if (!waiClass.isInterface() && !Modifier.isAbstract(waiClass.getModifiers()) &&

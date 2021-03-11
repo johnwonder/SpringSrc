@@ -29,14 +29,16 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+//https://spring.io/blog/2020/06/30/url-matching-with-pathpattern-in-spring-mvc
 /**
  * A {@link WebMvcConfigurer} that delegates to one or more others.
  *
- * @author Rossen Stoyanchev
+ * @author Rossen Stoyanchev 英格兰 剑桥 https://spring.io/team/rstoyanchev/
  * @since 3.1
  */
 class WebMvcConfigurerComposite implements WebMvcConfigurer {
 
+	//是个ArrayList
 	private final List<WebMvcConfigurer> delegates = new ArrayList<>();
 
 

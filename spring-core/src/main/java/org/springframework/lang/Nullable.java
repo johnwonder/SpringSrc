@@ -36,7 +36,7 @@ import javax.annotation.meta.When;
  * <p>Can be used in association with {@code @NonNullApi} or {@code @NonNullFields} to
  * override the default non-nullable semantic to nullable.
  *
- * @author Sebastien Deleuze
+ * @author Sebastien Deleuze //Lyon, France //understanding Reactive Types //https://m.sohu.com/a/200173943_575744
  * @author Juergen Hoeller
  * @since 5.0
  * @see NonNullApi

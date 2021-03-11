@@ -19,7 +19,11 @@ package org.springframework.web.context;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+//监听器就是一个实现特定接口的普通java程序，这个程序专门用于监听另一个java对象的方法调用或属性改变，
+// 当被监听对象发生上述事件后，监听器某个方法将立即被执行
 //https://blog.csdn.net/qq_36542090/article/details/80878955
+//https://www.zhihu.com/question/39061904
+//Spring3.1 支持注入根web容器,允许在Servlet3.0+环境中进行编程配置
 /**
  * Bootstrap listener to start up and shut down Spring's root {@link WebApplicationContext}.
  * Simply delegates to {@link ContextLoader} as well as to {@link ContextCleanupListener}.
@@ -57,6 +61,12 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 	public ContextLoaderListener() {
 	}
 
+	//通过给定的一个applicationContext 创建一个ContextLoaderListener
+	//在Servlet3.0+ 环境 通过 实例化  listener(servletContext.addListener)
+	//servletContext 可以通过 WebApplicationInitializer接口的 onStartup 方法回调拿到
+	//然后再调用servletContext.addListener
+
+	//推荐到做法是 这个context 实现 ConfigurableWebApplicationContext 接口
 	/**
 	 * Create a new {@code ContextLoaderListener} with the given application context. This
 	 * constructor is useful in Servlet 3.0+ environments where instance-based
@@ -96,11 +106,14 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 	}
 
 
+	//ServletContextListener 是Servlet接口
+	//todo 通过ServletContextListener源码注释 在初始化web应用程序中的任何筛选器或servlet之前，将通知所有ServletContextListener上下文初始化 2021-2-20
 	/**
 	 * Initialize the root web application context.
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
+		//初始化Web 应用程序上下文
 		initWebApplicationContext(event.getServletContext());
 	}
 

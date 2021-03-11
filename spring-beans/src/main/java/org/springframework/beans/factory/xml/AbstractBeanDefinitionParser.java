@@ -76,6 +76,7 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 						aliases = StringUtils.trimArrayElements(StringUtils.commaDelimitedListToStringArray(name));
 					}
 				}
+				//todo 实例化一个BeanDefinitionHolder 2021-2-5
 				BeanDefinitionHolder holder = new BeanDefinitionHolder(definition, id, aliases);
 
 				//todo PropertyPlaceholderBeanDefinition 注册BeanDefinition开始

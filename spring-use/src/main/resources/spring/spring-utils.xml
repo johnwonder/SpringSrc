@@ -3,7 +3,7 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xmlns:aop="http://www.springframework.org/schema/aop"
-	   xmlns:utils="http://www.springframework.org/schema/util"
+	   xmlns:util="http://www.springframework.org/schema/util"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
@@ -12,5 +12,17 @@
        http://www.springframework.org/schema/aop/spring-aop.xsd
 	   http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util-2.0.xsd">
-	<utils:constant id="hwConstant" static-field="org.wonder.frame.utilsNamespace.UtilsConstant.hwStatic"/>
+	<util:constant id="hwConstant" static-field="org.wonder.frame.utilsNamespace.UtilsConstant.hwStatic"/>
+
+	<bean id="utils" class="org.wonder.frame.utilsNamespace.Utils">
+
+		<property name="name">
+
+			<util:constant static-field="java.lang.Math.PI"/>
+
+		</property>
+
+	</bean>
+	<!-- 引用utils Bean中的属性-->
+	<util:property-path  id="Name" path="utils.name"/>
 </beans>

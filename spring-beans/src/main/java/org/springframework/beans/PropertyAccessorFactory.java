@@ -16,6 +16,7 @@
 
 package org.springframework.beans;
 
+//隐藏实际的目标实现类及其扩展的公共签名
 /**
  * Simple factory facade for obtaining {@link PropertyAccessor} instances,
  * in particular for {@link BeanWrapper} instances. Conceals the actual
@@ -30,6 +31,7 @@ public final class PropertyAccessorFactory {
 	}
 
 
+	//返回一个属性访问器，也就是一个BeanWrapper的实现 BeanWrapperImpl
 	/**
 	 * Obtain a BeanWrapper for the given target object,
 	 * accessing properties in JavaBeans style.

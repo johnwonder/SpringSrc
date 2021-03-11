@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
 import org.springframework.core.annotation.AliasFor;
 
 //2.5引入
+//todo 因为注解了@Component 所以会被扫描
 /**
  * Indicates that an annotated class is a "Controller" (e.g. a web controller).
  *

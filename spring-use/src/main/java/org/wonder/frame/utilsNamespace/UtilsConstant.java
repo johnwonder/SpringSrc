@@ -15,8 +15,9 @@ public class UtilsConstant {
 	public static void main(String[] args) {
 		BeanFactory beanFactory=  new ClassPathXmlApplicationContext("spring/spring-utils.xml");
 
-		//虽然是延迟初始化的 但是也返回true
+		//静态变量
 		System.out.println(beanFactory.getBean("hwConstant"));
 
+		System.out.println(beanFactory.getBean("Name"));
 	}
 }

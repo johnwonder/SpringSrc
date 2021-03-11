@@ -85,6 +85,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	 * <p>If not set, the implementation may use a default as appropriate.
 	 */
 	public void setConfigLocations(@Nullable String... locations) {
+
 		if (locations != null) {
 			//遍历locations中的变量是否为null
 			Assert.noNullElements(locations, "Config locations must not be null");
@@ -101,6 +102,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	}
 
 	//子类可以重写这个方法：提供 资源路径的集合
+	//
 	/**
 	 * Return an array of resource locations, referring to the XML bean definition
 	 * files that this context should be built with. Can also include location
@@ -149,6 +151,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 		this.setIdCalled = true;
 	}
 
+	// 对于上下文实例本身定义为bean的情况。会设置id 为 bean 名称
 	/**
 	 * Sets the id of this context to the bean name by default,
 	 * for cases where the context instance is itself defined as a bean.

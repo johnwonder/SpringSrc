@@ -95,6 +95,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		beanDefinitionReader.setEnvironment(this.getEnvironment());
 
 		//todo important 设置为ClassPathXmlApplicationContext 又因为AbstractApplicationContext继承自 DefaultResourceLoader 为自己 2020-08-31
+		//本来在实例化beanDefinitionReader的时候设置了 this.resourceLoader = new PathMatchingResourcePatternResolver();
 		beanDefinitionReader.setResourceLoader(this);
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 

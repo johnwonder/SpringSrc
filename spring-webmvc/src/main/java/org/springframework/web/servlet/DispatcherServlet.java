@@ -64,6 +64,7 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
+//提供方便的映射和异常处理设施
 /**
  * Central dispatcher for HTTP request handlers/controllers, e.g. for web UI controllers
  * or HTTP-based remote service exporters. Dispatches to registered handlers for processing
@@ -486,6 +487,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 
+	//todo 牛逼 在 ContextRefreshedEvent 事件触发的时候去 初始化 HandlerMappings等。
 	/**
 	 * This implementation calls {@link #initStrategies}.
 	 */
@@ -502,7 +504,10 @@ public class DispatcherServlet extends FrameworkServlet {
 		initMultipartResolver(context);
 		initLocaleResolver(context);
 		initThemeResolver(context);
+		//todo 初始化HandlerMappings
 		initHandlerMappings(context);
+
+		//todo 初始化HandlerAdapter
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
 		initRequestToViewNameTranslator(context);
@@ -593,6 +598,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		this.handlerMappings = null;
 
 		if (this.detectAllHandlerMappings) {
+			//todo 找出所有的 HandlerMappings 包括 祖先上下文 2021-3-8
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
 			Map<String, HandlerMapping> matchingBeans =
 					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
@@ -612,6 +618,9 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
+		//会去DispatcherServlet.properties 配置 找默认的
+		//org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping,\
+		//org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
 		if (this.handlerMappings == null) {
@@ -651,6 +660,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
+		//3. 如果handlerAdapters 还是为空 ，那么就根据默认策略去DispatcherServlet.properties 获取默认的 handlerAdapter
 		// Ensure we have at least some HandlerAdapters, by registering
 		// default HandlerAdapters if no other adapters are found.
 		if (this.handlerAdapters == null) {
@@ -865,6 +875,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			for (String className : classNames) {
 				try {
 					Class<?> clazz = ClassUtils.forName(className, DispatcherServlet.class.getClassLoader());
+					//todo 调用容器创建bean 给容器管辖 只不过是原型bean
 					Object strategy = createDefaultStrategy(context, clazz);
 					strategies.add((T) strategy);
 				}
@@ -901,6 +912,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 
+
+	//公开DispatcherServlet特定的请求属性 然后 代理给doDispatch方法
+	//用于实际调度
 	/**
 	 * Exposes the DispatcherServlet-specific request attributes and delegates to {@link #doDispatch}
 	 * for the actual dispatching.
@@ -1010,13 +1024,17 @@ public class DispatcherServlet extends FrameworkServlet {
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
+				//确定当前请求的处理程序
 				// Determine handler for the current request.
+				//todo 2021-3-6 去handlerMappings 中去匹配
+				//从HandlerMapping查找处理request的controller.
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
+				//找到handler的适配器去执行
 				// Determine handler adapter for the current request.
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
@@ -1030,10 +1048,12 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
+				//// 4。 拦截器的预处理方法
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
+				//// 5.实际的处理器处理请求,返回结果视图对象
 				// Actually invoke the handler.
 				//todo 这里会调用ControllerAdvice 注解 的bean 2020-12-12
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
@@ -1042,7 +1062,10 @@ public class DispatcherServlet extends FrameworkServlet {
 					return;
 				}
 
+				// 结果视图对象的处理
 				applyDefaultViewName(processedRequest, mv);
+
+				///6.拦截器的后处理方法
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {

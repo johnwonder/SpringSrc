@@ -324,7 +324,9 @@ class ConfigurationClassParser {
 			}
 		}
 
+		//todo 处理 @Bean方法 2021-3-5
 		// Process individual @Bean methods
+		//放入configClass  的 beanMethods LinkedHashSet  中
 		Set<MethodMetadata> beanMethods = retrieveBeanMethodMetadata(sourceClass);
 		for (MethodMetadata methodMetadata : beanMethods) {
 			configClass.addBeanMethod(new BeanMethod(methodMetadata, configClass));

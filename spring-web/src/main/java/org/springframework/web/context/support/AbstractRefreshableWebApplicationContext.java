@@ -34,7 +34,9 @@ import org.springframework.web.context.ConfigurableWebEnvironment;
 import org.springframework.web.context.ServletConfigAware;
 import org.springframework.web.context.ServletContextAware;
 
-//todo 提供“configLocations”属性，将在web应用程序启动时通过ConfigurableWebApplicationContext接口*填充
+//todo 提供“configLocations”属性，
+// 实际上是父类AbstractRefreshableConfigApplicationContext 提供的
+// 将在web应用程序启动时通过ConfigurableWebApplicationContext接口*填充
 /**
  * {@link org.springframework.context.support.AbstractRefreshableApplicationContext}
  * subclass which implements the
@@ -143,8 +145,11 @@ public abstract class AbstractRefreshableWebApplicationContext extends AbstractR
 		return this.namespace;
 	}
 
+	//todo ConfigurableWebApplicationContext接口定义了 setConfigLocations
+	//todo AbstractRefreshableConfigApplicationContext 父类 已经实现了此接口
 	@Override
 	public String[] getConfigLocations() {
+
 		return super.getConfigLocations();
 	}
 

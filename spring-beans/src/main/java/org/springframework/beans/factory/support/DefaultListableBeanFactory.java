@@ -786,11 +786,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		String beanDefinitionName = BeanFactoryUtils.transformedBeanName(beanName);
 		resolveBeanClass(mbd, beanDefinitionName);
+		//实例化方法 比如 @Configuration 类中的 @Bean注解的实例方法 代表唯一
 		if (mbd.isFactoryMethodUnique) {
 			boolean resolve;
 			synchronized (mbd.constructorArgumentLock) {
 				resolve = (mbd.resolvedConstructorOrFactoryMethod == null);
 			}
+			//resolvedConstructorOrFactoryMethod为空代表 要解析
 			if (resolve) {
 				new ConstructorResolver(this).resolveFactoryMethodIfPossible(mbd);
 			}
@@ -934,9 +936,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		//
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		if (existingDefinition != null) {
 			//不允许被覆盖的话就抛出错误
+			//todo Spring cloud 中会出现此问题 2021-3-3
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}

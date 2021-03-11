@@ -533,7 +533,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
-			//告诉子类刷新 内部BeanFactory
+			//告诉子类刷新 让他去刷新 内部BeanFactory
 			//https://www.iteye.com/blog/rkdu2-163-com-2003638
 			//内部会加载bean定义
 			//把beanFactory 赋给 this.beanFactory 属性
@@ -566,6 +566,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Initialize message source for this context.
 				initMessageSource();
 
+				//todo 为这个上下文 初始化 事件传播者 2021-3-10
 				// Initialize event multicaster for this context.
 				initApplicationEventMulticaster();
 
@@ -573,6 +574,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				onRefresh();
 
 				// Check for listener beans and register them.
+				//todo 检查是否有 listener的 beans 并且注册他们 2021-3-10
 				registerListeners();
 
 
@@ -580,6 +582,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				//子路 https://blog.csdn.net/java_lyvee/article/details/101793774
 				finishBeanFactoryInitialization(beanFactory);
 
+				//todo 发布相应的事件。 ContextRefreshedEvent 2021-3-10
 				// Last step: publish corresponding event.
 				finishRefresh();
 			}
@@ -609,6 +612,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 	}
 
+	//准备刷新 上下文，设置启动日期 active标记
+	//执行 property sources 的初始化
 	/**
 	 * Prepare this context for refreshing, setting its startup date and
 	 * active flag as well as performing any initialization of property sources.
@@ -616,6 +621,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected void prepareRefresh() {
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
+		//设置为true
+		//AbstractRefreshableConfigApplicationContext 的 afterPropertiesSet 里会判断是否为active
+		//不为active 会 执行refresh方法。
 		this.active.set(true);
 
 		if (logger.isDebugEnabled()) {
@@ -656,6 +664,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// For subclasses: do nothing by default.
 	}
 
+	//告诉子类 去刷新 也就是 让子类去调用 refreshBeanFactory
 	/**
 	 * Tell the subclass to refresh the internal bean factory.
 	 * @return the fresh BeanFactory instance
@@ -667,6 +676,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		//抽象类AbstractRefreshableApplicationContext
 		//里面会加载bean定义
 		//todo 加载bean定义
+		//todo 给beanFactory 赋值
+		//todo important 加载bean definition 到 map中
+		//子类去负责刷新
 		refreshBeanFactory();
 		//如果beanFactory为null 会报错
 		return getBeanFactory();
@@ -878,13 +890,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Doesn't affect other listeners, which can be added without being beans.
 	 */
 	protected void registerListeners() {
+		//先注册静态指定的侦听器。
 		// Register statically specified listeners first.
+		//todo  添加为ApplicationListener 实例
 		for (ApplicationListener<?> listener : getApplicationListeners()) {
 			getApplicationEventMulticaster().addApplicationListener(listener);
 		}
 
+		//不要在这里初始化factorybean：
+		// 我们需要让所有常规bean保持未初始化状态，以便让后处理器应用于它们
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let post-processors apply to them!
+		//todo 只是获取Bean名称 的集合 添加为ApplicationListenerBean
 		String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
 		for (String listenerBeanName : listenerBeanNames) {
 			getApplicationEventMulticaster().addApplicationListenerBean(listenerBeanName);
@@ -893,8 +910,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Publish early application events now that we finally have a multicaster...
 		Set<ApplicationEvent> earlyEventsToProcess = this.earlyApplicationEvents;
 		this.earlyApplicationEvents = null;
+		//提早的事件先处理
 		if (earlyEventsToProcess != null) {
 			for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
+				//
 				getApplicationEventMulticaster().multicastEvent(earlyEvent);
 			}
 		}
@@ -1150,13 +1169,23 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 
+	//beanFactory接口的实现
+	//todo 因为ApplicationContext接口 继承了BeanFactory接口 2021-3-6
 	//---------------------------------------------------------------------
 	// Implementation of BeanFactory interface
 	//---------------------------------------------------------------------
 
 	@Override
 	public Object getBean(String name) throws BeansException {
+
+		//如果beanFactory 不是active 的情况下 会抛出错误
+		//getBeanFactory 方法 却说是 子类实现getBeanFactory的时候检查
+		//这里是检查context是否active
+		//getBeanFactory里是 检查BeanFactory是否为空
 		assertBeanFactoryActive();
+
+		//AbstractRefreshableApplicationContext 子类实现了抽象getBeanFactory方法
+		//getBeanFactory是抽象方法 子类调用获取到beanFactory 根据beanFactory获取bean
 		return getBeanFactory().getBean(name);
 	}
 
@@ -1445,6 +1474,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected abstract void closeBeanFactory();
 
 
+	//子类应该有效地实现查找，这样就可以重复调用它而不会造成性能损失
+	//子类在返回内部beanFactory前 应该检查 context是否active
+	//一旦上下文关闭，内部工厂通常应被视为不可用
 	/**
 	 * Subclasses must return their internal bean factory here. They should implement the
 	 * lookup efficiently, so that it can be called repeatedly without a performance penalty.

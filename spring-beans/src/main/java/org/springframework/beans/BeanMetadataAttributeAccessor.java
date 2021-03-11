@@ -19,6 +19,10 @@ package org.springframework.beans;
 import org.springframework.core.AttributeAccessorSupport;
 import org.springframework.lang.Nullable;
 
+//https://blog.csdn.net/vistaed/article/details/108011144
+//主要重写了 AttributeAccessorSupport 的部分方法，限定操作为 BeanMetadataAttribute
+//也就是说属性的上下文操作重写为 增删改查：BeanMetadataAttribute
+//由于父类操作的是Object类型 ，所以进行一个重写 ，限定是 BeanMetadataAttribute
 /**
  * Extension of {@link org.springframework.core.AttributeAccessorSupport},
  * holding attributes as {@link BeanMetadataAttribute} objects in order
@@ -34,6 +38,7 @@ public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport impl
 	private Object source;
 
 
+	//对象的确切类型 依赖于 使用的配置机制
 	/**
 	 * Set the configuration source {@code Object} for this metadata element.
 	 * <p>The exact type of the object will depend on the configuration mechanism used.
@@ -42,6 +47,7 @@ public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport impl
 		this.source = source;
 	}
 
+	//todo 实现了BeanMetadataElement接口
 	@Override
 	@Nullable
 	public Object getSource() {

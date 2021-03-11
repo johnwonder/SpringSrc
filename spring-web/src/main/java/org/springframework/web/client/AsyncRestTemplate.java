@@ -45,6 +45,9 @@ import org.springframework.util.concurrent.ListenableFutureAdapter;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriTemplateHandler;
 
+//todo 2021-2-18
+//https://www.iteye.com/blog/jinnianshilongnian-1989381
+//已经被WebClient 替代
 /**
  * <strong>Spring's central class for asynchronous client-side HTTP access.</strong>
  * Exposes similar methods as {@link RestTemplate}, but returns {@link ListenableFuture}
@@ -73,6 +76,9 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 	private final RestTemplate syncTemplate;
 
 
+	//https://www.iteye.com/blog/jinnianshilongnian-1989381
+	//AsyncRestTemplate默认使用SimpleClientHttpRequestFactory，即通过java.net.HttpURLConnection实现；另外我们也可以使用apache的http components；
+	// 使用template.setAsyncRequestFactory(new HttpComponentsAsyncClientHttpRequestFactory());设置即可
 	/**
 	 * Create a new instance of the {@code AsyncRestTemplate} using default settings.
 	 * <p>This constructor uses a {@link SimpleClientHttpRequestFactory} in combination

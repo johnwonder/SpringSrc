@@ -25,6 +25,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+//主要内部使用 bean definition读取器的实现。
 /**
  * Utility methods that are useful for bean definition reader implementations.
  * Mainly intended for internal use.
@@ -58,6 +59,7 @@ public abstract class BeanDefinitionReaderUtils {
 			@Nullable String parentName, @Nullable String className, @Nullable ClassLoader classLoader) throws ClassNotFoundException {
 
 		GenericBeanDefinition bd = new GenericBeanDefinition();
+		//把parentName放入Bean Definition的parentName属性中
 		bd.setParentName(parentName);
 
 		//todo 如果又classLoader 那么就会根据className加载class ，ClassUtils.forName 2020-09-22
@@ -171,6 +173,7 @@ public abstract class BeanDefinitionReaderUtils {
 		// Register bean definition under primary name.
 		String beanName = definitionHolder.getBeanName();
 		//todo 放入 beandefinitionMap中 2020-09-11
+		// 其实也就是放入 beanFactory 中啦
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		//todo 获取bean name 注册到alias中 2020-11-20

@@ -374,7 +374,7 @@ class ConstructorResolver {
 	}
 
 	//使用命名工厂方法实例化bean。方法可能是静态的，如果
-	//bean定义参数指定一个类，而不是“工厂bean”，或者使用依赖注入配置的工厂对象本身的实例变量.
+	//bean定义参数指定一个类，  而不是factory-bean或者使用依赖注入配置的工厂对象本身的实例变量.
 //实现需要使用在RootBeanDefinition中指定的名称（该方法可能已重载）并尝试与参数匹配。我们没有附加到构造函数参数的类型，
 //所以试错是唯一的方法。explicitArgs数组可以包含通过相应的getBean方法以编程方式传入的参数值
 	/**
@@ -406,6 +406,7 @@ class ConstructorResolver {
 		//声明一个判断是否是静态工厂的boolean变量
 		boolean isStatic;
 
+		//todo 比如@Configuration类中的@Bean方法实例化时 factoryBeanName 就代表是 configuration 类。
 		//todo 有factory-bean属性的就是 实例工厂 2020-09-22
 		String factoryBeanName = mbd.getFactoryBeanName();
 		if (factoryBeanName != null) {

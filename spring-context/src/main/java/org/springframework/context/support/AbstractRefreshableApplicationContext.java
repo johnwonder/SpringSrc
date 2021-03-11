@@ -25,21 +25,29 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.lang.Nullable;
 
+//实现应该支持多个refresh调用
 /**
  * Base class for {@link org.springframework.context.ApplicationContext}
  * implementations which are supposed to support multiple calls to {@link #refresh()},
  * creating a new internal bean factory instance every time.
  * Typically (but not necessarily), such a context will be driven by
  * a set of config locations to load bean definitions from.
- * TODO 这样的上下文将由一组配置位置驱动，以便从中加载bean定义 2020-09-11
+ * TODO 这样的上下文将由一组配置文件驱动，以便从中加载bean定义 2020-09-11
  * TODO 也就是说这个上下文 是由配置文件来加载BEAN的 例如CLASSPATH XML
  *
+ * TODO 子类只要实现 loadBeanDefinitions方法 ，每次refresh 都会被invoke.
+ * TODO 实现会加载bean definitions 到 DefaultListableBeanFactory
+ * TODO 通过 beanDefinitionReader(比如 XmlBeanDefinitionReader)
+ * TODO DefaultListableBeanFactory 通过 XmlBeanDefinitionReader的构造函数传入
  * <p>The only method to be implemented by subclasses is {@link #loadBeanDefinitions},
  * which gets invoked on each refresh. A concrete implementation is supposed to load
  * bean definitions into the given
  * {@link org.springframework.beans.factory.support.DefaultListableBeanFactory},
  * typically delegating to one or more specific bean definition readers.
  *
+ * // TODO 针对web应用上下文 有类似的一个基类 AbstractRefreshableWebApplicationContext
+ * // TODO 不过针对web环境 预实现了 一些所有上下文功能
+ * //todo 当然了 他留了一种预定义的方法可以接收web上下文的配置位置
  * <p><b>Note that there is a similar base class for WebApplicationContexts.</b>
  * {@link org.springframework.web.context.support.AbstractRefreshableWebApplicationContext}
  * provides the same subclassing strategy, but additionally pre-implements
@@ -118,6 +126,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	}
 
 
+	//AbstractRefreshableApplicationContext
+	//todo 关闭上一个bean工厂（如果有的话）并为上下文生命周期的下一个阶段初始化一个新的bean工厂
+	//todo 此实现执行此上下文的底层bean工厂的实际刷新
 	/**
 	 * This implementation performs an actual refresh of this context's underlying
 	 * bean factory, shutting down the previous bean factory (if any) and
@@ -128,13 +139,15 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	protected final void refreshBeanFactory() throws BeansException {
 
 		//判断beanFactory 是否为空
+		//不为空就 destroyBeans  关闭beanFactory
 		if (hasBeanFactory()) {
 			destroyBeans();
 			closeBeanFactory(); //设置beanFactory = null
 		}
 		try {
 			//创建beanFactory 默认为DefaultListableBeanFactory
-			//todo important 加载配置文件 会判断 是否是 ResourceLoader DefaultListableBeanFactory不是
+			//todo important 加载配置文件 会判断 是否是 ResourceLoader
+			// DefaultListableBeanFactory 没有实现 ResourceLoader
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 
 			beanFactory.setSerializationId(getId());
@@ -185,7 +198,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		}
 	}
 
-	//AbstractApplicationContext
+	//实现了 AbstractApplicationContext 接口
 	@Override
 	public final ConfigurableListableBeanFactory getBeanFactory() {
 		synchronized (this.beanFactoryMonitor) {
@@ -193,6 +206,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 				throw new IllegalStateException("BeanFactory not initialized or already closed - " +
 						"call 'refresh' before accessing beans via the ApplicationContext");
 			}
+			//调用refreshBeanFactory 方法后 this.beanFactory = beanFactory;
 			return this.beanFactory;
 		}
 	}
@@ -253,6 +267,8 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		}
 	}
 
+	//todo 加载 bean definitions 到给定的BeanFactory
+	//todo 通常通过委托给一个或多个bean reader
 	/**
 	 * Load bean definitions into the given bean factory, typically through
 	 * delegating to one or more bean definition readers.

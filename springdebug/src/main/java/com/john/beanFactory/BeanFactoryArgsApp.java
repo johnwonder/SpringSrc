@@ -1,4 +1,4 @@
-package com.john.applicationContext;
+package com.john.beanFactory;
 
 import com.john.aop.Person;
 import com.john.beanFactory.Singer;

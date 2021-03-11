@@ -257,6 +257,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		//todo cglib增强 ConfigurationClass
+		//如果方法P在调用方法A，在不生成代理对象的时候，此时会创建两次Person对象？
+		// 那么创建两次对象，即在spring里非单例对象，这样的话无法保证spring中配置类的属性单例原则。
+		//https://www.cnblogs.com/chenhuadong12/p/14245689.html
+		//5.2版本里 @Configuration 加了 proxyBeanMethods 配置可以 不增强 就是不创建代理类
 		enhanceConfigurationClasses(beanFactory);
 		beanFactory.addBeanPostProcessor(new ImportAwareBeanPostProcessor(beanFactory));
 	}
@@ -365,6 +369,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
 
+			//todo 加载 @Bean 注解方法的Bean 2021-3-5
 			//这里加载了bean定义 会导致 下面的 getBeanDefinitionCount 可能大于 原来的candidateNames
 			//todo 里面会调用ConditionEvaluator
 			// 配置类 加载BeanDefinition阶段
@@ -454,15 +459,19 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			// If a @Configuration class gets proxied, always proxy the target class
 			beanDef.setAttribute(AutoProxyUtils.PRESERVE_TARGET_CLASS_ATTRIBUTE, Boolean.TRUE);
 			try {
+				//设置 用户指定的bean类的增强子类
 				// Set enhanced subclass of the user-specified bean class
 				Class<?> configClass = beanDef.resolveBeanClass(this.beanClassLoader);
 				if (configClass != null) {
+
+					//todo cglib增强
 					Class<?> enhancedClass = enhancer.enhance(configClass, this.beanClassLoader);
 					if (configClass != enhancedClass) {
 						if (logger.isTraceEnabled()) {
 							logger.trace(String.format("Replacing bean definition '%s' existing class '%s' with " +
 									"enhanced class '%s'", entry.getKey(), configClass.getName(), enhancedClass.getName()));
 						}
+						//放入BeanDefinition 的beanClass属性中
 						beanDef.setBeanClass(enhancedClass);
 					}
 				}

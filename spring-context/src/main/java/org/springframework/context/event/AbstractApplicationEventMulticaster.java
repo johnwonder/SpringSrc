@@ -191,6 +191,8 @@ public abstract class AbstractApplicationEventMulticaster
 				if (retriever != null) {
 					return retriever.getApplicationListeners();
 				}
+
+				//todo 放入retrieverCache缓存 2021-3-10
 				retriever = new ListenerRetriever(true);
 				Collection<ApplicationListener<?>> listeners =
 						retrieveApplicationListeners(eventType, sourceType, retriever);
@@ -349,6 +351,7 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 
+	//todo 此帮助程序的实例按事件类型和源类型进行缓存
 	/**
 	 * Helper class that encapsulates a specific set of target listeners,
 	 * allowing for efficient retrieval of pre-filtered listeners.
@@ -372,6 +375,7 @@ public abstract class AbstractApplicationEventMulticaster
 			List<ApplicationListener<?>> allListeners = new ArrayList<>(
 					this.applicationListeners.size() + this.applicationListenerBeans.size());
 			allListeners.addAll(this.applicationListeners);
+
 			if (!this.applicationListenerBeans.isEmpty()) {
 				BeanFactory beanFactory = getBeanFactory();
 				for (String listenerBeanName : this.applicationListenerBeans) {

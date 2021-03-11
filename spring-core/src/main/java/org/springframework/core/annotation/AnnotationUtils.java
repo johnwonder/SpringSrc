@@ -456,6 +456,7 @@ public abstract class AnnotationUtils {
 		return (ann != null ? synthesizeAnnotation(ann, annotatedElement) : null);
 	}
 
+	//通过跟踪哪些注解已经存在来避免无休止的递归
 	/**
 	 * Perform the search algorithm for {@link #findAnnotation(AnnotatedElement, Class)}
 	 * avoiding endless recursion by tracking which annotations have already

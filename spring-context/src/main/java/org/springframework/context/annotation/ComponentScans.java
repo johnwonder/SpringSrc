@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+//https://blog.csdn.net/qq_28410283/article/details/90115259
+//聚合几个 ComponentScan 注解
 /**
  * Container annotation that aggregates several {@link ComponentScan} annotations.
  *

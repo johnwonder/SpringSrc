@@ -45,11 +45,8 @@ public class MutablePropertySources implements PropertySources {
 
 	//https://baijiahao.baidu.com/s?id=1636057331750965212&wfr=spider&for=pc
 //	优点
-//
 //	对于一些读多写少的数据，这种做法的确很不错，例如配置、黑名单、物流地址等变化非常少的数据，这是一种无锁的实现。可以帮我们实现程序更高的并发。
-//
 //	缺点
-//
 //	这种实现只是保证数据的最终一致性，在添加到拷贝数据而还没进行替换的时候，读到的仍然是旧数据。如果对象比较大，频繁地进行替换会消耗内存，从而引发Java的GC问题，这个时候，我们应该考虑其他的容器，例如ConcurrentHashMap。
 	private final List<PropertySource<?>> propertySourceList = new CopyOnWriteArrayList<>();
 

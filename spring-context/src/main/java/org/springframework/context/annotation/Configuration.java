@@ -27,6 +27,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
+//代表 一个类定义了一个或多个@Bean注解的方法
+//会被Spring 容器去生成 bean definitions和
+// 在运行时 服务 对这些bean的请求
 /**
  * Indicates that a class declares one or more {@link Bean @Bean} methods and
  * may be processed by the Spring container to generate bean definitions and

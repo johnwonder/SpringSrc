@@ -56,6 +56,7 @@ public class UtilNamespaceHandler extends NamespaceHandlerSupport {
 	}
 
 
+	//静态变量的解析器
 	private static class ConstantBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
 		@Override
@@ -94,8 +95,11 @@ public class UtilNamespaceHandler extends NamespaceHandlerSupport {
 						"Attribute 'path' must follow pattern 'beanName.propertyName'", element);
 				return;
 			}
+			//引用的bean名称
 			String beanName = path.substring(0, dotIndex);
+			//bean的属性路径
 			String propertyPath = path.substring(dotIndex + 1);
+			//todo 设置 targetBeanName 和propertyPath
 			builder.addPropertyValue("targetBeanName", beanName);
 			builder.addPropertyValue("propertyPath", propertyPath);
 		}

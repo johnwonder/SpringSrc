@@ -118,6 +118,7 @@ public abstract class MvcNamespaceUtils {
 		return new RuntimeBeanReference(PATH_MATCHER_BEAN_NAME);
 	}
 
+	//这边应该是注册BeanNameUrlHandlerMapping
 	/**
 	 * Registers  an {@link HttpRequestHandlerAdapter} under a well-known
 	 * name unless already registered.

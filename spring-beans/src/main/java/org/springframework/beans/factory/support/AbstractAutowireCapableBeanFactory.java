@@ -293,6 +293,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 
+	//todo 创建和填充外部bean实例的典型方法 2021-3-3
 	//-------------------------------------------------------------------------
 	// Typical methods for creating and populating external bean instances
 	//-------------------------------------------------------------------------
@@ -1166,6 +1167,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		//2.通过supplier属性实例化
+		//todo Springboot 中 ServletComponentRegisteringPostProcessor 就是通过这个方式来创建的
 		Supplier<?> instanceSupplier = mbd.getInstanceSupplier();
 		if (instanceSupplier != null) {
 			return obtainFromSupplier(instanceSupplier, beanName);
@@ -1256,6 +1258,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return bw;
 	}
 
+	//重写，
+	// 以便将当前创建的bean隐式注册为依赖于在  Supplier 回调期间以编程方式检索的其他bean
 	/**
 	 * Overridden in order to implicitly register the currently created bean as
 	 * dependent on further beans getting programmatically retrieved during a
@@ -1272,6 +1276,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			registerDependentBean(beanName, currentlyCreatedBean);
 		}
 
+		//todo 调用 AbstractBeanFactory 的 getObjectForBeanInstance 方法返回
 		return super.getObjectForBeanInstance(beanInstance, name, beanName, mbd);
 	}
 
@@ -1376,6 +1381,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return new ConstructorResolver(this).autowireConstructor(beanName, mbd, ctors, explicitArgs);
 	}
 
+	//todo 很重要 使用bean定义中的属性值填充给定BeanWrapper中的bean实例 2021-3-11
 	/**
 	 * Populate the bean instance in the given BeanWrapper with the property values
 	 * from the bean definition.
@@ -1688,19 +1694,23 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 	}
 
+	//应用给定的属性值
+	//解析此bean工厂中对其他bean的任何运行时引用
+	//必须使用深度复制，因此我们不会永久修改此属性
 	/**
 	 * Apply the given property values, resolving any runtime references
 	 * to other beans in this bean factory. Must use deep copy, so we
 	 * don't permanently modify this property.
-	 * @param beanName the bean name passed for better exception information
-	 * @param mbd the merged bean definition
-	 * @param bw the BeanWrapper wrapping the target object
-	 * @param pvs the new property values
+	 * @param beanName the bean name passed for better exception information 传递bean名称以获得更好的异常信息
+	 * @param mbd the merged bean definition 合并过的bean 定义
+	 * @param bw the BeanWrapper wrapping the target object 包装目标对象的 beanWrapper
+	 * @param pvs the new property values 新的属性值
 	 */
 	//https://blog.csdn.net/zhuqiuhui/article/details/82391836
 	protected void applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs) {
 
 		//todo pvs 代表新的属性值
+		//todo 为啥判断不放在方法外面 2021-3-11
 		if (pvs.isEmpty()) {
 			return;
 		}
@@ -1712,13 +1722,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		MutablePropertyValues mpvs = null;
 		List<PropertyValue> original;
 
+		//todo 因为 PropertyValues 有多个实现
 		if (pvs instanceof MutablePropertyValues) {
 			mpvs = (MutablePropertyValues) pvs;
 
 			//这里判断如果转换过了 就直接设置了
 			if (mpvs.isConverted()) {
 				// Shortcut: use the pre-converted values as-is.
+				//快捷方式： 按原样使用预转换的值
 				try {
+					//set 完就直接返回了。
 					bw.setPropertyValues(mpvs);
 					return;
 				}
@@ -1747,6 +1760,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Create a deep copy, resolving any references for values.
 		List<PropertyValue> deepCopy = new ArrayList<>(original.size());
 		boolean resolveNecessary = false;
+
+		//开始遍历 属性值列表
 		for (PropertyValue pv : original) {
 			if (pv.isConverted()) {
 				deepCopy.add(pv);
@@ -1793,6 +1808,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				}
 			}
 		}
+		//1. 是MutablePropertyValues
+		//2. 代表属性集合 就是转换过的了
 		if (mpvs != null && !resolveNecessary) {
 			//设置成只包含转换过后的值了。。
 			mpvs.setConverted();
@@ -1801,6 +1818,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Set our (possibly massaged) deep copy.
 		try {
 			//todo 重点看 遍历deepCopy设置bean属性值  2020-09-16
+			//循环设置属性值
 			bw.setPropertyValues(new MutablePropertyValues(deepCopy));
 		}
 		catch (BeansException ex) {

@@ -272,6 +272,7 @@ public abstract class WebApplicationContextUtils {
 		initServletPropertySources(propertySources, servletContext, null);
 	}
 
+	//将基于 servlet 的 StubPropertySource stub property sources 替换为使用给定的 servletcontext 和 servletconfig 对象填充的实际实例
 	/**
 	 * Replace {@code Servlet}-based {@link StubPropertySource stub property sources} with
 	 * actual instances populated with the given {@code servletContext} and

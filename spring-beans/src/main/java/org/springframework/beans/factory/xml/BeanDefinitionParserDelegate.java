@@ -80,6 +80,7 @@ public class BeanDefinitionParserDelegate {
 	//多值分隔符
 	public static final String MULTI_VALUE_ATTRIBUTE_DELIMITERS = ",; ";
 
+	//区分大小写
 	/**
 	 * Value of a T/F attribute that represents true.
 	 * Anything else represents false. Case seNsItive.
@@ -224,6 +225,7 @@ public class BeanDefinitionParserDelegate {
 
 	private final DocumentDefaultsDefinition defaults = new DocumentDefaultsDefinition();
 
+	//解析状态机
 	private final ParseState parseState = new ParseState();
 
 	/**
@@ -521,31 +523,40 @@ public class BeanDefinitionParserDelegate {
 		this.usedNames.addAll(aliases);
 	}
 
+	//解析bean自身，不考虑名称或别名，在解析过程中如果有问题就会返回null
 	/**
 	 * Parse the bean definition itself, without regard to name or aliases. May return
 	 * {@code null} if problems occurred during the parsing of the bean definition.
 	 */
 	//https://www.cnblogs.com/ssh-html/p/11179860.html spring源码学习之默认标签的解析（一）
+	//@Nullable 可以用于方法，参数，成员上
 	@Nullable
 	public AbstractBeanDefinition parseBeanDefinitionElement(
 			Element ele, String beanName, @Nullable BeanDefinition containingBean) {
 
+		//在parseState中 放入一个beanEntry
 		this.parseState.push(new BeanEntry(beanName));
 
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
+		//所以className有可能为空
 		String parent = null;
+		//父bean节点判断
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
+		//所以parent有可能为空
 
 		try {
 			//// 创建用于承载属性的 GenericBeanDefinition 实例
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-			//todo 解析默认 bean 的各种属性 比如autowire 属性 2020-10-17
+
+			//todo 解析默认 bean 的各种属性 比如autowire,scope属性等 2020-10-17
+			//todo 为了设置containingBean的scope  所以传入containingBean
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			//description必须放在第一位
 			// 提取 description
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 			// 解析元数据
@@ -553,17 +564,21 @@ public class BeanDefinitionParserDelegate {
 
 			//https://blog.csdn.net/qq_22912803/article/details/52503914
 			//https://www.cnblogs.com/atwanli/articles/6154920.html
-			//由于采用cglib生成之类的方式，所以需要用来动态注入的类，不能是final修饰的；需要动态注入的方法，也不能是final修饰的。
+			//todo 由于采用cglib生成的方式，所以需要用来动态注入的类，不能是final修饰的；需要动态注入的方法，也不能是final修饰的。
+
 			// 解析 lookup-method 属性
-			//
+			//bean definition返回的 methodOverrides 作为参数传递
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			////bean definition返回的 methodOverrides 作为参数传递
 			// 解析 replaced-method 属性
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
+
 			// 解析构造函数参数
 			parseConstructorArgElements(ele, bd);
 
 			//todo  解析 property 子元素 2020-08-31
 			//todo property 可直接包含ref value等属性 也可以 包含ref value等子节点
+			//todo property 可直接包含 bean节点
 			//比如 ref属性 2020-08-11
 			parsePropertyElements(ele, bd);
 			// 解析 qualifier 子元素
@@ -571,6 +586,7 @@ public class BeanDefinitionParserDelegate {
 
 			//为了知道beanDefinition是从哪个资源来的
 			bd.setResource(this.readerContext.getResource());
+			//从readerContext提取 设置来源
 			bd.setSource(extractSource(ele));
 
 			return bd;
@@ -585,9 +601,10 @@ public class BeanDefinitionParserDelegate {
 			error("Unexpected failure during bean definition parsing", ele, ex);
 		}
 		finally {
+			//最终把 BeanEntry pop
 			this.parseState.pop();
 		}
-
+		//失败就返回null
 		return null;
 	}
 
@@ -601,6 +618,8 @@ public class BeanDefinitionParserDelegate {
 	public AbstractBeanDefinition parseBeanDefinitionAttributes(Element ele, String beanName,
 			@Nullable BeanDefinition containingBean, AbstractBeanDefinition bd) {
 
+		//如果bean 自己有scope 那么不会设置containingBean的scope
+		//反之 则会设置containingBean的scope
 		//single 标签过期了
 		if (ele.hasAttribute(SINGLETON_ATTRIBUTE)) {
 			error("Old 1.x 'singleton' attribute in use - upgrade to 'scope' declaration", ele);
@@ -609,28 +628,34 @@ public class BeanDefinitionParserDelegate {
 			bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
 		}
 		else if (containingBean != null) {
+
+			//对于内部bean定义，使用包含bean的默认值
 			// Take default from containing bean in case of an inner bean definition.
 			bd.setScope(containingBean.getScope());
 		}
 
+		//2.Abstract 属性
 		if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
 			bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
 		}
-
+		//lazy-init 属性
 		String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(lazyInit)) {
 			lazyInit = this.defaults.getLazyInit();
 		}
 		bd.setLazyInit(TRUE_VALUE.equals(lazyInit));
 
+		//autowire 属性
 		String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);
 		bd.setAutowireMode(getAutowireMode(autowire));
 
+		//depends-on 属性
 		if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE)) {
 			String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
 			bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
 		}
 
+		//autowire-candidate 属性
 		String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);
 		if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {
 			String candidatePattern = this.defaults.getAutowireCandidates();
@@ -643,10 +668,12 @@ public class BeanDefinitionParserDelegate {
 			bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
 		}
 
+		//primary 属性
 		if (ele.hasAttribute(PRIMARY_ATTRIBUTE)) {
 			bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));
 		}
 
+		//init-method 属性
 		if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) {
 			String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE);
 			bd.setInitMethodName(initMethodName);
@@ -656,6 +683,7 @@ public class BeanDefinitionParserDelegate {
 			bd.setEnforceInitMethod(false);
 		}
 
+		//destroy-method 属性
 		if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
 			String destroyMethodName = ele.getAttribute(DESTROY_METHOD_ATTRIBUTE);
 			bd.setDestroyMethodName(destroyMethodName);
@@ -666,9 +694,11 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		//todo BeanDefinition接口中 AbstractBeanDefinition 中实现 2020-09-22
+		//factory-method
 		if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {
 			bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));
 		}
+		//factory-bean
 		if (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) {
 			bd.setFactoryBeanName(ele.getAttribute(FACTORY_BEAN_ATTRIBUTE));
 		}
@@ -686,6 +716,8 @@ public class BeanDefinitionParserDelegate {
 	protected AbstractBeanDefinition createBeanDefinition(@Nullable String className, @Nullable String parentName)
 			throws ClassNotFoundException {
 
+		//BeanDefinitionReaderUtils 抽象类
+		//直接调用抽象类的方法
 		//todo 因为getBeanClassLoader默认为空 所以即使class 不存在这边也不会报错 2020-10-20
 		return BeanDefinitionReaderUtils.createBeanDefinition(
 				parentName, className, this.readerContext.getBeanClassLoader());

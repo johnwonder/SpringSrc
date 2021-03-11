@@ -154,6 +154,7 @@ public class ContextLoader {
 	private static final Map<ClassLoader, WebApplicationContext> currentContextPerThread =
 			new ConcurrentHashMap<>(1);
 
+	//todo 当前 WebApplicationContext，如果ContextLoader类部署在web应用程序类加载器本身中
 	/**
 	 * The 'current' WebApplicationContext, if the ContextLoader class is
 	 * deployed in the web app ClassLoader itself.
@@ -275,6 +276,7 @@ public class ContextLoader {
 			// Store context in local instance variable, to guarantee that
 			// it is available on ServletContext shutdown.
 			if (this.context == null) {
+				//todo  先 尝试从  线程本地 getContextClassLoader中 创建
 				this.context = createWebApplicationContext(servletContext);
 			}
 			if (this.context instanceof ConfigurableWebApplicationContext) {
@@ -288,6 +290,7 @@ public class ContextLoader {
 						ApplicationContext parent = loadParentContext(servletContext);
 						cwac.setParent(parent);
 					}
+					//todo 配合和刷新这个 WebApplicationContext 2021-3-8
 					configureAndRefreshWebApplicationContext(cwac, servletContext);
 				}
 			}
@@ -350,6 +353,7 @@ public class ContextLoader {
 		String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
 		if (contextClassName != null) {
 			try {
+				//ClassUtils.getDefaultClassLoader() 先尝试从 Thread.currentThread().getContextClassLoader() 中加载
 				return ClassUtils.forName(contextClassName, ClassUtils.getDefaultClassLoader());
 			}
 			catch (ClassNotFoundException ex) {
@@ -371,6 +375,7 @@ public class ContextLoader {
 
 	protected void configureAndRefreshWebApplicationContext(ConfigurableWebApplicationContext wac, ServletContext sc) {
 		if (ObjectUtils.identityToString(wac).equals(wac.getId())) {
+			//如果wac 的 id 还是默认值 那么就给他一个值
 			// The application context id is still set to its original default value
 			// -> assign a more useful id based on available information
 			String idParam = sc.getInitParameter(CONTEXT_ID_PARAM);
@@ -378,13 +383,18 @@ public class ContextLoader {
 				wac.setId(idParam);
 			}
 			else {
+				//生产默认id
 				// Generate default id...
+				//WebApplicationContext:/ 类似
 				wac.setId(ConfigurableWebApplicationContext.APPLICATION_CONTEXT_ID_PREFIX +
 						ObjectUtils.getDisplayString(sc.getContextPath()));
 			}
 		}
 
+		//把servletContext给到 webapplicationContext
 		wac.setServletContext(sc);
+
+		//todo 很重要 再设置配置路径 比如web.xml中的那个contextConfigLocation 2021-3-8
 		String configLocationParam = sc.getInitParameter(CONFIG_LOCATION_PARAM);
 		if (configLocationParam != null) {
 			wac.setConfigLocation(configLocationParam);
@@ -395,10 +405,13 @@ public class ContextLoader {
 		// use in any post-processing or initialization that occurs below prior to #refresh
 		ConfigurableEnvironment env = wac.getEnvironment();
 		if (env instanceof ConfigurableWebEnvironment) {
+			// 替换 servletContextInitParams 这个propertySource 为 当前servletContext
 			((ConfigurableWebEnvironment) env).initPropertySources(sc, null);
 		}
 
 		customizeContext(sc, wac);
+
+		//最后容器刷新
 		wac.refresh();
 	}
 
@@ -533,6 +546,7 @@ public class ContextLoader {
 	}
 
 
+	//获取当前线程的Spring根web应用程序上下文（即当前线程的上下文类加载器，它需要是web应用程序的类加载器)
 	/**
 	 * Obtain the Spring root web application context for the current thread
 	 * (i.e. for the current thread's context ClassLoader, which needs to be

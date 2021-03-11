@@ -266,6 +266,10 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 
+	//todo 很重要  创建RequestMappingHandlerMapping 这个Bean
+	//因为 继承了 AbstractHandlerMethodMapping
+	// AbstractHandlerMethodMapping 又实现了  InitializingBean
+	// 所以在 bean 生命周期里会调用 afterPropertiesSet initHandlerMethods
 	/**
 	 * Return a {@link RequestMappingHandlerMapping} ordered at 0 for mapping
 	 * requests to annotated controllers.
@@ -350,6 +354,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	protected PathMatchConfigurer getPathMatchConfigurer() {
 		if (this.pathMatchConfigurer == null) {
 			this.pathMatchConfigurer = new PathMatchConfigurer();
+
+			//传递给  configurers 去配置 pathMatch
 			configurePathMatch(this.pathMatchConfigurer);
 		}
 		return this.pathMatchConfigurer;
@@ -461,6 +467,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	protected void addViewControllers(ViewControllerRegistry registry) {
 	}
 
+	//将URL路径映射到控制器bean名称。就是@Controller注解上 配置 url名称
 	/**
 	 * Return a {@link BeanNameUrlHandlerMapping} ordered at 2 to map URL
 	 * paths to controller bean names.

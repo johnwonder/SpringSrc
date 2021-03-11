@@ -227,6 +227,9 @@ class ConfigurationClassBeanDefinitionReader {
 		}
 		else {
 			// instance @Bean method
+			//todo 实例 @Bean 方法
+			//FactoryBean 是配置类 configClass 2021-3-5
+			//todo 会设置 isFactoryMethodUnique为true ??  2021-3-5
 			beanDef.setFactoryBeanName(configClass.getBeanName());
 			beanDef.setUniqueFactoryMethodName(methodName);
 		}

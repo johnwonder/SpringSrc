@@ -24,6 +24,9 @@ task cglibRepackJar(type: Jar) { repackJar ->
 	repackJar.baseName = "spring-cglib-repack"
 	repackJar.version = cglibVersion
 
+	//https://blog.csdn.net/gdeer/article/details/104815986
+	//asPath 会下载引用的依赖（即 resolve），返回下载后的文件地址。
+	//asPath 即 FileCollection 的 getAsPath() 方法。
 	doLast() {
 		project.ant {
 			taskdef name: "jarjar", classname: "com.tonicsystems.jarjar.JarJarTask",

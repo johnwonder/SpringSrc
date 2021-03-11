@@ -49,9 +49,25 @@
 	<!--<bean id="car5" factory-bean="carFactory" factory-method="createCar">-->
 	<!--</bean>-->
 
-	<bean id="ChineseFemaleSinger" class="com.john.beanFactory.Singer" abstract="true" >
+	<bean id="ChineseFemaleSinger"   class="com.john.beanFactory.Singer" abstract="true" >
+		<!--必须放在第一位-->
+		<description>ss</description>
 		<property name="country" value="中国"/>
-		<property name="gender" value="女"/>
+
+
+		<property name="gender" value="女">
+
+			<description>ss</description>
+
+			<!--maxOccurs="1" property 子节点 最多出现一次-->
+			<!-- 下面的就是 inner bean -->
+		   <bean name="ss" >
+
+			   <property name="sss"></property>
+		   </bean>
+<!--			<ref bean="ss"/>-->
+
+		</property>
 		<!--<property name="gender" value="女"/>-->
 
 	</bean>

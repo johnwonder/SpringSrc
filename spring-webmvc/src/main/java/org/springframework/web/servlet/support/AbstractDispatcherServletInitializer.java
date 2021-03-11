@@ -56,14 +56,18 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	 */
 	public static final String DEFAULT_SERVLET_NAME = "dispatcher";
 
-
+	//https://www.cnkirito.moe/servlet-explore/
+	// ServletContext 新增的方法要么是在 ServletContextListener 的 contexInitialized 方法中调用，
+	// 要么是在 ServletContainerInitializer 的 onStartup() 方法中调用
+	//这边是在onStartup中调用
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
-		//todo 父类去注册ContextLoaderListener 有可能没有注册 2021-1-21
+		//1. todo 父类去注册ContextLoaderListener 有可能没有注册 2021-1-21
 		super.onStartup(servletContext);
 
 		//https://cloud.tencent.com/developer/article/1129894
-		//todo 注册DispatcherServlet 2021-1-21
+		//todo 子类创建一个AnnotationConfigWebApplicationContext 2021-1-21
+		//2. todo 注册DispatcherServlet 2021-1-21
 		registerDispatcherServlet(servletContext);
 	}
 
@@ -95,6 +99,7 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 		Assert.notNull(dispatcherServlet, "createDispatcherServlet(WebApplicationContext) must not return null");
 		dispatcherServlet.setContextInitializers(getServletApplicationContextInitializers());
 
+		//通过servletContext 添加Servlet
 		//todo 把FrameworkServlet放入 servletContext 2021-1-21
 		ServletRegistration.Dynamic registration = servletContext.addServlet(servletName, dispatcherServlet);
 		if (registration == null) {
@@ -103,9 +108,11 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 		}
 
 		registration.setLoadOnStartup(1);
+		//todo 交给子类实现返回映射路径 2021-2-21
 		registration.addMapping(getServletMappings());
 		registration.setAsyncSupported(isAsyncSupported());
 
+		//todo 获取配置的Filter列表后 循环添加 2021-2-20
 		Filter[] filters = getServletFilters();
 		if (!ObjectUtils.isEmpty(filters)) {
 			for (Filter filter : filters) {
@@ -194,6 +201,8 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	 */
 	protected FilterRegistration.Dynamic registerServletFilter(ServletContext servletContext, Filter filter) {
 		String filterName = Conventions.getVariableName(filter);
+
+		//todo 通过servletContext添加Filter 2021-2-20
 		Dynamic registration = servletContext.addFilter(filterName, filter);
 
 		if (registration == null) {

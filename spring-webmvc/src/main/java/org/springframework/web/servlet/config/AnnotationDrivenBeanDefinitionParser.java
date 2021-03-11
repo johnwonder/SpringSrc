@@ -229,6 +229,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		bindingDef.getPropertyValues().add("validator", validator);
 		bindingDef.getPropertyValues().add("messageCodesResolver", messageCodesResolver);
 
+		//todo 获取message-converters 子节点 2021-3-10
 		ManagedList<?> messageConverters = getMessageConverters(element, source, context);
 		ManagedList<?> argumentResolvers = getArgumentResolvers(element, context);
 		ManagedList<?> returnValueHandlers = getReturnValueHandlers(element, context);
@@ -320,6 +321,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		context.registerComponent(new BeanComponentDefinition(statusExceptionResolver, statusExResolverName));
 		context.registerComponent(new BeanComponentDefinition(defaultExceptionResolver, defaultExResolverName));
 
+		//todo 确保BeanNameUrlHandlerMapping（SPR-8289）和默认HandlerAdapter 未关闭 2021-3-10
 		// Ensure BeanNameUrlHandlerMapping (SPR-8289) and default HandlerAdapters are not "turned off"
 		MvcNamespaceUtils.registerDefaultComponents(context, source);
 

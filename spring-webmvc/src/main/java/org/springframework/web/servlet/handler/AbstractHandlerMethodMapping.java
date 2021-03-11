@@ -245,11 +245,14 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 				logger.trace("Could not resolve type for bean '" + beanName + "'", ex);
 			}
 		}
+
+		//todo 判断是@Controller 或者@RequestMapping的类
 		if (beanType != null && isHandler(beanType)) {
 			detectHandlerMethods(beanName);
 		}
 	}
 
+	//检测处理程序方法
 	/**
 	 * Look for handler methods in the specified handler bean.
 	 * @param handler either a bean name or an actual handler instance
@@ -352,6 +355,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		}
 	}
 
+	//todo 很重要 去mappingRegistry中去找 匹配的 RequestMappingInfo 对象 2021-3-10
 	/**
 	 * Look up the best-matching handler method for the current request.
 	 * If multiple matches are found, the best match is selected.
@@ -364,6 +368,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	@Nullable
 	protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
 		List<Match> matches = new ArrayList<>();
+
+		//先去urlLookup 中去找匹配的url
 		List<T> directPathMatches = this.mappingRegistry.getMappingsByUrl(lookupPath);
 		if (directPathMatches != null) {
 			addMatchingMappings(directPathMatches, matches, request);
@@ -495,6 +501,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	protected abstract Comparator<T> getMappingComparator(HttpServletRequest request);
 
 
+	//todo 很重要
+	//维护到处理程序方法的所有映射的注册表，
+	// 公开方法以执行查找并提供并发访问。
 	/**
 	 * A registry that maintains all mappings to handler methods, exposing methods
 	 * to perform lookups and providing concurrent access.
@@ -512,6 +521,11 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 		private final Map<HandlerMethod, CorsConfiguration> corsLookup = new ConcurrentHashMap<>();
 
+		//https://www.cnblogs.com/xiaoxi/p/9140541.html
+		//Reentrant 代表 可重入的
+		// 现实中有这样一种场景：对共享资源有读和写的操作，且写操作没有读操作那么频繁。
+		// 在没有写操作的时候，多个线程同时读一个资源没有任何问题，所以应该允许多个线程同时读取共享资源；
+		// 但是如果一个线程想去写这些共享资源，就不应该允许其他线程对该资源进行读和写的操作了
 		private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
 		/**

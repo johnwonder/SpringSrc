@@ -24,6 +24,7 @@ import org.springframework.beans.TypeConverter;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
+//允许通过xml bean定义中的“list”元素集中设置列表
 /**
  * Simple factory for shared List instances. Allows for central setup
  * of Lists via the "list" element in XML bean definitions.
@@ -85,6 +86,7 @@ public class ListFactoryBean extends AbstractFactoryBean<List<Object>> {
 			result = BeanUtils.instantiateClass(this.targetListClass);
 		}
 		else {
+			//默认就是ArrayList
 			result = new ArrayList<>(this.sourceList.size());
 		}
 		Class<?> valueType = null;

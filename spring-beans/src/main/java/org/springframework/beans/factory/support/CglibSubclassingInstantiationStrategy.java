@@ -48,7 +48,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @author Sam Brannen
+ * @author Sam Brannen https://github.com/sbrannen junit5
  * @since 1.1
  */
 public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationStrategy {
@@ -116,6 +116,8 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 		 */
 		public Object instantiate(@Nullable Constructor<?> ctor, Object... args) {
 			//todo 根据beanDefinition类来创建子类 2021-1-14
+			//cglib子类
+			//https://blog.csdn.net/qq_33661044/article/details/79767596
 			Class<?> subclass = createEnhancedSubclass(this.beanDefinition);
 			Object instance;
 			if (ctor == null) {

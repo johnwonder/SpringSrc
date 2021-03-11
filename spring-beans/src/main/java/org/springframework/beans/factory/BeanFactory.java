@@ -20,6 +20,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
+//访问Spring bean 容器的根接口
+//这是bean容器的基本客户端视图
 /**
  * The root interface for accessing a Spring bean container.
  * This is the basic client view of a bean container;
@@ -33,7 +35,7 @@ import org.springframework.lang.Nullable;
  * (the Prototype design pattern), or a single shared instance (a superior
  * alternative to the Singleton design pattern, in which the instance is a
  * singleton in the scope of the factory). Which type of instance will be returned
- * depends on the bean factory configuration: the API is the same. Since Spring
+ * depends on the bean factory configuration(bean definition 可以设置beanClass): the API is the same. Since Spring
  * 2.0, further scopes are available depending on the concrete application
  * context (e.g. "request" and "session" scopes in a web environment).
  * //spring 2.0开始 支持更多的scope ，依赖于应用上下文 request ,session scope
@@ -56,8 +58,9 @@ import org.springframework.lang.Nullable;
  * Java objects it creates as necessary directly in Java code. There are no
  * constraints on how the definitions could be stored: LDAP, RDBMS, XML,
  * properties file, etc. Implementations are encouraged to support references
- * amongst beans (Dependency Injection).
- *
+ * amongst beans (Dependency Injection) (鼓励实现支持bean之间的引用).
+ * ListableBeanFactory 不会检查parent factory
+ * HierarchicalBeanFactory 会检查parent factory
  * <p>In contrast to the methods in {@link ListableBeanFactory}, all of the
  * operations in this interface will also check parent factories if this is a
  * {@link HierarchicalBeanFactory}. If a bean is not found in this factory instance,

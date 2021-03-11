@@ -13,6 +13,7 @@ public class PublishEventDemo {
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("spring-config-notify.xml");
 
+		context.addApplicationListener(new NotifyListener());
 
 		NotifyEvent event = new NotifyEvent("object", "abc@qq.com", "This is the content");
 

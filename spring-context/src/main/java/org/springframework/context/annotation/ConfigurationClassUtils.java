@@ -119,6 +119,18 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
+		//5.2版本这么写了  proxyBeanMethods
+//		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
+//		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
+//			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
+//		}
+//		else if (config != null || isConfigurationCandidate(metadata)) {
+//			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
+//		}
+//		else {
+//			return false;
+//		}
+
 		//判断有没有@Configuration注解
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
