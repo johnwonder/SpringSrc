@@ -309,6 +309,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				//获取合并过的BeanDefinition
 				//https://blog.csdn.net/andy_zhang2007/article/details/86514320
 				//todo important RootBeanDefinition 2020-10-17
+				//到最后就变成RootBeanDefinition了
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				//这里args好像没用到
 				checkMergedBeanDefinition(mbd, beanName, args);
@@ -377,6 +378,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				else {
 					String scopeName = mbd.getScope();
+					//根据Bean的 scope 去scopes集合获取对应对scope 2021-3-23
 					final Scope scope = this.scopes.get(scopeName);
 					if (scope == null) {
 						throw new IllegalStateException("No Scope registered for scope name '" + scopeName + "'");
@@ -1346,6 +1348,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						//GenericBeanDefinition 和 ChildBeanDefinition  的parentName 不为空
 						String parentBeanName = transformedBeanName(bd.getParentName());
 						if (!beanName.equals(parentBeanName)) {
+							//直接从当前beanFactory中去找
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
@@ -1375,6 +1378,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// 然后mbd就是针对当前bd的一个MergedBeanDefinition(合并的BeanDefinition)了。
 
 					mbd = new RootBeanDefinition(pbd);
+
+					//todo 合并属性 比如mergable  ManagedList
 					mbd.overrideFrom(bd);
 				}
 
@@ -1383,6 +1388,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					mbd.setScope(RootBeanDefinition.SCOPE_SINGLETON);
 				}
 
+				//非单例bean中包含的bean本身不能是单例bean
+				//让我们在这里动态地纠正这个问题，因为这可能是外部bean的父子合并的结果
+				//在这种情况下，原始的内部bean定义将不会继承合并的外部bean的单例状态
 				// A bean contained in a non-singleton bean cannot be a singleton itself.
 				// Let's correct this on the fly here, since this might be the result of
 				// parent-child merging for the outer bean, in which case the original inner bean

@@ -82,6 +82,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
+//模板方法模式是类的行为模式。准备一个抽象类，将部分逻辑以具体方法以及具体构造函数的形式实现，
+// 然后声明一些抽象方法来迫使子类实现剩余的逻辑。
+// 不同的子类可以以不同的方式实现这些抽象方法，从而对剩余的逻辑有不同的实现。
+// 这就是模板方法模式的用意。
+//https://www.cnblogs.com/betterboyz/p/9377881.html
 /**
  * ApplicationContext
  * Abstract implementation of the {@link org.springframework.context.ApplicationContext}
@@ -535,7 +540,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// Tell the subclass to refresh the internal bean factory.
 			//告诉子类刷新 让他去刷新 内部BeanFactory
 			//https://www.iteye.com/blog/rkdu2-163-com-2003638
-			//内部会加载bean定义
+
+			//todo 1. 内部会加载bean定义
+
 			//把beanFactory 赋给 this.beanFactory 属性
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -679,11 +686,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		//todo 给beanFactory 赋值
 		//todo important 加载bean definition 到 map中
 		//子类去负责刷新
+		//模板设计模式的体现
 		refreshBeanFactory();
 		//如果beanFactory为null 会报错
 		return getBeanFactory();
 	}
 
+
+	//把bean工厂配置 成标准的上下文特点
 	/**
 	 * Configure the factory's standard context characteristics,
 	 * such as the context's ClassLoader and post-processors.

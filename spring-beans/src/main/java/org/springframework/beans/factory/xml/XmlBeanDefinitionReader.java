@@ -109,13 +109,17 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			DefaultBeanDefinitionDocumentReader.class;
 
 	//FailFastProblemReporter
+	//传递给XmlReaderContext
 	private ProblemReporter problemReporter = new FailFastProblemReporter();
 
+	//传递给XmlReaderContext
 	private ReaderEventListener eventListener = new EmptyReaderEventListener();
 
+	//传递给XmlReaderContext
 	//默认是NullSourceExtractor
 	private SourceExtractor sourceExtractor = new NullSourceExtractor();
 
+	//传递给XmlReaderContext
 	@Nullable
 	private NamespaceHandlerResolver namespaceHandlerResolver;
 
@@ -523,6 +527,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
 
+		//1.2.9 里直接通过 XmlBeanDefinitionParser 类 来解析了
 		//也就是说XmlBeanDefinitionReader类负责 包装documentReader 。
 		//默认是DefaultBeanDefinitionDocumentReader
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();

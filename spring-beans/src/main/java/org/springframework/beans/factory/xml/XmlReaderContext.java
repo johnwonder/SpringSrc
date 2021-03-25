@@ -44,11 +44,14 @@ import org.springframework.lang.Nullable;
  */
 public class XmlReaderContext extends ReaderContext {
 
+	//放入了XmlBeanDefinitionReader
 	private final XmlBeanDefinitionReader reader;
 
+	//放入了NamespaceHandlerResolver
 	private final NamespaceHandlerResolver namespaceHandlerResolver;
 
-
+	//传入reader namespaceHandlerResolver
+	//xmlReaderContext 可以随时使用他们提供的能力
 	/**
 	 * Construct a new {@code XmlReaderContext}.
 	 * @param resource the XML bean definition resource
@@ -64,6 +67,7 @@ public class XmlReaderContext extends ReaderContext {
 			XmlBeanDefinitionReader reader, NamespaceHandlerResolver namespaceHandlerResolver) {
 
 		super(resource, problemReporter, eventListener, sourceExtractor);
+
 		this.reader = reader;
 		this.namespaceHandlerResolver = namespaceHandlerResolver;
 	}

@@ -42,6 +42,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+//将beandefinition 对象中包含的值解析为应用于目标bean实例的实际值
 /**
  * Helper class for use in bean factory implementations,
  * resolving values contained in bean definition objects
@@ -57,12 +58,14 @@ import org.springframework.util.StringUtils;
  */
 class BeanDefinitionValueResolver {
 
+	//继承自 FactoryBeanRegistrySupport -> DefaultSingletonBeanRegistry
 	private final AbstractBeanFactory beanFactory;
 
 	private final String beanName;
 
 	private final BeanDefinition beanDefinition;
 
+	//用于属性值 类型转换用
 	private final TypeConverter typeConverter;
 
 
@@ -83,6 +86,7 @@ class BeanDefinitionValueResolver {
 	}
 
 
+	//给定一个PropertyValue，返回一个值，必要时解析对工厂中其他bean的任何引用
 	/**
 	 * Given a PropertyValue, return a value, resolving any references to other
 	 * beans in the factory if necessary. The value could be:
@@ -103,8 +107,10 @@ class BeanDefinitionValueResolver {
 	 */
 	@Nullable
 	public Object resolveValueIfNecessary(Object argName, @Nullable Object value) {
+
 		// We must check each value to see whether it requires a runtime reference
 		// to another bean to be resolved.
+		//todo ref 属性对应的
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
 			return resolveReference(argName, ref);
@@ -192,13 +198,18 @@ class BeanDefinitionValueResolver {
 		else if (value instanceof TypedStringValue) {
 			// Convert value to target type here.
 			TypedStringValue typedStringValue = (TypedStringValue) value;
+
+			//支持SpEL表达式
 			Object valueObject = evaluate(typedStringValue);
 			try {
+				//
 				Class<?> resolvedTargetType = resolveTargetType(typedStringValue);
+				//如果有targetType 还得处理类型转换
 				if (resolvedTargetType != null) {
 					return this.typeConverter.convertIfNecessary(valueObject, resolvedTargetType);
 				}
 				else {
+					//直接返回evaluate过后的值
 					return valueObject;
 				}
 			}
@@ -226,6 +237,7 @@ class BeanDefinitionValueResolver {
 	protected Object evaluate(TypedStringValue value) {
 		Object result = doEvaluate(value.getValue());
 		if (!ObjectUtils.nullSafeEquals(result, value.getValue())) {
+			//代表是动态变化的值
 			value.setDynamic();
 		}
 		return result;
@@ -296,6 +308,7 @@ class BeanDefinitionValueResolver {
 	private Object resolveInnerBean(Object argName, String innerBeanName, BeanDefinition innerBd) {
 		RootBeanDefinition mbd = null;
 		try {
+			//获取合并过后的beandefinition
 			mbd = this.beanFactory.getMergedBeanDefinition(innerBeanName, innerBd, this.beanDefinition);
 			// Check given bean name whether it is unique. If not already unique,
 			// add counter - increasing the counter until the name is unique.
@@ -312,6 +325,7 @@ class BeanDefinitionValueResolver {
 					this.beanFactory.getBean(dependsOnBean);
 				}
 			}
+			//实际上现在就创建内部bean实例
 			// Actually create the inner bean instance now...
 			Object innerBean = this.beanFactory.createBean(actualInnerBeanName, mbd, null);
 			if (innerBean instanceof FactoryBean) {
@@ -359,6 +373,7 @@ class BeanDefinitionValueResolver {
 			Object bean;
 			String refName = ref.getBeanName();
 			refName = String.valueOf(doEvaluate(refName));
+			//如果有parent属性就 解析 parent Factory中的
 			if (ref.isToParent()) {
 				if (this.beanFactory.getParentBeanFactory() == null) {
 					throw new BeanCreationException(
@@ -370,6 +385,7 @@ class BeanDefinitionValueResolver {
 			}
 			else {
 				bean = this.beanFactory.getBean(refName);
+				//这里也会注册一个依赖于这个bean的 kv
 				this.beanFactory.registerDependentBean(refName, this.beanName);
 			}
 			if (bean instanceof NullBean) {
@@ -426,6 +442,8 @@ class BeanDefinitionValueResolver {
 	 * For each element in the managed map, resolve reference if necessary.
 	 */
 	private Map<?, ?> resolveManagedMap(Object argName, Map<?, ?> mm) {
+
+		//最后转为LinkedHashMap
 		Map<Object, Object> resolved = new LinkedHashMap<>(mm.size());
 		mm.forEach((key, value) -> {
 			Object resolvedKey = resolveValueIfNecessary(argName, key);

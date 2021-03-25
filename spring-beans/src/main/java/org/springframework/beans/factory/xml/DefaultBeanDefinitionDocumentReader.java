@@ -65,10 +65,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	//嵌套bean
 	public static final String NESTED_BEANS_ELEMENT = "beans";
 
+	//bean别名 element
 	public static final String ALIAS_ELEMENT = "alias";
 
+	//别名 里的 name attribute
 	public static final String NAME_ATTRIBUTE = "name";
-
+	//别名 里的 alias attribute
 	public static final String ALIAS_ATTRIBUTE = "alias";
 
 	public static final String IMPORT_ELEMENT = "import";
@@ -76,6 +78,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	//用于import标签
 	public static final String RESOURCE_ATTRIBUTE = "resource";
 
+	//获取配置的环境 判断当前环境 是否符合
 	public static final String PROFILE_ATTRIBUTE = "profile";
 
 
@@ -135,6 +138,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		//这种行为模拟了一堆委托，实际上并不需要一个
 		BeanDefinitionParserDelegate parent = this.delegate;
 		//todo 为啥又创建一个代理呢
+		///创建新的（子）委托，并引用父委托以用于回退
+		//然后最终重置此代理返回到其原始（父）引用
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
 		//判断root是否是默认命名空间
@@ -202,6 +207,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 					}
 					else {
 						//自定义标签
+						//用到了parser
+						//todo parser内部 去注册BeanDefinition 2021-3-15
 						delegate.parseCustomElement(ele);
 					}
 				}
@@ -212,6 +219,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 	}
 
+	//todo 内部 会 可能会再调用 doRegisterBeanDefinitions
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
 		//todo  对 import 标签的解析 2020-11-17
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {

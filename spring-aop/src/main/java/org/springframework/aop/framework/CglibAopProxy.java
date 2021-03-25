@@ -162,6 +162,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 		}
 
 		try {
+			//通过传进来的advised获取targetClass
 			Class<?> rootClass = this.advised.getTargetClass();
 			Assert.state(rootClass != null, "Target class must be available for creating a CGLIB proxy");
 
@@ -177,6 +178,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 			// Validate the class, writing log messages as necessary.
 			validateClassIfNecessary(proxySuperClass, classLoader);
 
+			//配置CGlib 增强类
 			// Configure CGLIB Enhancer...
 			Enhancer enhancer = createEnhancer();
 			if (classLoader != null) {
@@ -284,6 +286,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 		boolean isFrozen = this.advised.isFrozen();
 		boolean isStatic = this.advised.getTargetSource().isStatic();
 
+		//https://www.jianshu.com/p/64c3500dacdb
 		// Choose an "aop" interceptor (used for AOP calls).
 		Callback aopInterceptor = new DynamicAdvisedInterceptor(this.advised);
 
@@ -306,6 +309,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 		Callback targetDispatcher = (isStatic ?
 				new StaticDispatcher(this.advised.getTargetSource().getTarget()) : new SerializableNoOp());
 
+		//7个Interceptor
 		Callback[] mainCallbacks = new Callback[] {
 				aopInterceptor,  // for normal advice
 				targetInterceptor,  // invoke target without considering advice, if optimized

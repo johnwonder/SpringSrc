@@ -1,5 +1,8 @@
 package com.john.javabase;
 
+import java.text.DecimalFormat;
+import java.text.Format;
+
 /**
  * @Description: spring5.0-2018
  * @Author: johnwonder
@@ -15,5 +18,8 @@ public class JavaNumBaseDemo {
 		System.out.printf("2进制数 %b 表示的是: %d \n", num01, num01);
 		System.out.printf("8进制数 %o 表示的是: %d \n", num02, num02);
 		System.out.printf("16进制数 %X 表示的是: %d \n", num03, num03);
+
+		Format moneyFormat=new DecimalFormat("0,000.00");
+		System.out.println(moneyFormat.format(Double.valueOf("0")) );
 	}
 }

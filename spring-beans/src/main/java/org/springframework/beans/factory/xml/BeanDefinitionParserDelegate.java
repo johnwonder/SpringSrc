@@ -64,9 +64,9 @@ import org.springframework.util.xml.DomUtils;
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
- * @author Rod Johnson
- * @author Mark Fisher
- * @author Gary Russell
+ * @author Rod Johnson Spring创始人
+ * @author Mark Fisher https://github.com/markfisher
+ * @author Gary Russell (https://github.com/garyrussell)  spring-kafka  spring-integration
  * @since 2.0
  * @see ParserContext
  * @see DefaultBeanDefinitionDocumentReader
@@ -77,13 +77,13 @@ public class BeanDefinitionParserDelegate {
 	//写死了默认的bean命名空间
 	public static final String BEANS_NAMESPACE_URI = "http://www.springframework.org/schema/beans";
 
-	//多值分隔符
+	//多值分隔符 逗号 分号 空格
 	public static final String MULTI_VALUE_ATTRIBUTE_DELIMITERS = ",; ";
 
 	//区分大小写
 	/**
 	 * Value of a T/F attribute that represents true.
-	 * Anything else represents false. Case seNsItive.
+	 * Anything else represents false. Case seNsItive(区分大小写).
 	 */
 	public static final String TRUE_VALUE = "true";
 
@@ -238,6 +238,7 @@ public class BeanDefinitionParserDelegate {
 	private final Set<String> usedNames = new HashSet<>();
 
 
+	//创建一个 与XmlReaderContext关联的 BeanDefinitionParserDelegate
 	/**
 	 * Create a new BeanDefinitionParserDelegate associated with the supplied
 	 * {@link XmlReaderContext}.
@@ -293,6 +294,7 @@ public class BeanDefinitionParserDelegate {
 		initDefaults(root, null);
 	}
 
+	//初始化默认的lazy-init , autowire,
 	/**
 	 * Initialize the default lazy-init, autowire, dependency check settings,
 	 * init-method, destroy-method and merge settings. Support nested 'beans'
@@ -302,6 +304,8 @@ public class BeanDefinitionParserDelegate {
 	 * @see #getDefaults()
 	 */
 	public void initDefaults(Element root, @Nullable BeanDefinitionParserDelegate parent) {
+
+		//创建parserDelegate的时候(createDelegate)就会调用
 		populateDefaults(this.defaults, (parent != null ? parent.defaults : null), root);
 
 		//todo 发送默认注册事件 2021-1-12
@@ -655,6 +659,8 @@ public class BeanDefinitionParserDelegate {
 			bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
 		}
 
+		//如果 bean 自身的autowire-candidate 为空或者默认
+		//那么就会获取defaults 上的 autowire-candidate 属性
 		//autowire-candidate 属性
 		String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);
 		if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {
@@ -1043,7 +1049,8 @@ public class BeanDefinitionParserDelegate {
 			return ref;
 		}
 		else if (hasValueAttribute) {
-			//value 属性
+			//value 属性 不能设置type
+			//比如 <property name="age"  value="#{T(Integer).MAX_VALUE}" />
 			TypedStringValue valueHolder = new TypedStringValue(ele.getAttribute(VALUE_ATTRIBUTE));
 			valueHolder.setSource(extractSource(ele));
 			return valueHolder;
@@ -1064,6 +1071,8 @@ public class BeanDefinitionParserDelegate {
 		return parsePropertySubElement(ele, bd, null);
 	}
 
+	//解析 property或constructor-arg 元素的子元素
+	// value ,ref ,collection子元素
 	/**
 	 * Parse a value, ref or collection sub-element of a property or
 	 * constructor-arg element.
@@ -1074,6 +1083,7 @@ public class BeanDefinitionParserDelegate {
 	@Nullable
 	public Object parsePropertySubElement(Element ele, @Nullable BeanDefinition bd, @Nullable String defaultValueType) {
 		if (!isDefaultNamespace(ele)) {
+			//todo 嵌套自定义元素 用parser
 			return parseNestedCustomElement(ele, bd);
 		}
 		else if (nodeNameEquals(ele, BEAN_ELEMENT)) {
@@ -1114,9 +1124,17 @@ public class BeanDefinitionParserDelegate {
 			return parseIdRefElement(ele);
 		}
 		else if (nodeNameEquals(ele, VALUE_ELEMENT)) {
+//			 <property name="age"  value="#{T(Integer).MAX_VALUE}" >
+//			 	 <value type="java.lang.String">
+//					sss
+//				 </value>
+	//		 </property>
 			return parseValueElement(ele, defaultValueType);
 		}
 		else if (nodeNameEquals(ele, NULL_ELEMENT)) {
+			//<property name="age"  value="#{T(Integer).MAX_VALUE}" >
+			//	<null/>
+			//	 </property>
 			// It's a distinguished null value. Let's wrap it in a TypedStringValue
 			// object in order to preserve the source location.
 			TypedStringValue nullHolder = new TypedStringValue(null);
@@ -1179,6 +1197,11 @@ public class BeanDefinitionParserDelegate {
 			typeName = defaultTypeName;
 		}
 		try {
+			// <property name="age"  value="#{T(Integer).MAX_VALUE}" >
+//			 	 <value type="java.lang.String">
+//					sss
+//				 </value>
+			//		 </property>
 			TypedStringValue typedValue = buildTypedStringValue(value, typeName);
 			typedValue.setSource(extractSource(ele));
 			typedValue.setSpecifiedTypeName(specifiedTypeName);
@@ -1273,16 +1296,22 @@ public class BeanDefinitionParserDelegate {
 	 * Parse a map element.
 	 */
 	public Map<Object, Object> parseMapElement(Element mapEle, @Nullable BeanDefinition bd) {
+		//用做默认的 keyType 和 valueType
 		String defaultKeyType = mapEle.getAttribute(KEY_TYPE_ATTRIBUTE);
 		String defaultValueType = mapEle.getAttribute(VALUE_TYPE_ATTRIBUTE);
 
+		//entry 元素的子元素列表
 		List<Element> entryEles = DomUtils.getChildElementsByTagName(mapEle, ENTRY_ELEMENT);
+		//基于entry元素的子元素个数 定义一个ManagedMap 基于LinkedHashMap
 		ManagedMap<Object, Object> map = new ManagedMap<>(entryEles.size());
 		map.setSource(extractSource(mapEle));
 		map.setKeyTypeName(defaultKeyType);
 		map.setValueTypeName(defaultValueType);
+
+		//是否支持合并
 		map.setMergeEnabled(parseMergeAttribute(mapEle));
 
+		//遍历entry 节点
 		for (Element entryEle : entryEles) {
 			// Should only have one value child element: ref, value, list, etc.
 			// Optionally, there might be a key child element.
@@ -1318,6 +1347,7 @@ public class BeanDefinitionParserDelegate {
 
 			// Extract key from attribute or sub-element.
 			Object key = null;
+			//key属性
 			boolean hasKeyAttribute = entryEle.hasAttribute(KEY_ATTRIBUTE);
 			boolean hasKeyRefAttribute = entryEle.hasAttribute(KEY_REF_ATTRIBUTE);
 			if ((hasKeyAttribute && hasKeyRefAttribute) ||
@@ -1361,6 +1391,7 @@ public class BeanDefinitionParserDelegate {
 						"attribute when it has a 'value' attribute", entryEle);
 			}
 			if (hasValueAttribute) {
+				//获取value-type属性
 				String valueType = entryEle.getAttribute(VALUE_TYPE_ATTRIBUTE);
 				if (!StringUtils.hasText(valueType)) {
 					valueType = defaultValueType;
@@ -1377,6 +1408,7 @@ public class BeanDefinitionParserDelegate {
 				value = ref;
 			}
 			else if (valueEle != null) {
+				//value 不能有子节点
 				value = parsePropertySubElement(valueEle, bd, defaultValueType);
 			}
 			else {
@@ -1472,6 +1504,7 @@ public class BeanDefinitionParserDelegate {
 		return parseCustomElement(ele, null);
 	}
 
+	//todo property 子元素 也有可能 解析自定义元素 parsePropertySubElement
 	@Nullable
 	public BeanDefinition parseCustomElement(Element ele, @Nullable BeanDefinition containingBd) {
 		String namespaceUri = getNamespaceURI(ele);

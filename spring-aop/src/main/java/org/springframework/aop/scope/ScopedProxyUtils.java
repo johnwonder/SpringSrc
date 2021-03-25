@@ -53,6 +53,9 @@ public abstract class ScopedProxyUtils {
 		BeanDefinition targetDefinition = definition.getBeanDefinition();
 		String targetBeanName = getTargetBeanName(originalBeanName);
 
+		// /保持原来的beanName不变，但是基于原来的bean定义创建代理bean定义,
+		 // 保存原来的bean定义到代理bean里面为后面创建代理类做准备.
+		//todo 很重要 ScopedProxyFactoryBean 2021-3-23
 		// Create a scoped proxy definition for the original bean name,
 		// "hiding" the target bean in an internal target definition.
 		RootBeanDefinition proxyDefinition = new RootBeanDefinition(ScopedProxyFactoryBean.class);
@@ -61,6 +64,7 @@ public abstract class ScopedProxyUtils {
 		proxyDefinition.setSource(definition.getSource());
 		proxyDefinition.setRole(targetDefinition.getRole());
 
+		//这里给targetBeanName 赋值
 		proxyDefinition.getPropertyValues().add("targetBeanName", targetBeanName);
 		if (proxyTargetClass) {
 			targetDefinition.setAttribute(AutoProxyUtils.PRESERVE_TARGET_CLASS_ATTRIBUTE, Boolean.TRUE);

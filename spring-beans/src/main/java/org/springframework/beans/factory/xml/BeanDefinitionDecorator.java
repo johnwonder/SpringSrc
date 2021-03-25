@@ -60,6 +60,7 @@ import org.springframework.beans.factory.config.BeanDefinitionHolder;
  */
 public interface BeanDefinitionDecorator {
 
+	//解析指定的元素或者 属性  并且装饰提供的BeanDefinition ,比如 添加property value
 	/**
 	 * Parse the specified {@link Node} (either an element or an attribute) and decorate
 	 * the supplied {@link org.springframework.beans.factory.config.BeanDefinition},

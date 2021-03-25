@@ -19,6 +19,8 @@ package org.springframework.beans.factory.parsing;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
+//传入问题报告器 资源 监听器 在调用 fatal 方法的时候
+// 内部其实就调用了问题报告器(problemReporter)
 /**
  * Context that gets passed along a bean definition reading process(传递一个bean定义读取过程),
  * encapsulating all relevant configuration as well as state(封装所有相关配置和状态).
@@ -29,10 +31,13 @@ import org.springframework.lang.Nullable;
  */
 public class ReaderContext {
 
+	//资源
 	private final Resource resource;
 
+	//问题报告器
 	private final ProblemReporter problemReporter;
 
+	//读取器的 事件监听器
 	private final ReaderEventListener eventListener;
 
 	//提取器

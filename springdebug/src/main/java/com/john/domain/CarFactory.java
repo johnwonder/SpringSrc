@@ -11,19 +11,19 @@ public class CarFactory {
 //	}
 
 	//静态方法
-//	public static Car createStaticCar(Brand brand){
-//
-//		//System.out.println(brand);
-//		Car car = new Car();
-//		car.setBrand(brand.getName());
-//		return car;
-//	}
-
-	public static Car createStaticCar(){
+	public static Car createStaticCar(Brand brand){
 
 		//System.out.println(brand);
 		Car car = new Car();
-		//car.setBrand(brand.getName());
+		car.setBrand(brand.getName());
 		return car;
 	}
+
+//	public static Car createStaticCar(){
+//
+//		//System.out.println(brand);
+//		Car car = new Car();
+//		//car.setBrand(brand.getName());
+//		return car;
+//	}
 }

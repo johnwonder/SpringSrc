@@ -84,6 +84,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	}
 
 	//todo 指定注解类是 调用注册
+	//该构造函数注册完后就开始刷新启动了
 	/**
 	 * Create a new AnnotationConfigApplicationContext, deriving bean definitions
 	 * from the given annotated classes and automatically refreshing the context.

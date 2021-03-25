@@ -22,6 +22,7 @@ import org.springframework.aop.TargetSource;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
+//创建代理的工厂
 /**
  * Factory for AOP proxies for programmatic use, rather than via declarative
  * setup in a bean factory. This class provides a simple way of obtaining
@@ -35,6 +36,7 @@ import org.springframework.util.ClassUtils;
 @SuppressWarnings("serial")
 public class ProxyFactory extends ProxyCreatorSupport {
 
+	//https://baijiahao.baidu.com/s?id=1659872326546139979&wfr=spider&for=pc
 	/**
 	 * Create a new ProxyFactory.
 	 */

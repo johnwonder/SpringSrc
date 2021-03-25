@@ -39,6 +39,7 @@ import org.springframework.util.ObjectUtils;
 //todo Builder 设计模式 实例化BeanDefinition
 public final class BeanDefinitionBuilder {
 
+	//返回一个新的BeanDefinitionBuilder实例
 	/**
 	 * Create a new {@code BeanDefinitionBuilder} used to construct a {@link GenericBeanDefinition}.
 	 */
@@ -139,6 +140,7 @@ public final class BeanDefinitionBuilder {
 	private int constructorArgIndex;
 
 
+	//强制使用工厂方法 学到了。。。
 	/**
 	 * Enforce the use of factory methods.
 	 */

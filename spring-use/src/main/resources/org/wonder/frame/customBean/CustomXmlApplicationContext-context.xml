@@ -10,9 +10,21 @@
 
 	<test:testBean id="testBean" name="Rob Harrop" age="23"/>
 
+
 	<bean id="customisedTestBean" class="org.wonder.frame.customBean.CustomBean">
 		<!-- 自定义标签加 自定义属性 -->
 		<test:set name="John wonder" age="36"/>
-	</bean>
 
+		<property name="innerBean">
+			<bean name="inner" class="org.wonder.frame.customBean.InnerBean"/>
+		</property>
+	</bean>
+	<bean id="customisedTestBean1" class="org.wonder.frame.customBean.CustomBean">
+		<!-- 自定义标签加 自定义属性 -->
+		<test:set name="John wonder" age="36"/>
+
+		<property name="innerBean">
+			<bean name="inner" class="org.wonder.frame.customBean.InnerBean"/>
+		</property>
+	</bean>
 </beans>

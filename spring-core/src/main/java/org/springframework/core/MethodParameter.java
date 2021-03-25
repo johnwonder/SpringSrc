@@ -40,6 +40,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+//加上一个参数索引和一个声明泛型类型的嵌套类型索引。可作为规范对象传递
 /**
  * Helper class that encapsulates the specification of a method parameter, i.e. a {@link Method}
  * or {@link Constructor} plus a parameter index and a nested type index for a declared generic

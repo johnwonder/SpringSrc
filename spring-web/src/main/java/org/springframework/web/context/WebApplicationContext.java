@@ -54,6 +54,8 @@ public interface WebApplicationContext extends ApplicationContext {
 	 */
 	String ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE = WebApplicationContext.class.getName() + ".ROOT";
 
+	//除了标准作用域“singleton”和“prototype”之外还支持
+	//request
 	/**
 	 * Scope identifier for request scope: "request".
 	 * Supported in addition to the standard scopes "singleton" and "prototype".

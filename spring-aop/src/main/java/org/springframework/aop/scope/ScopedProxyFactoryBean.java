@@ -97,6 +97,8 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 		pf.setTargetSource(this.scopedTargetSource);
 
 		Assert.notNull(this.targetBeanName, "Property 'targetBeanName' is required");
+
+		//获取到目标bean的类型
 		Class<?> beanType = beanFactory.getType(this.targetBeanName);
 		if (beanType == null) {
 			throw new IllegalStateException("Cannot create scoped proxy for bean '" + this.targetBeanName +
@@ -118,11 +120,13 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 	}
 
 
+	//返回的是一个代理
 	@Override
 	public Object getObject() {
 		if (this.proxy == null) {
 			throw new FactoryBeanNotInitializedException();
 		}
+		//返回代理对象 拦截方法调用
 		return this.proxy;
 	}
 

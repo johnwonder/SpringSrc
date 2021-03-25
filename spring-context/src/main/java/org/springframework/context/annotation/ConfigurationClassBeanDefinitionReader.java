@@ -271,6 +271,8 @@ class ConfigurationClassBeanDefinitionReader {
 		// Replace the original bean definition with the target one, if necessary
 		BeanDefinition beanDefToRegister = beanDef;
 		if (proxyMode != ScopedProxyMode.NO) {
+
+			//todo 通过ScopedProxyCreator 创建一个代理 BeanDefinition
 			BeanDefinitionHolder proxyDef = ScopedProxyCreator.createScopedProxy(
 					new BeanDefinitionHolder(beanDef, beanName), this.registry,
 					proxyMode == ScopedProxyMode.TARGET_CLASS);

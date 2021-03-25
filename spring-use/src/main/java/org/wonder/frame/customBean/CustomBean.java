@@ -36,6 +36,8 @@ public class CustomBean implements BeanNameAware, BeanFactoryAware, ITestBean, I
 
 	private String beanName;
 
+	private InnerBean innerBean;
+
 	private String country;
 
 	private BeanFactory beanFactory;
@@ -441,6 +443,14 @@ public class CustomBean implements BeanNameAware, BeanFactoryAware, ITestBean, I
 		else {
 			return 1;
 		}
+	}
+
+	public InnerBean getInnerBean() {
+		return innerBean;
+	}
+
+	public void setInnerBean(InnerBean innerBean) {
+		this.innerBean = innerBean;
 	}
 
 	@Override

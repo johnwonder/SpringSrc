@@ -1142,12 +1142,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return null;
 	}
 
+	//使用适当的实例化策略 为指定的bean创建一个新的实例
+	//1. 工厂方法 2.构造函数自动注入 3。 简单实例化
 	/**
 	 * Create a new instance for the specified bean, using an appropriate instantiation strategy:
 	 * factory method, constructor autowiring, or simple instantiation.
 	 * @param beanName the name of the bean
 	 * @param mbd the bean definition for the bean
-	 * @param args explicit arguments to use for constructor or factory method invocation
+	 * @param args explicit arguments to use for constructor or factory method invocation //用于构造函数或工厂方法调用的显式参数
 	 * @return a BeanWrapper for the new instance
 	 * @see #obtainFromSupplier
 	 * @see #instantiateUsingFactoryMethod
@@ -1174,7 +1176,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		//3.静态和实例工厂方法实例化
-		// @configuration 中的@bean方法实例化
+		//todo  @configuration 中的@bean方法实例化
 		//https://www.cnblogs.com/vickylinj/p/9474597.html
 		if (mbd.getFactoryMethodName() != null)  {
 			//todo  工厂方法实例化 2020-09-22
@@ -1220,6 +1222,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			return autowireConstructor(beanName, mbd, ctors, null);
 		}
 
+		//无参构造函数实例化
 		// No special handling: simply use no-arg constructor.
 		//todo 2020-08-30 @configuration注解的类也是在这里实例化的
 		return instantiateBean(beanName, mbd);
@@ -1236,6 +1239,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected BeanWrapper obtainFromSupplier(Supplier<?> instanceSupplier, String beanName) {
 		Object instance;
 
+		//先获取到当前创建过的bean
 		String outerBean = this.currentlyCreatedBean.get();
 		this.currentlyCreatedBean.set(beanName);
 		try {
@@ -1814,7 +1818,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//设置成只包含转换过后的值了。。
 			mpvs.setConverted();
 		}
-
+		//设置美化过的 属性值。。
 		// Set our (possibly massaged) deep copy.
 		try {
 			//todo 重点看 遍历deepCopy设置bean属性值  2020-09-16

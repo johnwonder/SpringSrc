@@ -101,14 +101,22 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/** Disposable bean instances: bean name to disposable instance. */
 	private final Map<String, Object> disposableBeans = new LinkedHashMap<>();
 
+	//key : 外部bean
+	//value :内部bean集合
+	//外部的bean依赖于 内部bean
+	// the containing bean as dependent on the contained bean
 	/** Map between containing bean names: bean name to Set of bean names that the bean contains. */
 	private final Map<String, Set<String>> containedBeanMap = new ConcurrentHashMap<>(16);
 
 	//依赖于这个bean的 bean集合
+	//key ： 被依赖的bean
+	//value: 依赖key这个 bean的bean集合
 	/** Map between dependent bean names: bean name to Set of dependent bean names. */
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
 	//bean 依赖其他bean的集合
+	//key : bean名称
+	//value : key这个bean 依赖的 bean集合
 	/** Map between depending bean names: bean name to Set of bean names for the bean's dependencies. */
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
 
@@ -560,6 +568,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		destroyBean(beanName, disposableBean);
 	}
 
+	//必须在销毁给定bean之前销毁 依赖于给定bean的集合
 	/**
 	 * Destroy the given bean. Must destroy beans that depend on the given
 	 * bean before the bean itself. Should not throw any exceptions.
@@ -595,6 +604,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			}
 		}
 
+
 		// Trigger destruction of contained beans...
 		Set<String> containedBeans;
 		synchronized (this.containedBeanMap) {
@@ -607,6 +617,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			}
 		}
 
+		//从其他bean的 依赖 集合中销毁 当前bean
 		// Remove destroyed bean from other beans' dependencies.
 		synchronized (this.dependentBeanMap) {
 			for (Iterator<Map.Entry<String, Set<String>>> it = this.dependentBeanMap.entrySet().iterator(); it.hasNext();) {

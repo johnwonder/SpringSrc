@@ -129,6 +129,8 @@ public abstract class AbstractBeanFactoryBasedTargetSource implements TargetSour
 			// Full check within synchronization, entering the BeanFactory interaction algorithm only once...
 			targetClass = this.targetClass;
 			if (targetClass == null && this.beanFactory != null) {
+
+				//获取到目标Bean的类型
 				// Determine type of the target bean.
 				targetClass = this.beanFactory.getType(this.targetBeanName);
 				if (targetClass == null) {

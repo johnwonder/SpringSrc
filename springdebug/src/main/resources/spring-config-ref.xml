@@ -16,6 +16,7 @@
 	<bean id="school" name="school1" class="com.john.xmlconfig.School">
 		<constructor-arg ><!-- ref="students"-->
 			<!--<ref bean="students"></ref>-->
+
 			<value >笑王</value>
 
 		</constructor-arg>

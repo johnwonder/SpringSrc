@@ -108,6 +108,7 @@ public class ProxyConfig implements Serializable {
 		return this.opaque;
 	}
 
+	//不保证AopContext访问将在建议对象的任何方法中一致地工作
 	/**
 	 * Set whether the proxy should be exposed by the AOP framework as a
 	 * ThreadLocal for retrieval via the AopContext class. This is useful

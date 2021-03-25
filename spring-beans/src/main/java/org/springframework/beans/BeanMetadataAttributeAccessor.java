@@ -34,6 +34,7 @@ import org.springframework.lang.Nullable;
 @SuppressWarnings("serial")
 public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport implements BeanMetadataElement {
 
+	//BeanMetadata 和 AttributeAccessor的组合
 	@Nullable
 	private Object source;
 

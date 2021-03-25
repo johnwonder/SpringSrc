@@ -143,6 +143,8 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	@Override
 	public Object getAttribute(String name, int scope) {
+
+		//request scope
 		if (scope == SCOPE_REQUEST) {
 			if (!isRequestActive()) {
 				throw new IllegalStateException(
