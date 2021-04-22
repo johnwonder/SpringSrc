@@ -36,7 +36,6 @@ public class resolveRawClassDemo<T> {
 //		//class com.john.resolveType.Children
 //		System.out.println(resolvableChildren.getRawClass());
 
-
 		//https://cloud.tencent.com/developer/article/1656249
 		HashMap<String,String> hashMap1 = new HashMap<>();
 		ResolvableType resolvableMap = ResolvableType.forClass(getHashMapClass(hashMap1).getClass());

@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- 这是2个非单例模式的bean -->
-	<bean id="apple" class="com.john.xmlconfig.Apple" scope="prototype"/>
+	<bean id="apple" class="com.john.xmlconfig.Apple" scope="prototype" />
 	<bean id="bananer" class="com.john.xmlconfig.Bananer " scope="prototype"/>
 
 	<bean id="fruitPlate1" class="com.john.xmlconfig.FruitPlate">

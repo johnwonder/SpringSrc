@@ -41,6 +41,7 @@ public class ProxyFactory<T> {
 		);
 	}
 
+	//https://blog.csdn.net/jiankunking/article/details/52143504
 	//https://blog.csdn.net/a907691592/article/details/95354063
 	public T getProxyInterface(){
 		return (T)Proxy.newProxyInstance(

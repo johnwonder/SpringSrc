@@ -19,7 +19,13 @@ public class JavaNumBaseDemo {
 		System.out.printf("8进制数 %o 表示的是: %d \n", num02, num02);
 		System.out.printf("16进制数 %X 表示的是: %d \n", num03, num03);
 
-		Format moneyFormat=new DecimalFormat("0,000.00");
+		Format moneyFormat=new DecimalFormat("##,##0.00");
 		System.out.println(moneyFormat.format(Double.valueOf("0")) );
+
+		System.out.println(moneyFormat.format(Double.valueOf("100005.756")) );
+
+		Format orFormat =new DecimalFormat("##,###.00");
+		System.out.println(orFormat.format(Double.valueOf("100005.756")) );
+
 	}
 }

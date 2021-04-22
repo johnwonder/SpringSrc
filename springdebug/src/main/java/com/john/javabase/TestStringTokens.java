@@ -10,6 +10,10 @@ import java.util.StringTokenizer;
  */
 public class TestStringTokens {
 
+	//https://www.zhihu.com/question/447224628/answer/1824574900
+	//https://blog.csdn.net/zhaominpro/article/details/79602714
+	//https://www.zhihu.com/question/27562173/answer/37188642
+	//https://blog.csdn.net/hanbo622/article/details/52882438
 	public static void main(String[] args) throws Exception {
 
 
@@ -22,7 +26,8 @@ public class TestStringTokens {
 		System.out.println("0x20BB7的字符串长度为："+str1.length());
 		//134071
 		System.out.println(str1.codePointAt(0));
-
+		System.out.println(str1.codePointAt(1));
+		//System.out.println(str1.codePointAt(2));//报错
 //		String str2 = new String(Character.toChars(cp));                  //  187ms
 //		String str3 = String.valueOf(Character.toChars(cp));              //  195ms
 //		String str4 = new StringBuilder().appendCodePoint(cp).toString(); //  269ms

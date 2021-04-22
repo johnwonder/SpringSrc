@@ -22,13 +22,17 @@ public class AnotationAutowireApp
 
 		applicationContext.register(AnotationAutowireApp.class);
 		applicationContext.refresh();
-		ListableBeanFactory listableBeanFactory = applicationContext.getBeanFactory();
+		///ListableBeanFactory listableBeanFactory = applicationContext.getBeanFactory();
 
-		AnnotationConfig config = (AnnotationConfig) listableBeanFactory.getBean(AnnotationConfig.class);
-		System.out.println(config);
+//		AnnotationConfig config = (AnnotationConfig) listableBeanFactory.getBean(AnnotationConfig.class);
+//		System.out.println(config);
 
 
+		AutowireTest1 bean = applicationContext.getBean(AutowireTest1.class);
 
+		System.out.println(bean.getAutowireTest2());
+
+		System.out.println(bean.getAutowireTest2());
 	}
 
 

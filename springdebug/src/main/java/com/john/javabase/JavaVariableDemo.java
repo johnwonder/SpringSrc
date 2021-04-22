@@ -16,5 +16,9 @@ public class JavaVariableDemo {
 //				a = 1,
 //				b = "b"
 //		)
+
+		String[]  strArray = new String[16];
+		//打印出16
+		System.out.println(strArray.length);
 	}
 }

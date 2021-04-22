@@ -28,6 +28,8 @@ public class TestHashMap {
 		System.out.println(b);//111
 		System.out.println(a == b);///false
 		System.out.println(a.equals(b));//true
+
+		//https://m.imooc.com/wenda/detail/545901
 		System.out.println("a的hashcode:" + a.hashCode()); //48657
 		System.out.println("b的hashcode:" + b.hashCode()); //48657
 		arr.put(a,"aaaaa");

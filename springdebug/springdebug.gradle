@@ -14,8 +14,8 @@ dependencies {
 	compile(project(":spring-core"))
 	compile(project(":spring-instrument"))
 	compile(project(":spring-aop"))
-//	optional(project(":spring-web"))
-
+	compile(project(":spring-web"))
+	compile(project(":spring-oxm"))
 //	compile(project(":spring-aop"))
 	compile("javax.inject:javax.inject:1")
 //	compile("org.yaml:snakeyaml:1.23")

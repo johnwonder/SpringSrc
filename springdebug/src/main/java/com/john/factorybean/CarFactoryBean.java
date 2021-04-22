@@ -1,7 +1,10 @@
 package com.john.factorybean;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+@Component
 public class CarFactoryBean  implements FactoryBean<Car> {
 	private  String carInfo;
 
@@ -9,7 +12,7 @@ public class CarFactoryBean  implements FactoryBean<Car> {
 
 		System.out.println("start new car");
 		Car car = new Car();
-		String[] infos = carInfo.split(",");
+		String[] infos = StringUtils.hasText(carInfo) ?  carInfo.split(","): "1,2,3".split(",");
 		car.setBrand(infos[0]);
 		car.setMaxSpeed(Integer.valueOf(infos[1]));
 		car.setPrice(Double.valueOf(infos[2]));

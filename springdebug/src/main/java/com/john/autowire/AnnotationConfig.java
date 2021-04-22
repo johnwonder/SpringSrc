@@ -11,7 +11,7 @@ import javax.annotation.Resource;
  * @Author: johnwonder
  * @Date: 2020/12/30
  */
-@Component
+//@Component
 public class AnnotationConfig {
 
 	@Autowired

@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * ParameterizedType 使用测试 参数化类型
+ * //https://juejin.cn/post/6881435547894546439#heading-7
  *
  * @author: wangji
  * @date: 2018/06/25 16:19
