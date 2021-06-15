@@ -20,6 +20,9 @@ import java.lang.reflect.Method;
 
 import org.springframework.lang.Nullable;
 
+//方法执行前通知，需要在目标方法执行前执行一些逻辑的，可以通过这个实现。
+//
+//通俗点说：需要在目标方法执行之前增强一些逻辑，可以通过这个接口来实现。before方法：在调用给定方法之前回调。
 /**
  * Advice invoked before a method is invoked. Such advices cannot
  * prevent the method call proceeding, unless they throw a Throwable.
@@ -30,6 +33,16 @@ import org.springframework.lang.Nullable;
  */
 public interface MethodBeforeAdvice extends BeforeAdvice {
 
+//	public Object invoke(){
+//		调用MethodBeforeAdvice#before方法
+//		return 调用目标方法;
+//	}
+	/**
+	 * 调用目标方法之前会先调用这个before方法
+	 * method：需要执行的目标方法
+	 * args：目标方法的参数
+	 * target：目标对象
+	 */
 	/**
 	 * Callback before a given method is invoked.
 	 * @param method method being invoked

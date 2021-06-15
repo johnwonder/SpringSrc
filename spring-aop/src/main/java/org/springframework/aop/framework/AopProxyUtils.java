@@ -130,6 +130,7 @@ public abstract class AopProxyUtils {
 				specifiedInterfaces = advised.getProxiedInterfaces();
 			}
 		}
+		//判断是否添加SpringProxy
 		boolean addSpringProxy = !advised.isInterfaceProxied(SpringProxy.class);
 		boolean addAdvised = !advised.isOpaque() && !advised.isInterfaceProxied(Advised.class);
 		boolean addDecoratingProxy = (decoratingProxy && !advised.isInterfaceProxied(DecoratingProxy.class));

@@ -18,6 +18,7 @@ package org.springframework.aop;
 
 import org.aopalliance.aop.Advice;
 
+//方法前置通知，内部空的
 /**
  * Common marker interface for before advice, such as {@link MethodBeforeAdvice}.
  *

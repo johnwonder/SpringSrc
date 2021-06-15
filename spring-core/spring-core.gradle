@@ -13,6 +13,8 @@ dependencyManagement {
 // avoids including two different copies of asm unnecessarily.
 def cglibVersion = "3.2.8"
 def objenesisVersion = "2.6"
+//https://blog.csdn.net/Dwade_mia/article/details/77610785
+//https://zhuanlan.zhihu.com/p/27220411
 
 configurations {
 	jarjar

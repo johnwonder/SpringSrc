@@ -18,6 +18,19 @@ package org.springframework.aop;
 
 import org.aopalliance.aop.Advice;
 
+///**
+// * 包含AOP advice（在joinpoint处执行的操作）和确定通知适用性的过滤器（如切入点[PointCut]）的基本接口。
+// * 这个接口不是供Spring用户使用的，而是为了支持不同类型的advice的通用性。
+// */
+//在spring aop中，你可以将advisor理解为切面，切面中通常有2个关键信息：
+//
+//需要增强的目标方法列表，这个通过切入点(Pointcut)来指定 where
+//需要在目标方法中增强的逻辑，这个通过(Advice)通知来指定 when
+
+///**
+// * 包含AOP通知（在joinpoint处执行的操作）和确定通知适用性的过滤器（如切入点[PointCut]）的基本接口。
+// * 这个接口不是供Spring用户使用的，而是为了支持不同类型的建议的通用性。
+// */
 /**
  * Base interface holding AOP <b>advice</b> (action to take at a joinpoint)
  * and a filter determining the applicability of the advice (such as

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.lang.Nullable;
 
+//启用@AspectJ样式
 /**
  * {@link BeanDefinitionParser} for the {@code aspectj-autoproxy} tag,
  * enabling the automatic application of @AspectJ-style aspects found in

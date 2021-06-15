@@ -18,6 +18,7 @@ package org.springframework.aop;
 
 import org.springframework.lang.Nullable;
 
+//所谓目标对象：就是被代理对象。
 /**
  * Minimal interface for exposing the target class behind a proxy.
  *

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
+//https://blog.csdn.net/rodbate/article/details/112568835
 //代表 一个类定义了一个或多个@Bean注解的方法
 //会被Spring 容器去生成 bean definitions和
 // 在运行时 服务 对这些bean的请求
@@ -438,6 +439,11 @@ public @interface Configuration {
 	@AliasFor(annotation = Component.class)
 	String value() default "";
 
+	//里面还涉及了redis的字符串设计文章
+	//为啥要加代理
+	//https://blog.csdn.net/rodbate/article/details/112568835
 	//5.2以后 运行时会给该类生成一个CGLIB子类放进容器，有一定的性能、时间开销（这个开销在Spring Boot这种拥有大量配置类的情况下是不容忽视的，
 	// 这也是为何Spring 5.2新增了proxyBeanMethods属性的最直接原因）
+
+	//https://blog.csdn.net/rodbate/article/details/112568835
 }

@@ -69,6 +69,7 @@ public final class ParseState {
 		this.state.push(entry);
 	}
 
+	//会移除
 	/**
 	 * Remove an {@link Entry} from the {@link LinkedList}.
 	 */
@@ -76,6 +77,7 @@ public final class ParseState {
 		this.state.pop();
 	}
 
+	//只是获取
 	/**
 	 * Return the {@link Entry} currently at the top of the {@link LinkedList} or
 	 * {@code null} if the {@link LinkedList} is empty.

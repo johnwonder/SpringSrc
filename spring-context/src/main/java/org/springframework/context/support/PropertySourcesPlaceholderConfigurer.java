@@ -45,7 +45,7 @@ import org.springframework.util.StringValueResolver;
  * the spring-context-3.1 or higher XSD; whereas, spring-context versions &lt;= 3.0 default to
  * {@code PropertyPlaceholderConfigurer} to ensure backward compatibility. See the spring-context
  * XSD documentation for complete details.
- *
+ *  local properties 在 所有envrionment 属性 最后去查找
  * <p>Any local properties (e.g. those added via {@link #setProperties}, {@link #setLocations}
  * et al.) are added as a {@code PropertySource}. Search precedence of local properties is
  * based on the value of the {@link #setLocalOverride localOverride} property, which is by
@@ -97,6 +97,9 @@ public class PropertySourcesPlaceholderConfigurer extends PlaceholderConfigurerS
 		this.propertySources = new MutablePropertySources(propertySources);
 	}
 
+	//在PostProcessorRegistrationDelegate 调用 invokeBeanFactoryPostProcessors的时候
+	//会触发 beanFactory.getBean(ppName, BeanFactoryPostProcessor.class)
+	//然后在初始化PropertySourcesPlaceholderConfigurer 之前  applicationContext会触发ApplicationContextAwareProcessor 调用 invokeAwareInterfaces
 	/**
 	 * {@code PropertySources} from the given {@link Environment}
 	 * will be searched when replacing ${...} placeholders.
@@ -134,6 +137,9 @@ public class PropertySourcesPlaceholderConfigurer extends PlaceholderConfigurerS
 						@Override
 						@Nullable
 						public String getProperty(String key) {
+							//AbstractEnvrionment 构造函数 里会去初始化 propertySources
+							// link customizePropertySources
+							//又会调用 environment自己的PropertySourceValueResolver 去解析占位符
 							return this.source.getProperty(key);
 						}
 					}
@@ -154,6 +160,7 @@ public class PropertySourcesPlaceholderConfigurer extends PlaceholderConfigurerS
 			}
 		}
 
+		//todo  使用PropertySourcesPropertyResolver 2021-04-11
 		processProperties(beanFactory, new PropertySourcesPropertyResolver(this.propertySources));
 		this.appliedPropertySources = this.propertySources;
 	}
@@ -169,6 +176,7 @@ public class PropertySourcesPlaceholderConfigurer extends PlaceholderConfigurerS
 		propertyResolver.setPlaceholderSuffix(this.placeholderSuffix);
 		propertyResolver.setValueSeparator(this.valueSeparator);
 
+		//内部还是使用参数传进来的propertyResolver
 		StringValueResolver valueResolver = strVal -> {
 			String resolved = (this.ignoreUnresolvablePlaceholders ?
 					propertyResolver.resolvePlaceholders(strVal) :

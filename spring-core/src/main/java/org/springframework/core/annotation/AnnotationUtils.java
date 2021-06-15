@@ -83,7 +83,7 @@ import org.springframework.util.StringUtils;
  * javadoc for each method in this class for details. For fine-grained support for
  * meta-annotations with <em>attribute overrides</em> in <em>composed annotations</em>,
  * consider using {@link AnnotatedElementUtils}'s more specific methods instead.
- *
+ *  对元注解的细粒度支持 可以考虑 使用AnnotatedElementUtils
  * <h3>Attribute Aliases</h3>
  * <p>All public methods in this class that return annotations, arrays of
  * annotations, or {@link AnnotationAttributes} transparently support attribute
@@ -2141,6 +2141,7 @@ public abstract class AnnotationUtils {
 				return descriptor;
 			}
 
+			//获取方法上的AliasFor注解
 			AliasFor aliasFor = attribute.getAnnotation(AliasFor.class);
 			if (aliasFor == null) {
 				return null;
@@ -2154,9 +2155,13 @@ public abstract class AnnotationUtils {
 
 		@SuppressWarnings("unchecked")
 		private AliasDescriptor(Method sourceAttribute, AliasFor aliasFor) {
+
+			//注解类型 比如@Cacheable 注解
 			Class<?> declaringClass = sourceAttribute.getDeclaringClass();
 
+			//标注@AliasFor的 注解里的方法
 			this.sourceAttribute = sourceAttribute;
+
 			this.sourceAnnotationType = (Class<? extends Annotation>) declaringClass;
 			this.sourceAttributeName = sourceAttribute.getName();
 
@@ -2357,11 +2362,13 @@ public abstract class AnnotationUtils {
 		 * {@code @AliasFor} is detected
 		 */
 		private String getAliasedAttributeName(AliasFor aliasFor, Method attribute) {
+
 			String attributeName = aliasFor.attribute();
 			String value = aliasFor.value();
 			boolean attributeDeclared = StringUtils.hasText(attributeName);
 			boolean valueDeclared = StringUtils.hasText(value);
 
+			//aliasFor value和attribute 不能同时定义
 			// Ensure user did not declare both 'value' and 'attribute' in @AliasFor
 			if (attributeDeclared && valueDeclared) {
 				String msg = String.format("In @AliasFor declared on attribute '%s' in annotation [%s], attribute 'attribute' " +

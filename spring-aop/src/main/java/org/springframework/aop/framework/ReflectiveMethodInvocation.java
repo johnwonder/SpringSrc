@@ -30,6 +30,9 @@ import org.springframework.aop.support.AopUtils;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.lang.Nullable;
 
+//当代理对象是采用jdk动态代理创建的，通过代理对象来访问目标对象的方法的时，
+// 最终过程是由ReflectiveMethodInvocation来处理的，
+// 内部会通过递归调用方法拦截器，最终会调用到目标方法
 /**
  * Spring's implementation of the AOP Alliance
  * {@link org.aopalliance.intercept.MethodInvocation} interface,
@@ -52,7 +55,7 @@ import org.springframework.lang.Nullable;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @author Adrian Colyer
+ * @author Adrian Colyer (https://www.infoq.cn/article/2007/11/spring-production) (https://blog.acolyer.org/2016/11/)
  * @see #invokeJoinpoint
  * @see #proceed
  * @see #invocableClone

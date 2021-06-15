@@ -24,16 +24,18 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//适配一个 AbstractAspectJAdvice 到 PointcutAdvisor
 /**
  * AspectJPointcutAdvisor that adapts an {@link AbstractAspectJAdvice}
  * to the {@link org.springframework.aop.PointcutAdvisor} interface.
  *
- * @author Adrian Colyer
+ * @author Adrian Colyer (https://www.infoq.cn/article/2007/11/spring-production) (https://blog.csdn.net/ai92)
  * @author Juergen Hoeller
  * @since 2.0
  */
 public class AspectJPointcutAdvisor implements PointcutAdvisor, Ordered {
 
+	//内部advice
 	private final AbstractAspectJAdvice advice;
 
 	private final Pointcut pointcut;

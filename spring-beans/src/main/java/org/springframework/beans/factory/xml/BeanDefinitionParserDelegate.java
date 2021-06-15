@@ -56,6 +56,7 @@ import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
+//通过ParserContext 传入实例 供 parser 和 decorator 使用
 /**
  * Stateful delegate class used to parse XML bean definitions(用于解析XML bean定义的有状态委托类).
  * Intended for use by both the main parser and any extension
@@ -111,6 +112,7 @@ public class BeanDefinitionParserDelegate {
 
 	public static final String ID_ATTRIBUTE = "id";
 
+	//mybatis-spring里 MapperFactoryBean 类上有此属性的用法
 	public static final String PARENT_ATTRIBUTE = "parent";
 
 	public static final String CLASS_ATTRIBUTE = "class";
@@ -872,6 +874,7 @@ public class BeanDefinitionParserDelegate {
 					error("'index' cannot be lower than 0", ele);
 				}
 				else {
+					//如果不加try finally 那么 parseState 有可能不会执行到
 					try {
 						this.parseState.push(new ConstructorArgumentEntry(index));
 
@@ -888,6 +891,7 @@ public class BeanDefinitionParserDelegate {
 						valueHolder.setSource(extractSource(ele));
 						//如果已经存在这个index的参数，那就报错
 						if (bd.getConstructorArgumentValues().hasIndexedArgumentValue(index)) {
+							//这里会抛出错误
 							error("Ambiguous constructor-arg entries for index " + index, ele);
 						}
 						else {
@@ -895,6 +899,7 @@ public class BeanDefinitionParserDelegate {
 						}
 					}
 					finally {
+						//这里肯定会执行到
 						this.parseState.pop();
 					}
 				}
@@ -997,6 +1002,7 @@ public class BeanDefinitionParserDelegate {
 		}
 	}
 
+	//解析<property> 元素
 	/**
 	 * Get the value of a property element. May be a list etc.
 	 * Also used for constructor arguments, "propertyName" being null in this case.
@@ -1103,6 +1109,7 @@ public class BeanDefinitionParserDelegate {
 			String refName = ele.getAttribute(BEAN_REF_ATTRIBUTE);
 			boolean toParent = false;
 			if (!StringUtils.hasLength(refName)) {
+				//todo 获取Parent Factory中的bean.
 				// A reference to the id of another bean in a parent context.
 				refName = ele.getAttribute(PARENT_REF_ATTRIBUTE);
 				toParent = true;
@@ -1124,7 +1131,7 @@ public class BeanDefinitionParserDelegate {
 			return parseIdRefElement(ele);
 		}
 		else if (nodeNameEquals(ele, VALUE_ELEMENT)) {
-//			 <property name="age"  value="#{T(Integer).MAX_VALUE}" >
+//			 <property name="age"  >
 //			 	 <value type="java.lang.String">
 //					sss
 //				 </value>

@@ -56,6 +56,7 @@ public abstract class PropertiesLoaderSupport {
 	@Nullable
 	private String fileEncoding;
 
+	//使用默认的
 	private PropertiesPersister propertiesPersister = new DefaultPropertiesPersister();
 
 

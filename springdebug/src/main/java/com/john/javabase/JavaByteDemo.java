@@ -21,9 +21,10 @@ public class JavaByteDemo {
 		byte testD = (byte)d; //
 		System.out.println(testD); //打印11，因为byte占一个字节
 
-		//-1的原码是 1,0000001
-		//反码是1,1111110
-		//补码是1,1111111
+		//1的原码是 0000 .... 0000001
+		//反码是11111 .... 11111110
+		//补码是1111  .... 11111111 代表-1
+		//截取8位 为 11111111 -1的二进制
 		int a = -1;
 		byte testA = (byte) a;
 		System.out.println(testA); //打印-1
@@ -34,8 +35,7 @@ public class JavaByteDemo {
 		System.out.println(testF); //打印1
 
 		//385的原码是110000001 舍去高位1
-		// 10000001 表示补码
-		// 10000001的原码为11111111 为-127
+		// 10000001 表示补码 -127
 		int g = 385;
 		byte testG = (byte) g;
 		System.out.println(testG); //打印-127
@@ -48,11 +48,14 @@ public class JavaByteDemo {
 		System.out.println(testH); //打印-1
 
 		int c = -128; //10000000
-
+		//以补码 1000 0000 保存 最高位为1要取反 + 1 所以打印-128
 		byte testC = (byte) c;
 		System.out.println(testC);//打印-128
 
-		int e = -129; //110000001
+		int e = -129;
+		//129 原码 0000 .... 1000 0001  ////
+		//以129的补码 1111 .... 0111 1111 保存
+		// 截取8位 0111 1111  所以打印127
 		byte testE = (byte) e;
 		System.out.println(testE); //打印127
 

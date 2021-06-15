@@ -23,6 +23,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 //创建代理的工厂
+//https://blog.csdn.net/f641385712/article/details/88952482
 /**
  * Factory for AOP proxies for programmatic use, rather than via declarative
  * setup in a bean factory. This class provides a simple way of obtaining
@@ -49,7 +50,9 @@ public class ProxyFactory extends ProxyCreatorSupport {
 	 * @param target the target object to be proxied
 	 */
 	public ProxyFactory(Object target) {
+		//设置目标对象
 		setTarget(target);
+		//获取目标对象的所有接口
 		setInterfaces(ClassUtils.getAllInterfaces(target));
 	}
 
@@ -96,6 +99,7 @@ public class ProxyFactory extends ProxyCreatorSupport {
 	 * @return the proxy object
 	 */
 	public Object getProxy() {
+		//createAopProxy 是基类ProxyCreatorSupport 的方法
 		return createAopProxy().getProxy();
 	}
 

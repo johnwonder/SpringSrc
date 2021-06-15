@@ -8,7 +8,7 @@ package com.john.jdkproxy;
 public class Test {
 
 	//https://www.cnblogs.com/qlqwjy/p/7550609.html
-
+	//https://blog.csdn.net/f641385712/article/details/89362021
 	//spring aop
 	public static void main(String[] args) {
 		// 目标对象

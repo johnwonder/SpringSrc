@@ -498,7 +498,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			return doGetBeanNamesForType(ResolvableType.forRawClass(type), includeNonSingletons, allowEagerInit);
 		}
 
-		//todo 是否包含不是单例的Bean 如果是 就从allBeanNamesByType中去查询 ，如果不是，那么就只查找单例的 singletonBeanNamesByType
+		//todo 是否包含不是单例的Bean 如果是 就从allBeanNamesByType中去查询 ，
+		// 如果不是单例，那么就只查找单例的 singletonBeanNamesByType
 		Map<Class<?>, String[]> cache =
 				(includeNonSingletons ? this.allBeanNamesByType : this.singletonBeanNamesByType);
 		String[] resolvedBeanNames = cache.get(type);
@@ -507,6 +508,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 		resolvedBeanNames = doGetBeanNamesForType(ResolvableType.forRawClass(type), includeNonSingletons, true);
 		if (ClassUtils.isCacheSafe(type, getBeanClassLoader())) {
+			//放入缓存 之后就直接去缓存查询
 			cache.put(type, resolvedBeanNames);
 		}
 		return resolvedBeanNames;
@@ -865,10 +867,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		//todo 遍历所有不是延迟初始化的 单例 bean 2020-08-28
 		for (String beanName : beanNames) {
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
-			//不是抽象的 且是单例的 且不是懒加载的
+			//不是抽象的 且是单例的 且不是懒加载的 才会去实例化
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
 				//todo 如果是factorybean 那还得去判断 是不是eagerInit
 				if (isFactoryBean(beanName)) {
+					//这边只是实例化FactoryBean本身
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
 					if (bean instanceof FactoryBean) {
 						final FactoryBean<?> factory = (FactoryBean<?>) bean;
@@ -970,6 +973,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {
+			//先判断是否alreadyCreated 不为空
+			//也就是已经开始创建bean 实例了
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				synchronized (this.beanDefinitionMap) {
@@ -1155,28 +1160,37 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		Assert.notNull(clazz, "Required type must have a raw Class");
 
 		//调用ListableBeanFactory接口的getBeanNamesForType方法
+		//去 beanDefinitionNames  中去找
 		String[] candidateNames = getBeanNamesForType(requiredType);
 
 		if (candidateNames.length > 1) {
 			List<String> autowireCandidates = new ArrayList<>(candidateNames.length);
 			for (String beanName : candidateNames) {
+				//去 beanDefinitionMap 中去查找 没有 或者 找到了
+				//只要有一个是 autowireCandidate的 那就只会去找 autowireCandidates的
 				if (!containsBeanDefinition(beanName) || getBeanDefinition(beanName).isAutowireCandidate()) {
 					autowireCandidates.add(beanName);
 				}
 			}
+			//如果autowireCandidates不为空 那就重新赋值candidateNames
+			//也就是只关心autowireCandidate的 bean
 			if (!autowireCandidates.isEmpty()) {
 				candidateNames = StringUtils.toStringArray(autowireCandidates);
 			}
 		}
-
+		//获取到的候选名称只有1个的情况
 		if (candidateNames.length == 1) {
 			String beanName = candidateNames[0];
+			//内部调用getBean方法
+			//还是调用 父 抽象类 AbstractBeanFactory的getBean方法 根据名称去get
 			return new NamedBeanHolder<>(beanName, (T) getBean(beanName, clazz, args));
 		}
-		else if (candidateNames.length > 1) {
+		else if (candidateNames.length > 1) {////获取到的候选名称有多个的情况
 			Map<String, Object> candidates = new LinkedHashMap<>(candidateNames.length);
 			for (String beanName : candidateNames) {
+				//如果 已经存在单例对象了 singletonObjects 中 且参数为空
 				if (containsSingleton(beanName) && args == null) {
+					//直接获取bean
 					Object beanInstance = getBean(beanName);
 					candidates.put(beanName, (beanInstance instanceof NullBean ? null : beanInstance));
 				}
@@ -1184,8 +1198,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 					candidates.put(beanName, getType(beanName));
 				}
 			}
+			//如果候选的bean数量大于1
+			//检查是否是有Primay
 			String candidateName = determinePrimaryCandidate(candidates, clazz);
 			if (candidateName == null) {
+				//https://blog.csdn.net/gamezjl/article/details/108572474
 				candidateName = determineHighestPriorityCandidate(candidates, clazz);
 			}
 			if (candidateName != null) {
@@ -1276,6 +1293,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			String autowiredBeanName;
 			Object instanceCandidate;
 
+			//如果匹配的bean 数量大于1
+			//里面会探测是否是Primary 主要的 determinePrimaryCandidate
 			if (matchingBeans.size() > 1) {
 				autowiredBeanName = determineAutowireCandidate(matchingBeans, descriptor);
 				if (autowiredBeanName == null) {
@@ -1322,6 +1341,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 	}
 
+	//多个Bean注入 比如
+	// @Autowired
+	// List<BeanType> beans;
 	@Nullable
 	private Object resolveMultipleBeans(DependencyDescriptor descriptor, @Nullable String beanName,
 			@Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) {
@@ -1580,10 +1602,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		for (Map.Entry<String, Object> entry : candidates.entrySet()) {
 			String candidateBeanName = entry.getKey();
 			Object beanInstance = entry.getValue();
+			//也会去父容器里判断是否是Primary的
 			if (isPrimary(candidateBeanName, beanInstance)) {
 				if (primaryBeanName != null) {
+					//判断当前bean工厂是否有对应的beandefinition
 					boolean candidateLocal = containsBeanDefinition(candidateBeanName);
 					boolean primaryLocal = containsBeanDefinition(primaryBeanName);
+					//判断是否有多于1个的primary bean
 					if (candidateLocal && primaryLocal) {
 						throw new NoUniqueBeanDefinitionException(requiredType, candidates.size(),
 								"more than one 'primary' bean found among candidates: " + candidates.keySet());
@@ -1600,6 +1625,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		return primaryBeanName;
 	}
 
+	//最小值代表最高优先级
 	/**
 	 * Determine the candidate with the highest priority in the given set of beans.
 	 * <p>Based on {@code @javax.annotation.Priority}. As defined by the related
@@ -1620,9 +1646,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			String candidateBeanName = entry.getKey();
 			Object beanInstance = entry.getValue();
 			if (beanInstance != null) {
+				//获取优先级@Priority注解
+				//todo 通过 OrderComparator 来比较 2021-06-02
 				Integer candidatePriority = getPriority(beanInstance);
 				if (candidatePriority != null) {
 					if (highestPriorityBeanName != null) {
+						//如果优先级一样就抛出异常
 						if (candidatePriority.equals(highestPriority)) {
 							throw new NoUniqueBeanDefinitionException(requiredType, candidates.size(),
 									"Multiple beans found with the same priority ('" + highestPriority +

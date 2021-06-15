@@ -159,7 +159,7 @@ public abstract class AnnotationConfigUtils {
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
 				beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
 			}
-			//会注册 注解 自动装配的 resolver 解决泛型注入的问题 2021-1-21
+			//todo 会注册 注解 自动装配的 resolver 解决泛型注入的问题 2021-1-21
 			if (!(beanFactory.getAutowireCandidateResolver() instanceof ContextAnnotationAutowireCandidateResolver)) {
 				beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
 			}

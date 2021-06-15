@@ -19,6 +19,8 @@ package org.springframework.context;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.Aware;
 
+//当一个对象需要访问一组协作bean时，实现这个接口是有意义的。
+// 请注意，如果只是bean查找目的 那么通过bean引用进行配置比 实现此接口更可取
 /**
  * Interface to be implemented by any object that wishes to be notified
  * of the {@link ApplicationContext} that it runs in.

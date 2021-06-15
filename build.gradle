@@ -10,6 +10,7 @@ buildscript {
 
 	}
 	dependencies {
+		classpath 'com.bmuschko:gradle-tomcat-plugin:2.5'
 		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
 		classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
 	}

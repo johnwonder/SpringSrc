@@ -17,6 +17,11 @@ public class resolveRawClassDemo<T> {
 
 	public static void main(String[] args) {
 
+
+		ResolvableType hashMapType = ResolvableType.forClass(HashMap.class);
+		System.out.println(hashMapType.hasGenerics());
+
+
 		//打印出Object
 //		System.out.println(ResolvableType.forClass(null));
 //

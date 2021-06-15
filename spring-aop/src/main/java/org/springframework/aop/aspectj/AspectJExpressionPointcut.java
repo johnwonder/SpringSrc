@@ -63,6 +63,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+//实现了ClassFilter， MethodMatcher 也就是 Pointcut接口
+//
 /**
  * Spring {@link org.springframework.aop.Pointcut} implementation
  * that uses the AspectJ weaver to evaluate a pointcut expression.

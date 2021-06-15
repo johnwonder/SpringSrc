@@ -16,6 +16,7 @@
 
 package org.aopalliance.intercept;
 
+//方法拦截器，所有的通知均需要转换为MethodInterceptor类型的，最终多个MethodInterceptor组成一个方法拦截器连。
 /**
  * Intercepts calls on an interface on its way to the target. These
  * are nested "on top" of the target.

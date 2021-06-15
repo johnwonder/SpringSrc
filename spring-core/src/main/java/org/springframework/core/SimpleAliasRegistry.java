@@ -219,6 +219,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	 * @return the transformed name
 	 */
 	//原始名称
+	//先会尝试去别名集合里去查找是否是别名
 	//todo 根据别名获取规范名称 2020-09-19
 	public String canonicalName(String name) {
 		String canonicalName = name;

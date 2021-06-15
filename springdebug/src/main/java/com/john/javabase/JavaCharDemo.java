@@ -23,5 +23,43 @@ public class JavaCharDemo {
 		char[] chars = Character.toChars(suppleCodePoint);
 
 		System.out.println(chars.length);
+
+		char c = Character.toUpperCase('\u212A');
+		char c1 =Character.toUpperCase('k');
+		System.out.println(c);
+		System.out.println(c1);
+
+		char c2 = Character.toLowerCase('\u212A');
+		char c3 =Character.toLowerCase('k');
+		System.out.println(c2);
+		System.out.println(c3);
+
+
+		System.out.println(Character.toUpperCase('\u212A')== Character.toUpperCase('k'));//false
+		System.out.println(Character.toLowerCase('\u212A') == Character.toLowerCase('K'));//true
+		//System.out.println((Character.'\u212A' == 'k'));
+
+		String s1 = "K";
+		String s2 = "K";
+		String s3 = "K";
+
+		System.out.println(s1.equalsIgnoreCase(s2));
+		System.out.println(s1.equals(s2));
+		System.out.println(s2.equals(s3));
+
+		int i = -1>>>1;
+		System.out.println(i);
+
+		int j = 0x7FFFFFFF;
+		System.out.println(j);
+
+		//Latin1是ISO-8859-1的别名，有些环境下写作Latin-1。ISO-8859-1编码是单字节编码
+		//Latin1 字符编码
+		//CharacterData.of里学到
+//		if (ch >>> 8 == 0) {     // fast-path
+//			return CharacterDataLatin1.instance;
+//		}
+		//Latin1是ISO-8859-1的别名，有些环境下写作Latin-1。ISO-8859-1编码是单字节编码，向下兼容ASCII，
+		// 其编码范围是0x00-0xFF，0x00-0x7F之间完全和ASCII一致，0x80-0x9F之间是控制字符，0xA0-0xFF之间是文字符号。
 	}
 }

@@ -101,6 +101,7 @@ public class ResolvableType implements Serializable {
 			new ConcurrentReferenceHashMap<>(256);
 
 
+	//正在管理的底层java 类型
 	/**
 	 * The underlying Java type being managed.
 	 */
@@ -130,12 +131,15 @@ public class ResolvableType implements Serializable {
 	@Nullable
 	private Class<?> resolved;
 
+	//父类 类型
 	@Nullable
 	private volatile ResolvableType superType;
 
+	//接口列表
 	@Nullable
 	private volatile ResolvableType[] interfaces;
 
+	//泛型列表
 	@Nullable
 	private volatile ResolvableType[] generics;
 
@@ -525,6 +529,7 @@ public class ResolvableType implements Serializable {
 	 * @see #getGenerics()
 	 */
 	public boolean hasGenerics() {
+		//判断泛型参数 数量大于0
 		return (getGenerics().length > 0);
 	}
 
@@ -713,6 +718,7 @@ public class ResolvableType implements Serializable {
 		ResolvableType[] generics = this.generics;
 		if (generics == null) {
 			if (this.type instanceof Class) {
+				//获取到泛型参数
 				Type[] typeParams = ((Class<?>) this.type).getTypeParameters();
 				generics = new ResolvableType[typeParams.length];
 				for (int i = 0; i < generics.length; i++) {

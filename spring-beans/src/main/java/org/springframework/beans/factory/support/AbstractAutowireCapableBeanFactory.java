@@ -1760,6 +1760,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		//todo 这里每次都new一个BeanDefinitionValueResolver 去解析Bean 的属性值 2020-10-13
 		BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this, beanName, mbd, converter);
 
+
 		//todo 创建一个深拷贝 list 解析值引用 为了不修改原来的
 		// Create a deep copy, resolving any references for values.
 		List<PropertyValue> deepCopy = new ArrayList<>(original.size());

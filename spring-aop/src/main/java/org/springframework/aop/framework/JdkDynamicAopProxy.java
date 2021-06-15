@@ -61,6 +61,8 @@ import org.springframework.util.ClassUtils;
  * @see AdvisedSupport
  * @see ProxyFactory
  * https://blog.csdn.net/a837199685/article/details/68930987
+ * https://blog.csdn.net/f641385712/article/details/88952482
+ * https://blog.csdn.net/jiankunking/article/details/52143504
  */
 final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializable {
 
@@ -80,9 +82,11 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 	/** We use a static Log to avoid serialization issues. */
 	private static final Log logger = LogFactory.getLog(JdkDynamicAopProxy.class);
 
+	///** 这里就保存这个AOP代理所有的配置信息  包括所有的增强器等等 */
 	/** Config used to configure this proxy. */
 	private final AdvisedSupport advised;
 
+	//// 标记equals方法和hashCode方法是否定义在了接口上=====
 	/**
 	 * Is the {@link #equals} method defined on the proxied interfaces?
 	 */
@@ -102,6 +106,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 	 */
 	public JdkDynamicAopProxy(AdvisedSupport config) throws AopConfigException {
 		Assert.notNull(config, "AdvisedSupport must not be null");
+		//// 内部再校验一次：必须有至少一个增强器  和  目标实例才行
 		if (config.getAdvisors().length == 0 && config.getTargetSource() == AdvisedSupport.EMPTY_TARGET_SOURCE) {
 			throw new AopConfigException("No advisors and no TargetSource specified");
 		}
@@ -119,11 +124,24 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		if (logger.isTraceEnabled()) {
 			logger.trace("Creating JDK dynamic proxy: " + this.advised.getTargetSource());
 		}
+		//https://blog.csdn.net/f641385712/article/details/88952482
+		// 这部很重要，就是去找接口 我们看到最终代理的接口就是这里返回的所有接口们（除了我们自己的接口，还有Spring默认的一些接口）  大致过程如下：
+		//1、获取目标对象自己实现的接口们(最终肯定都会被代理的)
+		//2、是否添加`SpringProxy`这个接口：目标对象实现对就不添加了，没实现过就添加true
+		//3、是否新增`Adviced`接口，注意不是Advice通知接口。 实现过就不实现了，没实现过并且advised.isOpaque()=false就添加（默认是会添加的）
+		//4、是否新增DecoratingProxy接口。传入的参数decoratingProxy为true，并且没实现过就添加（显然这里，首次进来是会添加的）
+		//5、代理类的接口一共是目标对象的接口+上面三个接口SpringProxy、Advised、DecoratingProxy（SpringProxy是个标记接口而已，其余的接口都有对应的方法的）
+		//DecoratingProxy 这个接口Spring4.3后才提供
 		Class<?>[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);
 		findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);
+
+		//https://blog.csdn.net/jiankunking/article/details/52143504
+		//当前实例实现了InvocationHandler
 		return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);
 	}
 
+	//// 找找看看接口里有没有自己定义equals方法和hashCode方法，这个很重要  然后标记一下
+	//	// 注意此处用的是getDeclaredMethods，只会找自己的
 	/**
 	 * Finds any {@link #equals} or {@link #hashCode} method that may be defined
 	 * on the supplied set of interfaces.
@@ -147,6 +165,12 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 	}
 
 
+	// // 对于这部分代码和采用CGLIB的大部分逻辑都是一样的，Spring对此的解释很有意思：
+	//	 // 本来是可以抽取出来的，使得代码看起来更优雅。但是因为此会带来10%得性能损耗，所以Spring最终采用了粘贴复制的方式各用一份
+	//	 // Spring说它提供了基础的套件，来保证两个的执行行为是一致的。
+	//	 //proxy:指的是我们所代理的那个真实的对象；method:指的是我们所代理的那个真实对象的某个方法的Method对象args:指的是调用那个真实对象方法的参数。
+	//
+
 	/**
 	 * Implementation of {@code InvocationHandler.invoke}.
 	 * <p>Callers will see exactly the exception thrown by the target,
@@ -155,6 +179,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 	@Override
 	@Nullable
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		//// 它是org.aopalliance.intercept这个包下的  AOP联盟得标准接口
 		MethodInvocation invocation;
 		Object oldProxy = null;
 		boolean setProxyContext = false;
@@ -163,6 +188,10 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		Object target = null;
 
 		try {
+			//“通常情况”Spring AOP不会对equals、hashCode方法进行拦截增强,所以此处做了处理
+			// equalsDefined为false（表示接口没有定义过eequals方法）  那就交给代理去比较
+			// hashCode同理，只要接口没有实现过此方法，那就交给代理吧
+
 			if (!this.equalsDefined && AopUtils.isEqualsMethod(method)) {
 				// The target does not implement the equals(Object) method itself.
 				return equals(args[0]);

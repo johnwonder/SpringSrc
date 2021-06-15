@@ -274,6 +274,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		for (String basePackage : basePackages) {
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
+				//todo 会合并scope属性 2021-04-16 比如 RequestScope  就会默认给scope加上 ProxyMode = targetClass
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
 				candidate.setScope(scopeMetadata.getScopeName());
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);

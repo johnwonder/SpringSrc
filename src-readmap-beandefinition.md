@@ -41,7 +41,7 @@ public interface BeanDefinition {
 
 BeanDefinition定义了beanClassName,scope,lazyInit,initMethodName,destroyMethodName
 
-通过BeanDefinitionBuilder**使用工厂方法**创建BeanDefinition
+通过BeanDefinitionBuilder**使用Builder设计模式**创建BeanDefinition
 通过GenericBeanDefinition构造一个实例。
 
 MutablePropertyValues可以通过**Builder模式**添加属性值。

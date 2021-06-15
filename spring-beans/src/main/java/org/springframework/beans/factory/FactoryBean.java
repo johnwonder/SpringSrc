@@ -18,6 +18,8 @@ package org.springframework.beans.factory;
 
 import org.springframework.lang.Nullable;
 
+//实现这个接口的bean 本身就是创建单个对象的工厂，
+//如果一个bean实现了这个接口，是为了像工厂一样暴露一个对象，不是直接像一个bean实例
 /**
  * Interface to be implemented by objects used within a {@link BeanFactory} which
  * are themselves factories for individual objects. If a bean implements this

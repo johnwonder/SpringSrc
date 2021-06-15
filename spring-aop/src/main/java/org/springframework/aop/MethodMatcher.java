@@ -48,6 +48,11 @@ import java.lang.reflect.Method;
 public interface MethodMatcher {
 
 	/**
+	 * 执行静态检查给定方法是否匹配
+	 * @param method 目标方法
+	 * @param targetClass 目标对象类型
+	 */
+	/**
 	 * Perform static checking whether the given method matches.
 	 * <p>If this returns {@code false} or if the {@link #isRuntime()}
 	 * method returns {@code false}, no runtime check (i.e. no
@@ -59,6 +64,11 @@ public interface MethodMatcher {
 	 */
 	boolean matches(Method method, Class<?> targetClass);
 
+	//通过上面的过程，大家可以看出来，如果isRuntime为false的时候，只需要对方法名称进行校验，当目标方法调用多次的时候，
+	// 实际上第一步的验证结果是一样的，所以如果isRuntime为false的情况，可以将验证结果放在缓存中，提升效率，而spring内部就是这么做的，isRuntime为false的时候，需要每次都进行校验，效率会低一些，不过对性能的影响基本上可以忽略。
+	/**
+	 * 是否是动态匹配，即是否每次执行目标方法的时候都去验证一下
+	 */
 	/**
 	 * Is this MethodMatcher dynamic, that is, must a final call be made on the
 	 * {@link #matches(java.lang.reflect.Method, Class, Object[])} method at
@@ -71,6 +81,9 @@ public interface MethodMatcher {
 	 */
 	boolean isRuntime();
 
+	/**
+	 * 动态匹配验证的方法，比第一个matches方法多了一个参数args，这个参数是调用目标方法传入的参数
+	 */
 	/**
 	 * Check whether there a runtime (dynamic) match for this method,
 	 * which must have matched statically.
@@ -88,6 +101,9 @@ public interface MethodMatcher {
 	boolean matches(Method method, Class<?> targetClass, Object... args);
 
 
+	/**
+	 * 匹配所有方法，这个内部的2个matches方法任何时候都返回true
+	 */
 	/**
 	 * Canonical instance that matches all methods.
 	 */

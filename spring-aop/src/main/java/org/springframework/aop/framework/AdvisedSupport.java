@@ -162,6 +162,11 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		return this.targetSource.getTargetClass();
 	}
 
+	/**
+	 * 设置此代理配置是否经过预筛选，这个什么意思呢：通过目标方法调用代理的时候，
+	 * 需要通过匹配的方式获取这个方法上的调用链列表，查找过程需要2个步骤：
+	 * 第一步：类是否匹配，第二步：方法是否匹配，当这个属性为true的时候，会直接跳过第一步，这个懂了不
+	 */
 	@Override
 	public void setPreFiltered(boolean preFiltered) {
 		this.preFiltered = preFiltered;
@@ -172,6 +177,10 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		return this.preFiltered;
 	}
 
+	/**
+	 * 设置顾问链工厂，当调用目标方法的时候，需要获取这个方法上匹配的Advisor列表，
+	 * 获取目标方法上匹配的Advisor列表的功能就是AdvisorChainFactory来负责的
+	 */
 	/**
 	 * Set the advisor chain factory to use.
 	 * <p>Default is a {@link DefaultAdvisorChainFactory}.
@@ -188,7 +197,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		return this.advisorChainFactory;
 	}
 
-
+	//设置代理对象需要实现的接口
 	/**
 	 * Set the interfaces to be proxied.
 	 */

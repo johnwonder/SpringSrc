@@ -1,3 +1,11 @@
+pluginManagement {
+	repositories {
+		mavenCentral()
+		maven { url "http://maven.aliyun.com/repository/gradle-plugin" }
+	}
+
+}
+
 include "spring-aop"
 include "spring-aspects"
 include "spring-beans"
@@ -21,7 +29,7 @@ include "spring-webflux"
 include "spring-websocket"
 include "spring-framework-bom"
 include "springdebug"
-
+include "spring-mvc-debug"
 // Exposes gradle buildSrc for IDE support
 include "buildSrc"
 rootProject.children.find{ it.name == "buildSrc" }.name = "spring-build-src"

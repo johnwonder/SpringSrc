@@ -74,13 +74,14 @@ public class AnnotationScopeMetadataResolver implements ScopeMetadataResolver {
 	}
 
 
+	//todo 跟AliasFor 注解没关系
 	@Override
 	public ScopeMetadata resolveScopeMetadata(BeanDefinition definition) {
 		ScopeMetadata metadata = new ScopeMetadata();
 		if (definition instanceof AnnotatedBeanDefinition) {
 			AnnotatedBeanDefinition annDef = (AnnotatedBeanDefinition) definition;
 			AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(
-					annDef.getMetadata(), this.scopeAnnotationType);
+					annDef.getMetadata(), this.scopeAnnotationType); //scopeAnnotionType为Scope
 			if (attributes != null) {
 				metadata.setScopeName(attributes.getString("value"));
 				ScopedProxyMode proxyMode = attributes.getEnum("proxyMode");

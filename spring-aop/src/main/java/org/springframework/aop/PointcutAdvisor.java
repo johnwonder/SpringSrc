@@ -16,6 +16,9 @@
 
 package org.springframework.aop;
 
+///**
+// * 切入点类型的Advisor
+// */
 /**
  * Superinterface for all Advisors that are driven by a pointcut.
  * This covers nearly all advisors except introduction advisors,

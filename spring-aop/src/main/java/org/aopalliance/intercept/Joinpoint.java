@@ -18,6 +18,7 @@ package org.aopalliance.intercept;
 
 import java.lang.reflect.AccessibleObject;
 
+//这个接口表示一个通用的运行时连接点（在AOP术语中)
 /**
  * This interface represents a generic runtime joinpoint (in the AOP
  * terminology).
@@ -33,12 +34,15 @@ import java.lang.reflect.AccessibleObject;
  * method, a constructor, a field), i.e. the static part of the
  * joinpoint. It is passed to the interceptors that are installed on
  * the static joinpoint.
- *
+ * 方法，构造器，成员变量
  * @author Rod Johnson
  * @see Interceptor
  */
 public interface Joinpoint {
 
+	/**
+	 * 转到拦截器链中的下一个拦截器
+	 */
 	/**
 	 * Proceed to the next interceptor in the chain.
 	 * <p>The implementation and the semantics of this method depends
@@ -49,12 +53,18 @@ public interface Joinpoint {
 	Object proceed() throws Throwable;
 
 	/**
+	 * 返回保存当前连接点静态部分【的对象】，这里一般指被代理的目标对象
+	 */
+	/**
 	 * Return the object that holds the current joinpoint's static part.
 	 * <p>For instance, the target object for an invocation.
 	 * @return the object (can be null if the accessible object is static)
 	 */
 	Object getThis();
 
+	/**
+	 * 返回此静态连接点  一般就为当前的Method(至少目前的唯一实现是MethodInvocation,所以连接点得静态部分肯定就是本方法)
+	 */
 	/**
 	 * Return the static part of this joinpoint.
 	 * <p>The static part is an accessible object on which a chain of

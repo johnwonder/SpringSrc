@@ -88,7 +88,7 @@ public class AnnotatedBeanDefinitionReader {
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
 
-
+		//很重要 注册了 ConfigurationClassPostProcessor
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 
@@ -244,6 +244,8 @@ public class AnnotatedBeanDefinitionReader {
 				}
 			}
 		}
+
+		//todo BeanDefinitionCustomizer 自定义BeanDefinition 2021-06-15
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}

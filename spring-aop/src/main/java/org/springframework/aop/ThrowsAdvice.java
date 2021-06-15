@@ -16,6 +16,9 @@
 
 package org.springframework.aop;
 
+//此接口上没有任何方法，因为方法由反射调用，
+// 实现类必须实现以下形式的方法，前3个参数是可选的，
+// 最后一个参数为需要匹配的异常的类型。
 /**
  * Tag interface for throws advice.
  *

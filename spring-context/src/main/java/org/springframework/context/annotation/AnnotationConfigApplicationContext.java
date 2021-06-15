@@ -78,6 +78,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(DefaultListableBeanFactory beanFactory) {
 		super(beanFactory);
+
+		//直接把当前实例传入 reader 和 scanner
 		//todo 很关键 这里直接实例化AnnotatedBeanDefinitionReader 然后会注册 registerAnnotationConfigProcessors 2020-11-17
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);

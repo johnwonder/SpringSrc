@@ -155,6 +155,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private String[] dependsOn;
 
+	//默认是自动注入候选的
 	private boolean autowireCandidate = true;
 
 	private boolean primary = false;
@@ -502,6 +503,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	@Override
 	public boolean isAbstract() {
+		//默认为false
 		return this.abstractFlag;
 	}
 

@@ -18,6 +18,7 @@ package org.springframework.beans.factory.config;
 
 import org.springframework.beans.BeansException;
 
+//典型的例子 PropertyResourceConfigurer
 /**
  * Allows for custom modification of an application context's bean definitions,
  * adapting the bean property values of the context's underlying bean factory.

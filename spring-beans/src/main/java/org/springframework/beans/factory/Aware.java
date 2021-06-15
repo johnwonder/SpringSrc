@@ -16,6 +16,9 @@
 
 package org.springframework.beans.factory;
 
+//指示bean有资格通过 回调方法 被含有特定框架对象的Spring容器 通知 的 标记父接口
+//实际的方法签名由各个子接口确定
+//但通常应该只包含一个接受单个参数的void返回方法
 /**
  * Marker superinterface indicating that a bean is eligible to be
  * notified by the Spring container of a particular framework object

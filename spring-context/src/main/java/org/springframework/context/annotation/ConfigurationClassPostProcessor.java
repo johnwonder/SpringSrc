@@ -246,6 +246,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + beanFactory);
 		}
 		this.factoriesPostProcessed.add(factoryId);
+
+		//判断 处理过的registryPostProcessor中是否包含了当前factoryid
 		if (!this.registriesPostProcessed.contains(factoryId)) {
 			// BeanDefinitionRegistryPostProcessor hook apparently not supported...
 			// Simply call processConfigurationClasses lazily at this point then.
@@ -253,6 +255,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				//todo beanFactory   processConfigBeanDefinitions
 			//此处延迟调用 是为了避免 BeanDefinitionRegistryPostProcessor不支持
 			//todo 这里beanFactory 不一定是实现了 BeanDefinitionRegistry接口
+
+			//可能是因为 ConfigurationClassPostProcessor 是由 BeanDefinitionRegistry 注册进来的把
+			//
 			processConfigBeanDefinitions((BeanDefinitionRegistry) beanFactory);
 		}
 
@@ -373,6 +378,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			//这里加载了bean定义 会导致 下面的 getBeanDefinitionCount 可能大于 原来的candidateNames
 			//todo 里面会调用ConditionEvaluator
 			// 配置类 加载BeanDefinition阶段
+			//内部会调用ImportBeanDefinitionRegistrar registerBeanDefinitions的方法
 			this.reader.loadBeanDefinitions(configClasses);
 
 			//把解析过的config类们 全部放入alreadyParsed 集合中。。

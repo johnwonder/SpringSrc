@@ -102,7 +102,8 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 		if (!this.active) {
 			activate();
 		}
-		//创建AOP代理的时候把当前实例传进去
+		//创建AOP代理的时候把当前实例传进去 从当前实例获取targetClass 创建代理
+		//根据是否是接口 判断 要创建jdk代理 还是cglib代理
 		return getAopProxyFactory().createAopProxy(this);
 	}
 

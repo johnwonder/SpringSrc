@@ -77,6 +77,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 		else {
 			String beanClassName = getBeanClassName(element);
 			if (beanClassName != null) {
+				//就是上面的生成的genericBeanDefinition
 				builder.getRawBeanDefinition().setBeanClassName(beanClassName);
 			}
 		}

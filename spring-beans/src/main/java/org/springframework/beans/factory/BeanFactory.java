@@ -21,7 +21,9 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 //访问Spring bean 容器的根接口
-//这是bean容器的基本客户端视图
+//这是bean容器的最基本客户端视图
+
+//其他的接口 比如ListableBeanFactory 和 ConfigurableBeanFactory 可用于特殊用途。
 /**
  * The root interface for accessing a Spring bean container.
  * This is the basic client view of a bean container;
@@ -342,6 +344,7 @@ public interface BeanFactory {
 	 */
 	boolean isTypeMatch(String name, ResolvableType typeToMatch) throws NoSuchBeanDefinitionException;
 
+	//貌似不会调用getBean
 	/**
 	 * Check whether the bean with the given name matches the specified type.
 	 * More specifically, check whether a {@link #getBean} call for the given name

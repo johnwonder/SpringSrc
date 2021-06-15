@@ -150,6 +150,8 @@ class ConfigurationClassBeanDefinitionReader {
 		}
 
 		loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());
+
+		//调用 ImportBeanDefinitionRegistrar接口类的 registerBeanDefinitions 方法
 		loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());
 	}
 
@@ -257,10 +259,14 @@ class ConfigurationClassBeanDefinitionReader {
 		String destroyMethodName = bean.getString("destroyMethod");
 		beanDef.setDestroyMethodName(destroyMethodName);
 
+		//https://cloud.tencent.com/developer/article/1330375
+		//https://bbs.huaweicloud.com/blogs/186148
+		//https://blog.csdn.net/lan_qie/article/details/84381126
 		// Consider scoping
 		ScopedProxyMode proxyMode = ScopedProxyMode.NO;
 		AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(metadata, Scope.class);
 		if (attributes != null) {
+			//设置beandefinition的 scope
 			beanDef.setScope(attributes.getString("value"));
 			proxyMode = attributes.getEnum("proxyMode");
 			if (proxyMode == ScopedProxyMode.DEFAULT) {
@@ -273,6 +279,7 @@ class ConfigurationClassBeanDefinitionReader {
 		if (proxyMode != ScopedProxyMode.NO) {
 
 			//todo 通过ScopedProxyCreator 创建一个代理 BeanDefinition
+			//todo ConfigurationClassBeanDefinition
 			BeanDefinitionHolder proxyDef = ScopedProxyCreator.createScopedProxy(
 					new BeanDefinitionHolder(beanDef, beanName), this.registry,
 					proxyMode == ScopedProxyMode.TARGET_CLASS);

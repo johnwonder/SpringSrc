@@ -320,6 +320,11 @@ class ConfigurationClassEnhancer {
 		public Object intercept(Object enhancedConfigInstance, Method beanMethod, Object[] beanMethodArgs,
 					MethodProxy cglibMethodProxy) throws Throwable {
 
+			//enhancedConfigInstance 为 代理对象
+			//Object o：代理对象本身
+			//
+			//通过调用时传入this很容易看出。
+			//https://blog.csdn.net/qq_41854763/article/details/111058947
 			ConfigurableBeanFactory beanFactory = getBeanFactory(enhancedConfigInstance);
 			String beanName = BeanAnnotationHelper.determineBeanNameFor(beanMethod);
 

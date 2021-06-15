@@ -128,6 +128,7 @@ abstract class AnnotationReadingVisitorUtils {
 			return null;
 		}
 
+		//AnnotationAttributes 继承自LinkedHashMap
 		// To start with, we populate the result with a copy of all attribute values
 		// from the target annotation. A copy is necessary so that we do not
 		// inadvertently mutate the state of the metadata passed to this method.
@@ -142,6 +143,7 @@ abstract class AnnotationReadingVisitorUtils {
 		List<String> annotationTypes = new ArrayList<>(attributesMap.keySet());
 		Collections.reverse(annotationTypes);
 
+		//不需要再访问目标 注解名称了
 		// No need to revisit the target annotation type:
 		annotationTypes.remove(annotationName);
 

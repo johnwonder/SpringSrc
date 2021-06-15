@@ -23,7 +23,8 @@
 		<property name="maps">
 			<map>
 				<entry key="list1">
-					<value type="java.lang.String">
+
+					<value type="java.lang.String" >
 						cccc
 					</value>
 				</entry>
@@ -34,7 +35,9 @@
 		</property>
 	</bean>
 	 <bean id="setterBean" class="org.wonder.frame.xmlConfig.ElBean"  parent="setterParentBean">
-		 <property name="age"  value="#{T(Integer).MAX_VALUE}" />
+		 <property name="age"   value="#{T(Integer).MAX_VALUE}">
+
+		 </property>
 
 		 <property name="lists">
 
@@ -49,7 +52,7 @@
 			 <!--				 sss-->
 			 <!--			 </value>-->
 
-			 <map merge="true">
+			 <map merge="true" key-type="java.lang.String">
 				 <entry key="list1">
 					 <value type="java.lang.String">
 						cccc

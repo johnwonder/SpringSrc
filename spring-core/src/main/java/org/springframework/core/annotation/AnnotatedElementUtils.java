@@ -43,6 +43,7 @@ import org.springframework.util.MultiValueMap;
  * meta-annotation programming model with support for <em>annotation attribute
  * overrides</em>. If you do not need support for annotation attribute
  * overrides, consider using {@link AnnotationUtils} instead.
+ * //如果不需要对注解属性替代的支持 ，可以考虑使用 AnnotationUtils
  *
  * <p>Note that the features of this class are not provided by the JDK's
  * introspection facilities themselves.

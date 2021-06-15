@@ -75,7 +75,7 @@ package org.springframework.core.env;
  * {@link ConfigurableEnvironment} Javadoc for usage examples demonstrating manipulation
  * of property sources prior to application context {@code refresh()}.
  *
- * @author Chris Beams
+ * @author Chris Beams (https://github.com/cbeams)
  * @since 3.1
  * @see PropertyResolver
  * @see EnvironmentCapable

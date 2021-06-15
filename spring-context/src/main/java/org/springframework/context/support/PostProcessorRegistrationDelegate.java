@@ -87,10 +87,12 @@ final class PostProcessorRegistrationDelegate {
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
 			//todo MyMatis下的MapperScannerConfigurer就实现了BeanDefinitionRegistryPostProcessor接口 来扫描Mapper接口
 			//todo ConfigurationClassPostProcessor 实现了 PriorityOrdered  所以会优先调用
+			// getBeanNamesForType 里面会遍历 beanDefinitionNames 集合 遍历的时候会 合并beanDefinition 2021-4-13
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+					//又会去工厂里查找bean
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
 					processedBeans.add(ppName);
 				}
@@ -182,6 +184,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// First, invoke the BeanFactoryPostProcessors that implement PriorityOrdered.
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+		//todo 此处执行PropertyPlaceHolderConfigurer
 		invokeBeanFactoryPostProcessors(priorityOrderedPostProcessors, beanFactory);
 
 		// Next, invoke the BeanFactoryPostProcessors that implement Ordered.

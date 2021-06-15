@@ -67,6 +67,8 @@ public class AnnotationAwareOrderComparator extends OrderComparator {
 			return order;
 		}
 
+		//5.2版本重写了以下逻辑
+		//https://blog.csdn.net/gamezjl/article/details/108572474
 		// Check for @Order and @Priority on various kinds of elements
 		if (obj instanceof Class) {
 			return OrderUtils.getOrder((Class<?>) obj);
@@ -78,12 +80,15 @@ public class AnnotationAwareOrderComparator extends OrderComparator {
 			}
 		}
 		else if (obj instanceof AnnotatedElement) {
+			//AnnotatedElement代表在当前运行的java虚拟机中一个可以被注解的元素，这个接口允许通过反射读取元素上面的注解，这与我们之前的理解是一致的
+			//https://www.yuque.com/cuihualong/javaseries/sh91es
 			Order ann = AnnotationUtils.getAnnotation((AnnotatedElement) obj, Order.class);
 			if (ann != null) {
 				return ann.value();
 			}
 		}
 		else {
+			//https://blog.csdn.net/gamezjl/article/details/108572474
 			order = OrderUtils.getOrder(obj.getClass());
 			if (order == null && obj instanceof DecoratingProxy) {
 				order = OrderUtils.getOrder(((DecoratingProxy) obj).getDecoratedClass());

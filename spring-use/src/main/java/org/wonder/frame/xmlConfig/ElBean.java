@@ -13,7 +13,7 @@ public class ElBean {
 
 	private String age;
 
-	private Map<String, String> maps;
+	private Map<String, Object> maps;
 
 	private List<String> lists;
 
@@ -26,11 +26,11 @@ public class ElBean {
 	}
 
 
-	public Map<String, String> getMaps() {
+	public Map<String, Object> getMaps() {
 		return maps;
 	}
 
-	public void setMaps(Map<String, String> maps) {
+	public void setMaps(Map<String, Object> maps) {
 		this.maps = maps;
 	}
 

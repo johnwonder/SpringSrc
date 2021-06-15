@@ -20,6 +20,9 @@ import java.lang.reflect.Method;
 
 import org.springframework.lang.Nullable;
 
+//方法执行后通知，需要在目标方法执行之后执行增强一些逻辑的，可以通过这个实现。
+//
+//不过需要注意一点：目标方法正常执行后，才会回调这个接口，当目标方法有异常，那么这通知会被跳过。
 /**
  * After returning advice is invoked only on normal method return, not if an
  * exception is thrown. Such advice can see the return value, but cannot change it.
@@ -30,6 +33,17 @@ import org.springframework.lang.Nullable;
  */
 public interface AfterReturningAdvice extends AfterAdvice {
 
+//	public Object invoke(){
+//		Object retVal = 调用目标方法;
+//		调用AfterReturningAdvice#afterReturning方法
+//		return retVal;
+//	}
+	/**
+	 * 目标方法执行之后会回调这个方法
+	 * method：需要执行的目标方法
+	 * args：目标方法的参数
+	 * target：目标对象
+	 */
 	/**
 	 * Callback after a given method successfully returned.
 	 * @param returnValue the value returned by the method, if any

@@ -24,6 +24,9 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.AfterReturningAdvice;
 
+//负责将各种非MethodInterceptor类型的通知(Advice)包装为MethodInterceptor类型。
+//
+//刚才有说过：Aop中所有的Advice最终都会转换为MethodInterceptor类型的，组成一个方法调用链，然后执行
 /**
  * Adapter to enable {@link org.springframework.aop.AfterReturningAdvice}
  * to be used in the Spring AOP framework.

@@ -33,11 +33,17 @@ package org.springframework.aop;
 public interface Pointcut {
 
 	/**
+	 * 类过滤器, 可以知道哪些类需要拦截
+	 */
+	/**
 	 * Return the ClassFilter for this pointcut.
 	 * @return the ClassFilter (never {@code null})
 	 */
 	ClassFilter getClassFilter();
 
+	/**
+	 * 方法匹配器, 可以知道哪些方法需要拦截
+	 */
 	/**
 	 * Return the MethodMatcher for this pointcut.
 	 * @return the MethodMatcher (never {@code null})
@@ -45,6 +51,11 @@ public interface Pointcut {
 	MethodMatcher getMethodMatcher();
 
 
+	/**
+	 * //ClassFilter 和 MethodMatcher 都返回true
+	 * 始终匹配的规范切入点实例
+	 * 匹配所有对象的 Pointcut，内部的2个过滤器默认都会返回true
+	 */
 	/**
 	 * Canonical Pointcut instance that always matches.
 	 */

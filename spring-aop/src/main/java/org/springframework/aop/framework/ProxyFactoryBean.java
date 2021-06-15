@@ -327,6 +327,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 			}
 			// Initialize the shared singleton instance.
 			super.setFrozen(this.freezeProxy);
+			//调用 AopProxy.getProxy获取代理对象
 			this.singletonInstance = getProxy(createAopProxy());
 		}
 		return this.singletonInstance;

@@ -61,8 +61,10 @@ class BeanDefinitionValueResolver {
 	//继承自 FactoryBeanRegistrySupport -> DefaultSingletonBeanRegistry
 	private final AbstractBeanFactory beanFactory;
 
+	//当前正在作用的bean 名称
 	private final String beanName;
 
+	//当前正在作用的bean 定义
 	private final BeanDefinition beanDefinition;
 
 	//用于属性值 类型转换用
@@ -235,6 +237,7 @@ class BeanDefinitionValueResolver {
 	 */
 	@Nullable
 	protected Object evaluate(TypedStringValue value) {
+		//表达式解析
 		Object result = doEvaluate(value.getValue());
 		if (!ObjectUtils.nullSafeEquals(result, value.getValue())) {
 			//代表是动态变化的值
@@ -282,6 +285,7 @@ class BeanDefinitionValueResolver {
 		return this.beanFactory.evaluateBeanDefinitionString(value, this.beanDefinition);
 	}
 
+	//解析TypedStringValue中的目标类型
 	/**
 	 * Resolve the target type in the given TypedStringValue.
 	 * @param value the TypedStringValue to resolve
@@ -347,6 +351,7 @@ class BeanDefinitionValueResolver {
 		}
 	}
 
+	//适配内部bean名称
 	/**
 	 * Checks the given bean name whether it is unique. If not already unique,
 	 * a counter is added, increasing the counter until the name is unique.
@@ -394,6 +399,7 @@ class BeanDefinitionValueResolver {
 			return bean;
 		}
 		catch (BeansException ex) {
+			//argName == bean property 'maps' with key [TypedStringValue: value [list1], target type [null]]
 			throw new BeanCreationException(
 					this.beanDefinition.getResourceDescription(), this.beanName,
 					"Cannot resolve reference to bean '" + ref.getBeanName() + "' while setting " + argName, ex);
@@ -447,14 +453,27 @@ class BeanDefinitionValueResolver {
 		Map<Object, Object> resolved = new LinkedHashMap<>(mm.size());
 		mm.forEach((key, value) -> {
 			Object resolvedKey = resolveValueIfNecessary(argName, key);
+
+			//再去循环遍历
 			Object resolvedValue = resolveValueIfNecessary(new KeyedArgName(argName, key), value);
 			resolved.put(resolvedKey, resolvedValue);
 		});
 		return resolved;
 	}
 
+	//	//2.普通内部类把它理解为与外部类绑定了，创建普通内部类对象一定要通过外部类的对象new才行。而静态内部类是不需要的。
+	//BeanDefinitionValueResolver.NormalInsideKeyedArgName normalInsideKeyedArgName = valueResolver.new NormalInsideKeyedArgName();
+//	class  NormalInsideKeyedArgName{
+//
+//	}
 
-	//私有静态类
+
+	//静态内部类的使用场景： 为了抛出异常 的时候 toString 使用
+	//https://www.cnblogs.com/heavenplus/p/9451181.html
+	//1.静态内部类对外部类的访问是有局限的，如不能访问外部类的非静态成员与变量（这是它的最大限制，也是使用频率上输给普通内部类的原因）
+
+	//私有静态内部类
+	//为了只会toString()的使用，比如抛出异常的时候
 	/**
 	 * Holder class used for delayed toString building.
 	 */
@@ -471,6 +490,7 @@ class BeanDefinitionValueResolver {
 
 		@Override
 		public String toString() {
+			//'maps' with key [TypedStringValue: value [list1], target type [null]]
 			return this.argName + " with key " + BeanWrapper.PROPERTY_KEY_PREFIX +
 					this.key + BeanWrapper.PROPERTY_KEY_SUFFIX;
 		}

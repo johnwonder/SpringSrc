@@ -19,6 +19,10 @@ package org.springframework.beans.factory.config;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.Nullable;
 
+//Spring 的 PostProcessor 接口起到什么作用
+//这里面包含两个
+// 一个是BeanFactoryPostProcessor
+// 一个是BeanPostProcessor
 /**
  * Factory hook that allows for custom modification of new bean instances,
  * 工厂钩子，允许自定义修改新的bean实例

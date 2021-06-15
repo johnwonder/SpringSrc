@@ -1,0 +1,82 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("com.bmuschko:gradle-tomcat-plugin:2.5")
+	}
+}
+
+plugins {
+	id 'java'
+	id 'war'
+	id 'com.bmuschko.tomcat'
+}
+group 'org.springframework'
+version '5.1.1.BUILD-SNAPSHOT'
+
+
+dependencies {
+	provided("javax.servlet:javax.servlet-api:4.0.1")
+	compile(project(":spring-context"))
+	compile(project(":spring-beans"))
+	compile(project(":spring-core"))
+	//compile(project(":spring-instrument"))
+	compile(project(":spring-aop"))
+	compile(project(":spring-web"))
+	compile(project(":spring-webmvc"))
+	compile("com.fasterxml.jackson.core:jackson-databind:${jackson2Version}")
+	compile(project(":spring-oxm"))
+//	compile(project(":spring-aop"))
+	compile("javax.inject:javax.inject:1")
+//	compile("org.yaml:snakeyaml:1.23")
+	//compile name: 'rt'
+	compile fileTree(dir:'lib',includes:['*jar'])
+
+	def tomcatVersion = '8.0.27'
+	tomcat   "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+			"org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+			"org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+}
+
+tomcatRun.contextPath = '/'
+tomcatRunWar.contextPath = '/test'
+
+//compileJava {
+	//options.compilerArgs << '-XDignore.symbol.file'
+	//https://blog.csdn.net/am_Sun/article/details/106374866?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param
+	//options.bootClasspath = "${System.env.JAVA_HOME}/jre/lib/rt.jar"
+//}
+
+//tasks.withType(JavaCompile){
+//	options.encoding= "UTF-8"
+//	options.warnings(false)
+//
+//	// Try to turn them all off automatically
+//	options.compilerArgs << '-Xlint:none'
+//	options.compilerArgs << '-nowarn' // same as '-Xlint:none'
+//
+//	// Turn them off manually
+//
+//	options.compilerArgs << '-XDignore.symbol.file'
+//	options.compilerArgs << '-Xlint:-auxiliaryclass'
+//	options.compilerArgs << '-Xlint:-cast'
+//	options.compilerArgs << '-Xlint:-classfile'
+//	options.compilerArgs << '-Xlint:-deprecation'
+//	options.compilerArgs << '-Xlint:-dep-ann'
+//	options.compilerArgs << '-Xlint:-divzero'
+//	options.compilerArgs << '-Xlint:-empty'
+//	options.compilerArgs << '-Xlint:-fallthrough'
+//	options.compilerArgs << '-Xlint:-finally'
+//	options.compilerArgs << '-Xlint:-options'
+//	options.compilerArgs << '-Xlint:-overloads'
+//	options.compilerArgs << '-Xlint:-overrides'
+//	options.compilerArgs << '-Xlint:-path'
+//	options.compilerArgs << '-Xlint:-processing'
+//	options.compilerArgs << '-Xlint:-rawtypes'
+//	options.compilerArgs << '-Xlint:-serial'
+//	options.compilerArgs << '-Xlint:-static'
+//	options.compilerArgs << '-Xlint:-try'
+//	options.compilerArgs << '-Xlint:-unchecked'
+//	options.compilerArgs << '-Xlint:-varargs'
+//}

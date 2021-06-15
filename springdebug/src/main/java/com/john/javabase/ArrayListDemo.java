@@ -10,6 +10,7 @@ import java.util.Iterator;
  */
 public class ArrayListDemo {
 
+	//https://blog.csdn.net/m0_37991005/article/details/111477484
 	public static void main(String[] args) {
 
 		ArrayList<String> myArrayList =new ArrayList<>();
@@ -17,6 +18,8 @@ public class ArrayListDemo {
 		myArrayList.add("1");
 		myArrayList.add("2");
 		myArrayList.add("3");
+
+		myArrayList.add(3,"5");
 
 		Iterator<String> iterator = myArrayList.iterator();
 		while (iterator.hasNext()){

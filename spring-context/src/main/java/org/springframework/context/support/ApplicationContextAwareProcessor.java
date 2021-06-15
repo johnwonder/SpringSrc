@@ -48,8 +48,8 @@ import org.springframework.util.StringValueResolver;
  * underlying bean factory. Applications do not use this directly.
  *
  * @author Juergen Hoeller
- * @author Costin Leau
- * @author Chris Beams
+ * @author Costin Leau （https://github.com/costin/  elasticsearch）
+ * @author Chris Beams (https://github.com/cbeams bisq)
  * @since 10.10.2003
  * @see org.springframework.context.EnvironmentAware
  * @see org.springframework.context.EmbeddedValueResolverAware
@@ -74,6 +74,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		this.applicationContext = applicationContext;
 		this.embeddedValueResolver = new EmbeddedValueResolver(applicationContext.getBeanFactory());
 	}
+
 
 
 	@Override
@@ -101,9 +102,11 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
+	//在bean初始化前会调用 实现ApplicationContextAware接口的Bean
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof Aware) {
 			if (bean instanceof EnvironmentAware) {
+				//获取Environment 然后放入 bean
 				((EnvironmentAware) bean).setEnvironment(this.applicationContext.getEnvironment());
 			}
 			if (bean instanceof EmbeddedValueResolverAware) {

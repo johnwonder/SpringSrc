@@ -63,6 +63,10 @@ public class AopNamespaceHandler extends NamespaceHandlerSupport {
 	public void init() {
 		// In 2.0 XSD as well as in 2.1 XSD.
 		registerBeanDefinitionParser("config", new ConfigBeanDefinitionParser());
+
+		//通过aop命名空间的<aop:aspectj-autoproxy />声明自动为spring容器中那些配置@aspectJ切面的bean创建代理，织入切面。当然，spring
+		//在内部依旧采用AnnotationAwareAspectJAutoProxyCreator进行自动代理的创建工作，但具体实现的细节已经被<aop:aspectj-autoproxy />隐藏起来了
+		//https://blog.csdn.net/z69183787/article/details/18675145
 		registerBeanDefinitionParser("aspectj-autoproxy", new AspectJAutoProxyBeanDefinitionParser());
 		registerBeanDefinitionDecorator("scoped-proxy", new ScopedProxyBeanDefinitionDecorator());
 

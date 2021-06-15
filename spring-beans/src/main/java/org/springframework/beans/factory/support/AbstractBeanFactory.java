@@ -192,12 +192,17 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 
+	// <T> T getBean(Class<T> requiredType) throws BeansException;
+	//这个接口交给了子类去实现。。。
 	//---------------------------------------------------------------------
 	// Implementation of BeanFactory interface
 	//---------------------------------------------------------------------
 	//实现BeanFactory方法
 	@Override
 	public Object getBean(String name) throws BeansException {
+		//requiredType为null
+		//args 为null
+		//typeCheckOnly 为false
 		return doGetBean(name, null, null, false);
 	}
 
@@ -226,6 +231,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return doGetBean(name, requiredType, args, false);
 	}
 
+	//在方法参数前面加final关键字就是为了防止 在方法体中被修改。
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
 	 * @param name the name of the bean to retrieve
@@ -242,6 +248,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
 		//就像BeanFactory接口中getBean方法javadoc中说的 转换为对应的规范的Bean名称
+		//先会尝试去别名集合里去查找是否是别名
 		//Translates aliases back to the corresponding canonical bean name.
 		final String beanName = transformedBeanName(name);
 		Object bean;
@@ -299,6 +306,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			//是否只是为了类型检查
+			//不是类型检查 那就标记开始创建bean实例了
 			if (!typeCheckOnly) {
 				markBeanAsCreated(beanName);
 			}
@@ -327,6 +335,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						//todo 注册从属bean  beanName依赖dep 2021-02-09
 						registerDependentBean(dep, beanName);
 						try {
+							//先获取依赖的Bean
 							getBean(dep);
 						}
 						catch (NoSuchBeanDefinitionException ex) {
@@ -377,8 +386,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				else {
+					//获取beandefinition的 scope
 					String scopeName = mbd.getScope();
 					//根据Bean的 scope 去scopes集合获取对应对scope 2021-3-23
+					//RequestScope需加上代理 不然在autowire的时候会报错
 					final Scope scope = this.scopes.get(scopeName);
 					if (scope == null) {
 						throw new IllegalStateException("No Scope registered for scope name '" + scopeName + "'");
@@ -1178,6 +1189,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	protected String transformedBeanName(String name) {
 		//todo 解析别名为真正的bean id 2020-10-17
+		//先会尝试去别名集合里去查找是否是别名
 		return canonicalName(BeanFactoryUtils.transformedBeanName(name));
 	}
 
@@ -1315,6 +1327,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// Check with full lock now in order to enforce the same merged instance.
 			if (containingBd == null) {
+				//检查一遍 有可能是同一个实例
 				mbd = this.mergedBeanDefinitions.get(beanName);
 			}
 
@@ -1348,7 +1361,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						//GenericBeanDefinition 和 ChildBeanDefinition  的parentName 不为空
 						String parentBeanName = transformedBeanName(bd.getParentName());
 						if (!beanName.equals(parentBeanName)) {
-							//直接从当前beanFactory中去找
+							//直接从当前beanFactory中去找 父Bean
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
@@ -1380,6 +1393,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					mbd = new RootBeanDefinition(pbd);
 
 					//todo 合并属性 比如mergable  ManagedList
+					//从子Bean定义重载 比如isAbstract赋为false
 					mbd.overrideFrom(bd);
 				}
 

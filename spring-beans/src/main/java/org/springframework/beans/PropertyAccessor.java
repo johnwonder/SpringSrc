@@ -40,6 +40,7 @@ public interface PropertyAccessor {
 	 */
 	String NESTED_PROPERTY_SEPARATOR = ".";
 
+	//嵌套属性分隔符
 	/**
 	 * Path separator for nested properties.
 	 * Follows normal Java conventions: getFoo().getBar() would be "foo.bar".

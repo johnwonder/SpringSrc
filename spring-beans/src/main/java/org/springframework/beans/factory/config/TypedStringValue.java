@@ -17,12 +17,14 @@
 package org.springframework.beans.factory.config;
 
 import org.springframework.beans.BeanMetadataElement;
+import org.springframework.beans.PropertyValue;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 //字符串 所对应类型的 持有者
+//真正的转换是被bean工厂执行的
 /**
  * Holder for a typed String value. Can be added to bean definitions
  * in order to explicitly specify a target type for a String value,
@@ -38,9 +40,21 @@ import org.springframework.util.ObjectUtils;
  */
 public class TypedStringValue implements BeanMetadataElement {
 
+	//parsePropertyValue 返回一个TypedStringValue 实例
+//	Object val = parsePropertyValue(ele, bd, propertyName);
+//
+//	//todo 解析属性完成 放入PropertyValues中 2020-09-29
+//	PropertyValue pv = new PropertyValue(propertyName, val);
+//	parseMetaElements(ele, pv);
+//			pv.setSource(extractSource(ele));
+//	//pv里 合并的value
+//	//todo 最终添加到beanDefinition的PropertyValues中 2020-09-29
+//	bd.getPropertyValues().addPropertyValue(pv);
+	//值
 	@Nullable
 	private String value;
 
+	//目标类型
 	@Nullable
 	private volatile Object targetType;
 

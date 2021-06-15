@@ -68,12 +68,16 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	/** Never check system properties. */
 	public static final int SYSTEM_PROPERTIES_MODE_NEVER = 0;
 
+	//如果在指定的properties查找不到再去系统properties查找
+	// System.getProperty
 	/**
 	 * Check system properties if not resolvable in the specified properties.
 	 * This is the default.
 	 */
 	public static final int SYSTEM_PROPERTIES_MODE_FALLBACK = 1;
 
+	//先检查系统属性 如果检查到了就不会去指定的properties查找
+	// System.getProperty
 	/**
 	 * Check system properties first, before trying the specified properties.
 	 * This allows system properties to override any other property source.
@@ -224,15 +228,19 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)
 			throws BeansException {
 
+		//把属性集合传递给 PlaceHolderResolver 函数式接口的实现
 		StringValueResolver valueResolver = new PlaceholderResolvingStringValueResolver(props);
+		//调用父类 PlaceholderConfigurerSupport 的方法
 		doProcessProperties(beanFactoryToProcess, valueResolver);
 	}
 
 
 	private class PlaceholderResolvingStringValueResolver implements StringValueResolver {
 
+		//helper内部会调用 resolver的方法
 		private final PropertyPlaceholderHelper helper;
 
+		//函数式接口
 		private final PlaceholderResolver resolver;
 
 		public PlaceholderResolvingStringValueResolver(Properties props) {
@@ -240,6 +248,10 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 			//todo 这里的PropertyPlaceholderHelper 在解析xml配置文件路径占位符的时候也用到了
 			//todo AbstractPropertyResolver 调用 createPlaceholderHelper 的时候
 			//PlaceholderConfigurerSupport 提供的 placeholderPrefix
+
+			//这里实例化一个PropertyPlaceholderHelper
+			//与 PropertySourcesPropertyResolver的区别
+			// PropertySourcesPropertyResolver通过 createPlaceholderHelper 内部创建
 			this.helper = new PropertyPlaceholderHelper(
 					placeholderPrefix, placeholderSuffix, valueSeparator, ignoreUnresolvablePlaceholders);
 			this.resolver = new PropertyPlaceholderConfigurerResolver(props);
@@ -249,6 +261,9 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 		@Override
 		@Nullable
 		public String resolveStringValue(String strVal) throws BeansException {
+
+			//直接获取
+			//this.resolver 就是一个 PlaceholderResolver 函数式接口
 			String resolved = this.helper.replacePlaceholders(strVal, this.resolver);
 			if (trimValues) {
 				resolved = resolved.trim();
@@ -271,6 +286,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 		@Override
 		@Nullable
 		public String resolvePlaceholder(String placeholderName) {
+			//todo 关键代码
 			return PropertyPlaceholderConfigurer.this.resolvePlaceholder(placeholderName,
 					this.props, systemPropertiesMode);
 		}

@@ -18,6 +18,7 @@ package org.springframework.aop;
 
 import org.aopalliance.aop.Advice;
 
+//后置通知的公共标记接口
 /**
  * Common marker interface for after advice,
  * such as {@link AfterReturningAdvice} and {@link ThrowsAdvice}.

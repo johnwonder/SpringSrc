@@ -23,6 +23,8 @@ import java.util.List;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
+//比较器还可以用来控制某些数据结构（如sored sets 或sorted maps）的顺序，
+// 或者为没有自然顺序的对象集合提供顺序
 /**
  * {@link Comparator} implementation for {@link Ordered} objects, sorting
  * by order value ascending, respectively by priority descending.
@@ -69,15 +71,23 @@ public class OrderComparator implements Comparator<Object> {
 	}
 
 	private int doCompare(@Nullable Object o1, @Nullable Object o2, @Nullable OrderSourceProvider sourceProvider) {
+
+		//先判断是否 是 PriorityOrdered接口
+		//o1为原先的后一个元素
+		//o2为原先的前一个元素
 		boolean p1 = (o1 instanceof PriorityOrdered);
 		boolean p2 = (o2 instanceof PriorityOrdered);
+		//p1实现了PriorityOrdered，但是p2没实现PriorityOrdered，则p1优先级更高
 		if (p1 && !p2) {
+			////小于0 表示逆序 o1排前
 			return -1;
 		}
 		else if (p2 && !p1) {
+			//p2实现了PriorityOrdered，但是p1没实现PriorityOrdered，则p2优先级更高
+			//大于0 表示正序 o2排前
 			return 1;
 		}
-
+		//再通过Orderd接口 获取 order值
 		int i1 = getOrder(o1, sourceProvider);
 		int i2 = getOrder(o2, sourceProvider);
 		return Integer.compare(i1, i2);
@@ -98,6 +108,7 @@ public class OrderComparator implements Comparator<Object> {
 				if (orderSource.getClass().isArray()) {
 					Object[] sources = ObjectUtils.toObjectArray(orderSource);
 					for (Object source : sources) {
+						//AnnotationAwareOrderComparator接口重新实现 通过注解获取
 						order = findOrder(source);
 						if (order != null) {
 							break;
@@ -105,6 +116,7 @@ public class OrderComparator implements Comparator<Object> {
 					}
 				}
 				else {
+					//AnnotationAwareOrderComparator接口重新实现 通过注解获取
 					order = findOrder(orderSource);
 				}
 			}

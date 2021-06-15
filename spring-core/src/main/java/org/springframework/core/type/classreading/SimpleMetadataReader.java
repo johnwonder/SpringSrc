@@ -44,11 +44,14 @@ final class SimpleMetadataReader implements MetadataReader {
 
 	private final ClassMetadata classMetadata;
 
+	//继承自ClassMetadata
 	private final AnnotationMetadata annotationMetadata;
 
 
 	SimpleMetadataReader(Resource resource, @Nullable ClassLoader classLoader) throws IOException {
 		InputStream is = new BufferedInputStream(resource.getInputStream());
+
+		//asm 读取
 		ClassReader classReader;
 		try {
 			classReader = new ClassReader(is);

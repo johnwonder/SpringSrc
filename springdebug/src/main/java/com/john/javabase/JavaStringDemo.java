@@ -12,6 +12,18 @@ public class JavaStringDemo {
 
 	public static void main(String[] args) {
 
+		String str = "abc";
+
+		char data[] = {'a', 'b', 'c'};
+		String newStr = new String("abc");
+
+		System.out.println("str== newStr : "+ (str == newStr));//false
+		System.out.println("str equals newStr : "+ str.equals(newStr));//true
+
+
+		String[] splitStr  ="@@".split("@@");
+		System.out.println(splitStr.length); //输出0
+
 		StringBuffer stringBuffer = new StringBuffer("hello world");
 		String strBuffer = new String(stringBuffer);
 

@@ -23,6 +23,9 @@ import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;
 import org.springframework.lang.Nullable;
 
+//PointcutAdvisor的默认实现，这是最常用的Advisor实现，
+// 它可以用于任何Pointcut和Advice类型，代码相当简单，
+// 里面定义了2个属性：pointcut和advisor，由使用者指定。
 /**
  * Convenient Pointcut-driven Advisor implementation.
  *

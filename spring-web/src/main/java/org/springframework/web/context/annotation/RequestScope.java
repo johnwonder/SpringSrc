@@ -54,6 +54,9 @@ import org.springframework.web.context.WebApplicationContext;
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 public @interface RequestScope {
 
+	//https://vladmihalcea.com/spring-request-level-memoization/
+	//不加AliasFor 也能解析为target_class
+	//通过AnnotationScopeMetadataResolver 去把requestScope的属性proxyMode覆盖到scope属性上
 	/**
 	 * Alias for {@link Scope#proxyMode}.
 	 * <p>Defaults to {@link ScopedProxyMode#TARGET_CLASS}.

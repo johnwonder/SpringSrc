@@ -30,6 +30,9 @@ import org.springframework.aop.AfterAdvice;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//负责将各种非MethodInterceptor类型的通知(Advice)包装为MethodInterceptor类型。
+//
+//刚才有说过：Aop中所有的Advice最终都会转换为MethodInterceptor类型的，组成一个方法调用链，然后执行
 /**
  * Interceptor to wrap an after-throwing advice.
  *
@@ -67,6 +70,7 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 	private final Map<Class<?>, Method> exceptionHandlerMap = new HashMap<>();
 
 
+	//创建这个类型的对象的时候需要传递一个MethodBeforeAdvice类型的参数
 	/**
 	 * Create a new ThrowsAdviceInterceptor for the given ThrowsAdvice.
 	 * @param throwsAdvice the advice object that defines the exception handler methods
@@ -78,9 +82,12 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 
 		Method[] methods = throwsAdvice.getClass().getMethods();
 		for (Method method : methods) {
+			//方法名称为afterThrowing && 方法参数为1或者4
 			if (method.getName().equals(AFTER_THROWING) &&
 					(method.getParameterCount() == 1 || method.getParameterCount() == 4)) {
+				//获取方法的最后一个参数类型
 				Class<?> throwableParam = method.getParameterTypes()[method.getParameterCount() - 1];
+				//判断方法参数类型是不是Throwable类型的
 				if (Throwable.class.isAssignableFrom(throwableParam)) {
 					// An exception handler to register...
 					this.exceptionHandlerMap.put(throwableParam, method);
@@ -106,20 +113,29 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 	}
 
 
+	//这个类实现了MethodInterceptor接口，负责将MethodBeforeAdvice方法前置通知包装为MethodInterceptor类型，
+	// 创建这个类型的对象的时候需要传递一个MethodBeforeAdvice类型的参数，重点是invoke方法
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		try {
+			////调用通知链
 			return mi.proceed();
 		}
 		catch (Throwable ex) {
+			//获取异常通知中自定义的处理异常的方法
 			Method handlerMethod = getExceptionHandler(ex);
 			if (handlerMethod != null) {
+				////调用异常处理方法
 				invokeHandlerMethod(mi, ex, handlerMethod);
 			}
+			//抛出异常
 			throw ex;
 		}
 	}
 
+	/**
+	 * 获取throwsAdvice中处理exception参数指定的异常的方法
+	 */
 	/**
 	 * Determine the exception handle method for the given exception.
 	 * @param exception the exception thrown

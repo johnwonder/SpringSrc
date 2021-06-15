@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringValueResolver;
 
+//https://www.jianshu.com/p/1f1049d0a0f4
 /**
  * Visitor class for traversing {@link BeanDefinition} objects, in particular
  * the property values and constructor argument values contained in them,
@@ -47,6 +48,7 @@ import org.springframework.util.StringValueResolver;
  */
 public class BeanDefinitionVisitor {
 
+	//处理值的解析器
 	@Nullable
 	private StringValueResolver valueResolver;
 
@@ -69,6 +71,13 @@ public class BeanDefinitionVisitor {
 	}
 
 
+	//各角色职责分离，符合单一职责原则
+	//通过UML类图和上面的示例可以看出来，Visitor、ConcreteVisitor、Element 、ObjectStructure，职责单一，各司其责。
+	//具有优秀的扩展性
+	//如果需要增加新的访问者，增加实现类 ConcreteVisitor 就可以快速扩展。
+	//使得数据结构和作用于结构上的操作解耦，使得操作集合可以独立变化
+	//员工属性（数据结构）和CEO、CTO访问者（数据操作）的解耦。
+	//灵活性
 	/**
 	 * Traverse the given BeanDefinition object and the MutablePropertyValues
 	 * and ConstructorArgumentValues contained in them.

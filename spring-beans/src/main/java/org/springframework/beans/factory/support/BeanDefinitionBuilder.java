@@ -24,7 +24,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 //以编程方式实例化一个BeanDefinition
-//主要目的是实现Spring2.0里的NamespaceHandler
+//主要目的是给 实现Spring2.0里的NamespaceHandler 使用的。。
 /**
  * Programmatic means of constructing
  * {@link org.springframework.beans.factory.config.BeanDefinition BeanDefinitions}

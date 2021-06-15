@@ -106,6 +106,7 @@ final class ProfilesParser {
 		return activeProfile -> Arrays.stream(profiles).anyMatch(isMatch(activeProfile));
 	}
 
+	//记住函数返回的始终是个Profiles函数接口
 	private static Profiles and(Profiles... profiles) {
 		return activeProfile -> Arrays.stream(profiles).allMatch(isMatch(activeProfile));
 	}
@@ -141,6 +142,7 @@ final class ProfilesParser {
 		@Override
 		public boolean matches(Predicate<String> activeProfiles) {
 			for (Profiles candidate : this.parsed) {
+				//Profiles函数接口
 				if (candidate.matches(activeProfiles)) {
 					return true;
 				}

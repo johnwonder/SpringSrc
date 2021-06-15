@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd" default-autowire-candidates="**">
+
+	<bean id="refBean" class="org.wonder.frame.xmlConfig.RefBean"/>
+	<bean id="refMapBean" class="org.wonder.frame.xmlConfig.MapBean" >
+
+
+		<property name="lists">
+
+			<list>
+				<value>s</value>
+				<value>s</value>
+			</list>
+		</property>
+		<property name="maps">
+			<map>
+				<entry key="list1"  >
+					<ref  bean="refBean" />
+
+				</entry>
+				<entry key="list2"  value="student4"/>
+				<entry key="list3" value="student5" />
+			</map>
+
+		</property>
+	</bean>
+</beans>

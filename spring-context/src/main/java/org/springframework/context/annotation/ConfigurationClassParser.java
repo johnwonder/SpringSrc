@@ -247,6 +247,7 @@ class ConfigurationClassParser {
 		//递归处理它的父类
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
+			//处理Configuration 类
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
