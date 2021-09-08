@@ -725,6 +725,7 @@ public abstract class AnnotationUtils {
 		AnnotationCacheKey cacheKey = new AnnotationCacheKey(clazz, annotationType);
 		A result = (A) findAnnotationCache.get(cacheKey);
 		if (result == null) {
+			//获取 接口 或者 基类的注解
 			result = findAnnotation(clazz, annotationType, new HashSet<>());
 			if (result != null && synthesize) {
 				result = synthesizeAnnotation(result, clazz);
@@ -765,13 +766,15 @@ public abstract class AnnotationUtils {
 			return null;
 		}
 
+		//获取接口中的注解
 		for (Class<?> ifc : clazz.getInterfaces()) {
 			A annotation = findAnnotation(ifc, annotationType, visited);
 			if (annotation != null) {
 				return annotation;
 			}
 		}
-
+		//获取超类中的注解
+		//@Configuration cglib超类就是raw class
 		Class<?> superclass = clazz.getSuperclass();
 		if (superclass == null || superclass == Object.class) {
 			return null;
@@ -1163,6 +1166,7 @@ public abstract class AnnotationUtils {
 				if (defaultValue != null && ObjectUtils.nullSafeEquals(attributeValue, defaultValue)) {
 					attributeValue = new DefaultValueHolder(defaultValue);
 				}
+				//放入linked hash map 中。。。
 				attributes.put(method.getName(),
 						adaptValue(annotatedElement, attributeValue, classValuesAsString, nestedAnnotationsAsMap));
 			}

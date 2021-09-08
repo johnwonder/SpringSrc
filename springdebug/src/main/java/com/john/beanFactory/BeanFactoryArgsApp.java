@@ -7,6 +7,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.ResolvableType;
 
 /**
  * Hello world!
@@ -22,12 +23,14 @@ public class BeanFactoryArgsApp
 		ListableBeanFactory listableBeanFactory = applicationContext.getBeanFactory();
 
 		//覆盖了默认的构造函数 但是必须提供两个参数，不然就找不到可用的constructor
-		Singer singer = (Singer) listableBeanFactory.getBean("singer","美国","男");
+		Singer singer = (Singer) listableBeanFactory.getBean("singer","美国","男","john");
 
 		System.out.println(singer);
 
 		//配置文件里的构造参数必须去掉或者匹配
 		System.out.println(listableBeanFactory.getBean(Singer.class));
+
+		//ResolvableType.forClass()
 	}
 
 

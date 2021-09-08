@@ -149,6 +149,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	public Resource getResource(String location) {
 		Assert.notNull(location, "Location must not be null");
 
+		//有protocolResolver 后就直接通过protocolResolver返回Resource
 		for (ProtocolResolver protocolResolver : this.protocolResolvers) {
 			Resource resource = protocolResolver.resolve(location, this);
 			if (resource != null) {
@@ -161,7 +162,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 			return getResourceByPath(location);
 		}
 		else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
-			//以classpath:开头
+			//以classpath:开头 截取classpath:后的路径
 			return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
 		}
 		else {
@@ -173,6 +174,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
 				//todo datasource.xml 这种 会 调用此处方法 2020-09-07
+				//返回一个ClassPathContextResource
 				return getResourceByPath(location);
 			}
 		}

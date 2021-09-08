@@ -16,12 +16,19 @@ public class MapperBean {
 
 
 	public SqlSessionFactory getSqlSessionFactory() {
-		return sqlSessionFactory;
+		return  (this.aqlSessionTemplate != null ? this.aqlSessionTemplate.getSqlSessionFactory() : null);
+	}
+
+
+	public void setSqlSessionFactory(SqlSessionProperty sqlSessionFactory) {
+		System.out.println("sqlSessionFactory");
+		this.aqlSessionTemplate = new SqlSessionTemplate();
+
 	}
 
 	public void setAqlSessionTemplate(SqlSessionTemplate aqlSessionTemplate) {
 
-		System.out.println("aqlSessionFactory");
+		System.out.println("aqlSessionTemplate");
 
 		if(this.aqlSessionTemplate != null)
 			System.out.println("aqlSessionFactory 已存在,会被覆盖");
@@ -29,10 +36,4 @@ public class MapperBean {
 
 	}
 
-
-	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
-		System.out.println("sqlSessionFactory");
-		this.aqlSessionTemplate = new SqlSessionTemplate();
-
-	}
 }

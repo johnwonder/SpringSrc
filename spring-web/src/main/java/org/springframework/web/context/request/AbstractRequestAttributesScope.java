@@ -42,6 +42,7 @@ public abstract class AbstractRequestAttributesScope implements Scope {
 		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
 		Object scopedObject = attributes.getAttribute(name, getScope());
 		if (scopedObject == null) {
+			//调用工厂方法获取
 			scopedObject = objectFactory.getObject();
 			attributes.setAttribute(name, scopedObject, getScope());
 			// Retrieve object again, registering it for implicit session attribute updates.

@@ -137,7 +137,7 @@ final class ConfigurationClass {
 		this.beanName = beanName;
 	}
 
-
+	//AnnotatedTypeMetadata的子接口
 	public AnnotationMetadata getMetadata() {
 		return this.metadata;
 	}

@@ -442,6 +442,12 @@ public class AnnotationUtilsTests {
 		assertNotNull(component);
 
 		AnnotationAttributes attributes = (AnnotationAttributes) getAnnotationAttributes(component);
+
+		attributes.forEach( (a,b) -> {
+
+			System.out.println(a);
+		});
+
 		assertNotNull(attributes);
 		assertEquals("value attribute: ", "webController", attributes.getString(VALUE));
 		assertEquals(Component.class, attributes.annotationType());

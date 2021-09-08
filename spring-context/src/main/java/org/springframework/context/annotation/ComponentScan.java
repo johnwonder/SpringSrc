@@ -119,6 +119,7 @@ public @interface ComponentScan {
 	 */
 	String resourcePattern() default ClassPathScanningCandidateComponentProvider.DEFAULT_RESOURCE_PATTERN;
 
+	//默认true
 	/**
 	 * Indicates whether automatic detection of classes annotated with {@code @Component}
 	 * {@code @Repository}, {@code @Service}, or {@code @Controller} should be enabled.

@@ -13,8 +13,10 @@
 <!--	<bean id="testBean" class="com.john.primary.SubTypeBean"    primary="true" />-->
 <!--	<bean id="testBean1" class="com.john.primary.SubTypeBean1" />-->
 
-
-
-		<bean id="testBean" class="com.john.primary.SubTypeBean" />
+		<bean id="testBean" class="com.john.primary.SubTypeBean"  primary="true"/>
 		<bean id="testBean1" class="com.john.primary.SubTypeBean1"/>
+
+
+	<context:component-scan base-package="com.john.primary"/>
+
 </beans>

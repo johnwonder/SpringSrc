@@ -162,6 +162,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
 			if (!this.singletonObjects.containsKey(beanName)) {
+				//() -> getEarlyBeanReference(beanName, mbd, bean)
 				this.singletonFactories.put(beanName, singletonFactory);
 				this.earlySingletonObjects.remove(beanName);
 				this.registeredSingletons.add(beanName);
@@ -209,6 +210,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		return singletonObject;
 	}
 
+	//之前是 addSingletonFactory
 	/**
 	 * Return the (raw) singleton object registered under the given name,
 	 * creating and registering a new one if none registered yet.
@@ -265,6 +267,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					//放入singletonObjects中。。
 					addSingleton(beanName, singletonObject);
 				}
 			}

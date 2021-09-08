@@ -15,4 +15,13 @@
 	<alias name="person" alias="johnperson"/>
 	<alias name="person" alias="johnperson1"/>
 
+	<!-- myBean定义为person这个bean的时候 根据type获取不到-->
+<!--	<alias name="person" alias="myBean"/>-->
+
+
+		<bean id="myBean" factory-bean="eagerBean" scope="prototype" factory-method="createMyBean">
+		</bean>
+	<!-- factory-bean本身是个FactoryBean类型 内部的EagerBean 有createMyBean方法 -->
+	<bean id="eagerBean" class="com.john.beanFactory.EagerFactoryBean">
+	</bean>
 </beans>

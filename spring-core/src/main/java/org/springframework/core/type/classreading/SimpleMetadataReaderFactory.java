@@ -25,6 +25,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
+// asm 字节码的实现
 /**
  * Simple implementation of the {@link MetadataReaderFactory} interface,
  * creating a new ASM {@link org.springframework.asm.ClassReader} for every request.

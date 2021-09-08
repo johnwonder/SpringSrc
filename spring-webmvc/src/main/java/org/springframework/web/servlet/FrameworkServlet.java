@@ -1001,6 +1001,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 		asyncManager.registerCallableInterceptor(FrameworkServlet.class.getName(), new RequestBindingInterceptor());
 
+		//初始化ContextHolder
 		initContextHolders(request, localeContext, requestAttributes);
 
 		try {

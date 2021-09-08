@@ -139,6 +139,7 @@ public class QualifierAnnotationTests {
 		assertEquals("LarryBean", person.getName());
 	}
 
+	//https://github.com/johnwonder/SpringSrc/commit/9871e94cadcd7e4898e073f74b95d7cbf2d96748
 	@Test
 	public void testQualifiedByAlias() {
 		StaticApplicationContext context = new StaticApplicationContext();

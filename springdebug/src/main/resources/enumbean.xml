@@ -6,7 +6,7 @@
 
 		<property name="ss" value="com.john.beanFactory.City.HANGZHOU"/>
 		<property name="cc" value="HANGZHOU"/>
-		<property name="city" value="City.HANGZHOU"/>
+<!--		<property name="city" value="City.HANGZHOU"/>-->
 
 	</bean>
 </beans>

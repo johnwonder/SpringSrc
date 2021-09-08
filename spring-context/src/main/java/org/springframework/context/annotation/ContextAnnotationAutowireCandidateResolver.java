@@ -27,6 +27,7 @@ import java.util.Set;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -46,6 +47,7 @@ import org.springframework.util.Assert;
  */
 public class ContextAnnotationAutowireCandidateResolver extends QualifierAnnotationAutowireCandidateResolver {
 
+	//判断是否是lazy 初始化的 如果是就返回一个代理
 	@Override
 	@Nullable
 	public Object getLazyResolutionProxyIfNecessary(DependencyDescriptor descriptor, @Nullable String beanName) {
@@ -53,12 +55,30 @@ public class ContextAnnotationAutowireCandidateResolver extends QualifierAnnotat
 	}
 
 	protected boolean isLazy(DependencyDescriptor descriptor) {
+
+		// @Autowired
+		//	public ConstructBean(@Lazy DependencyBean dependencyBean) {
+		//
+		//		bean = dependencyBean;
+		//
+		//		System.out.println("construct bean loaded");
+		//	}
 		for (Annotation ann : descriptor.getAnnotations()) {
 			Lazy lazy = AnnotationUtils.getAnnotation(ann, Lazy.class);
 			if (lazy != null && lazy.value()) {
 				return true;
 			}
 		}
+
+		//类似于这种
+//			@Autowired
+//			@Lazy
+//			public ConstructBean(DependencyBean dependencyBean) {
+//
+//					bean = dependencyBean;
+//
+//					System.out.println("construct bean loaded");
+//		    }
 		MethodParameter methodParam = descriptor.getMethodParameter();
 		if (methodParam != null) {
 			Method method = methodParam.getMethod();
@@ -76,6 +96,8 @@ public class ContextAnnotationAutowireCandidateResolver extends QualifierAnnotat
 		Assert.state(getBeanFactory() instanceof DefaultListableBeanFactory,
 				"BeanFactory needs to be a DefaultListableBeanFactory");
 		final DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) getBeanFactory();
+
+		//接口匿名类
 		TargetSource ts = new TargetSource() {
 			@Override
 			public Class<?> getTargetClass() {
@@ -87,6 +109,7 @@ public class ContextAnnotationAutowireCandidateResolver extends QualifierAnnotat
 			}
 			@Override
 			public Object getTarget() {
+				//在cglib 的  intercept 方法中会调用
 				Object target = beanFactory.doResolveDependency(descriptor, beanName, null, null);
 				if (target == null) {
 					Class<?> type = getTargetClass();
@@ -108,6 +131,8 @@ public class ContextAnnotationAutowireCandidateResolver extends QualifierAnnotat
 			public void releaseTarget(Object target) {
 			}
 		};
+
+		//构造一个代理对象
 		ProxyFactory pf = new ProxyFactory();
 		pf.setTargetSource(ts);
 		Class<?> dependencyType = descriptor.getDependencyType();

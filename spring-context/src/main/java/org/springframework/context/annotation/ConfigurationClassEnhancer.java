@@ -126,7 +126,10 @@ class ConfigurationClassEnhancer {
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
 		enhancer.setUseFactory(false);
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
+		//设置beanFactory 成员变量
 		enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
+
+		//ConditionalCallbackFilter
 		enhancer.setCallbackFilter(CALLBACK_FILTER);
 		enhancer.setCallbackTypes(CALLBACK_FILTER.getCallbackTypes());
 		return enhancer;
@@ -188,6 +191,8 @@ class ConfigurationClassEnhancer {
 			}
 		}
 
+		//https://mp.weixin.qq.com/s/xvidIGCL4mIYfGni4pq9wQ
+		//CallbackHelper
 		@Override
 		public int accept(Method method) {
 			for (int i = 0; i < this.callbacks.length; i++) {
@@ -309,6 +314,15 @@ class ConfigurationClassEnhancer {
 	 */
 	private static class BeanMethodInterceptor implements MethodInterceptor, ConditionalCallback {
 
+		/**
+		 * 代理对象方法拦截器
+		 * @param enhancedConfigInstance 代理对象
+		 * @param beanMethod 被代理的类的方法，即bean的方法
+		 * @param objects 调用方法传递的参数
+		 * @param cglibMethodProxy 方法代理对象
+		 * @return
+		 * @throws Throwable
+		 */
 		/**
 		 * Enhance a {@link Bean @Bean} method to check the supplied BeanFactory for the
 		 * existence of this bean object.

@@ -17,6 +17,6 @@ public class ConfigArgClass {
 	@Scope("prototype")
 	public Singer createSinger(String country,String gender){
 
-		return  new Singer(country,gender);
+		return  new Singer(country,gender,"");
 	}
 }

@@ -177,6 +177,7 @@ class ConfigurationClassBeanDefinitionReader {
 		}
 	}
 
+	//加载 @Bean注解的方法成为BeanDefinition
 	/**
 	 * Read the given {@link BeanMethod}, registering bean definitions
 	 * with the BeanDefinitionRegistry based on its contents.
@@ -217,7 +218,7 @@ class ConfigurationClassBeanDefinitionReader {
 			}
 			return;
 		}
-
+		//当前配置类的 BeanDefinition 2021-07-03
 		ConfigurationClassBeanDefinition beanDef = new ConfigurationClassBeanDefinition(configClass, metadata);
 		beanDef.setResource(configClass.getResource());
 		beanDef.setSource(this.sourceExtractor.extractSource(metadata, configClass.getResource()));

@@ -11,10 +11,11 @@
        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
-	<bean id="singer" class="com.john.beanFactory.Singer"  scope="prototype" >
+	<bean id="singer" class="com.john.beanFactory.Singer"  >
 
 		<constructor-arg name="country" value="中国"/>
 		<constructor-arg name="gender" index="1" value="女"/>
+		<constructor-arg name="name" index="2" value="john"/>
 
 	</bean>
 

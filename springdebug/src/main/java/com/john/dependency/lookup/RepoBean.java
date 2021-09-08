@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * @Date: 2021/1/15
  */
 //跟@Component注解的
-@Repository("lookup")
+@Repository("lookup1")
 @Lazy
 public class RepoBean  {
 

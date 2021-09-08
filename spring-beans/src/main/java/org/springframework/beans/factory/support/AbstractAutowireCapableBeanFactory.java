@@ -500,6 +500,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			// todo 调用 InstantiationAwareBeanPostProcessor 直接返回bean的代理
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -608,6 +609,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//todo important 属性值注入
 			populateBean(beanName, mbd, instanceWrapper);
 
+			//Bean Aware 接口回调阶段 - initializeBean
+			//· Bean 初始化前阶段 - initializeBean
+			//· Bean 初始化阶段 - initializeBean
+			//· Bean 初始化后阶段 - initializeBean
 			// 调用初始化方法
 			//todo 调用 Aware接口  PostProcessorBeforeInitialization PostProcessorAfterInitialization 2020-08-31
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
@@ -672,6 +677,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Override
 	@Nullable
 	protected Class<?> predictBeanType(String beanName, RootBeanDefinition mbd, Class<?>... typesToMatch) {
+		//很重要 确定目标类型 内部会判断 factory-bean 的 factory-method返回的类型
 		Class<?> targetType = determineTargetType(beanName, mbd, typesToMatch);
 
 		// Apply SmartInstantiationAwareBeanPostProcessors to predict the
@@ -704,6 +710,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected Class<?> determineTargetType(String beanName, RootBeanDefinition mbd, Class<?>... typesToMatch) {
 		Class<?> targetType = mbd.getTargetType();
 		if (targetType == null) {
+			//factory-method 不为空 那么就获取factory-method返回的类型
+			//否则再解析bean类型
 			targetType = (mbd.getFactoryMethodName() != null ?
 					getTypeForFactoryMethod(beanName, mbd, typesToMatch) :
 					resolveBeanClass(mbd, beanName, typesToMatch));
@@ -738,6 +746,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Class<?> factoryClass;
 		boolean isStatic = true;
 
+		//当前beandefinition的factoryBeanName  不为空 那么 就是实例方法
 		String factoryBeanName = mbd.getFactoryBeanName();
 		if (factoryBeanName != null) {
 			if (factoryBeanName.equals(beanName)) {
@@ -746,6 +755,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			// Check declared factory method return type on factory class.
 			factoryClass = getType(factoryBeanName);
+
 			isStatic = false;
 		}
 		else {
@@ -762,12 +772,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Can't clearly figure out exact method due to type converting / autowiring!
 		Class<?> commonType = null;
 		Method uniqueCandidate = null;
+		//获取beanDefinition的构造函数参数个数
 		int minNrOfArgs =
 				(mbd.hasConstructorArgumentValues() ? mbd.getConstructorArgumentValues().getArgumentCount() : 0);
 		Method[] candidates = this.factoryMethodCandidateCache.computeIfAbsent(
 				factoryClass, ReflectionUtils::getUniqueDeclaredMethods);
 
+		//遍历factoryclass的方法列表
 		for (Method candidate : candidates) {
+
 			if (Modifier.isStatic(candidate.getModifiers()) == isStatic && mbd.isFactoryMethod(candidate) &&
 					candidate.getParameterCount() >= minNrOfArgs) {
 				// Declared type variables to inspect?
@@ -872,6 +885,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				BeanDefinition fbDef = getBeanDefinition(factoryBeanName);
 				if (fbDef instanceof AbstractBeanDefinition) {
 					AbstractBeanDefinition afbDef = (AbstractBeanDefinition) fbDef;
+					//判断 beanClass 属性 是否是Class 对象
 					if (afbDef.hasBeanClass()) {
 						Class<?> result = getTypeForFactoryBeanFromMethod(afbDef.getBeanClass(), factoryMethodName);
 						if (result != null) {
@@ -888,6 +902,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
+		//为了获取 调用getObjectType
 		// Let's obtain a shortcut instance for an early getObjectType() call...
 		FactoryBean<?> fb = (mbd.isSingleton() ?
 				getSingletonFactoryBeanForTypeCheck(beanName, mbd) :
@@ -1206,8 +1221,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
+		//有多个构造函数的话 这里会根据@Autowired 注解 选取构造函数
 		//todo 如果 autowireMode 是 AUTOWIRE_CONSTRUCTOR 肯定会调用 autowireConstructor 2020-1-11
 		// Candidate constructors for autowiring?
+		//1. 检测到的构造函数不为空
+		//2. bean注入模式为 autowire_constructor
+		//3. bean有构造函数参数值列表
+		//4. 有显示参数
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args))  {
@@ -1554,6 +1574,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		Set<String> autowiredBeanNames = new LinkedHashSet<>(4);
 		//属性值
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
+		//遍历属性值
 		for (String propertyName : propertyNames) {
 			try {
 				PropertyDescriptor pd = bw.getPropertyDescriptor(propertyName);
@@ -1884,6 +1905,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			invokeAwareMethods(beanName, bean);
 		}
 
+		//Multiple lifecycle mechanisms configured for the same bean, with different initialization methods, are called as follows:
+		//
+		//1.Methods annotated with @PostConstruct
+		//2. afterPropertiesSet() as defined by the InitializingBean callback interface
+		//3. custom configured init() method
 		//todo 调用@PostConstruct 等方法 2020-11-03
 		//https://blog.csdn.net/qq_40697071/article/details/102130375
 		Object wrappedBean = bean;
@@ -1905,7 +1931,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		return wrappedBean;
 	}
-
+	//Bean 自身 实现了BeanNameAware BeanClassLoaderAware BeanFactoryAware 接口
 	private void invokeAwareMethods(final String beanName, final Object bean) {
 		if (bean instanceof Aware) {
 			if (bean instanceof BeanNameAware) {
@@ -1960,6 +1986,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
+		//file:///Users/zhangjiong/code/spring-framework/build/asciidoc/html5/core.html#beans-factory-lifecycle-default-init-destroy-methods
 		if (mbd != null && bean.getClass() != NullBean.class) {
 			String initMethodName = mbd.getInitMethodName();
 			//todo 没有实现isInitializingBean 或者 方法名字不是afterPropertiesSet

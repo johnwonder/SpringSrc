@@ -56,6 +56,7 @@ import org.springframework.util.Assert;
 //https://blog.csdn.net/qq_34190023/article/details/80879382
 public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContext {
 
+	//返回的Resource接口集合
 	@Nullable
 	private Resource[] configResources;
 
@@ -210,7 +211,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	 */
 	public ClassPathXmlApplicationContext(String[] paths, Class<?> clazz, @Nullable ApplicationContext parent)
 			throws BeansException {
-
+		//通过super传递parent
 		super(parent);
 		Assert.notNull(paths, "Path array must not be null");
 		Assert.notNull(clazz, "Class argument must not be null");

@@ -83,6 +83,7 @@ import org.springframework.util.ObjectUtils;
 @SuppressWarnings("serial")
 class CglibAopProxy implements AopProxy, Serializable {
 
+	//cglib 回调 的数组索引常量
 	// Constants for CGLIB callback array indices
 	private static final int AOP_PROXY = 0;
 	private static final int INVOKE_TARGET = 1;
@@ -100,6 +101,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 	private static final Map<Class<?>, Boolean> validatedClasses = new WeakHashMap<>();
 
 
+	//一般是 ProxyFactory 对象
 	/** The configuration used to configure this proxy. */
 	protected final AdvisedSupport advised;
 
@@ -167,6 +169,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 			Assert.state(rootClass != null, "Target class must be available for creating a CGLIB proxy");
 
 			Class<?> proxySuperClass = rootClass;
+			//判断是否已经是cglib代理类
 			if (ClassUtils.isCglibProxyClass(rootClass)) {
 				proxySuperClass = rootClass.getSuperclass();
 				Class<?>[] additionalInterfaces = rootClass.getInterfaces();
@@ -193,6 +196,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 			enhancer.setStrategy(new ClassLoaderAwareUndeclaredThrowableStrategy(classLoader));
 
+			//获取回调列表
 			Callback[] callbacks = getCallbacks(rootClass);
 			Class<?>[] types = new Class<?>[callbacks.length];
 			for (int x = 0; x < types.length; x++) {
@@ -390,7 +394,9 @@ class CglibAopProxy implements AopProxy, Serializable {
 			// if the target sets a reference to itself in another returned object.
 			returnValue = proxy;
 		}
+		//判断返回类型
 		Class<?> returnType = method.getReturnType();
+		//如果返回值为空 但是返回类型为基础类型 那么就报错
 		if (returnValue == null && returnType != Void.TYPE && returnType.isPrimitive()) {
 			throw new AopInvocationException(
 					"Null return value from advice does not match primitive return type for: " + method);
@@ -449,6 +455,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
 			Object oldProxy = null;
 			try {
+				//设置当前代理类到ThreadLocal中
 				oldProxy = AopContext.setCurrentProxy(proxy);
 				Object retVal = methodProxy.invoke(this.target, args);
 				return processReturnType(proxy, this.target, method, retVal);
@@ -659,6 +666,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 			this.advised = advised;
 		}
 
+		//https://mp.weixin.qq.com/s/UBE9CqASb-i9sRt715ckGA
+		//MethodProxy 方法代理对象 ,可以用于调用被代理类中的方法
 		@Override
 		@Nullable
 		public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
@@ -676,6 +685,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 				target = targetSource.getTarget();
 				Class<?> targetClass = (target != null ? target.getClass() : null);
 
+				//filter里也会获取一遍 用于判断
 				//获取到拦截链 2021-04-27
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
@@ -690,6 +700,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 					retVal = methodProxy.invoke(target, argsToUse);
 				}
 				else {
+					//todo 调用proceed方法 2021-08-24
 					// We need to create a method invocation...
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
@@ -846,10 +857,13 @@ class CglibAopProxy implements AopProxy, Serializable {
 			Class<?> targetClass = this.advised.getTargetClass();
 			// Proxy is not yet available, but that shouldn't matter.
 			List<?> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
+			//如果interceptors 列表不为空
 			boolean haveAdvice = !chain.isEmpty();
+
 			boolean exposeProxy = this.advised.isExposeProxy();
 			boolean isStatic = this.advised.getTargetSource().isStatic();
 			boolean isFrozen = this.advised.isFrozen();
+			//如果有advice 或者 没有冻结
 			if (haveAdvice || !isFrozen) {
 				// If exposing the proxy, then AOP_PROXY must be used.
 				if (exposeProxy) {

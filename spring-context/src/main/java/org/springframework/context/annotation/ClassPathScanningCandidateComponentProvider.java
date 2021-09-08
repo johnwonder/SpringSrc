@@ -416,6 +416,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
+			//类路径
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
 			Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
@@ -427,7 +428,10 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				}
 				if (resource.isReadable()) {
 					try {
+						//todo 返回新的一个SimpleMetadataReader 2021-08-19
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
+
+						//@Component @ComponentScan @Import @ImportResource
 						if (isCandidateComponent(metadataReader)) {
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setResource(resource);

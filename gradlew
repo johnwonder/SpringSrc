@@ -12,6 +12,8 @@
 # PRG即为源程序。源程序是文本文件
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
+# https://www.cnblogs.com/fhefh/archive/2011/04/15/2017613.html
+# $0 Shell本身的文件名
 PRG="$0"
 # Need this for relative symlinks.
 while [ -h "$PRG" ] ; do
@@ -72,8 +74,10 @@ esac
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
 # Determine the Java command to use to start the JVM.
+#[ -n STRING ] or [ STRING ]  “STRING” 的长度为非零 non-zero则为真
 if [ -n "$JAVA_HOME" ] ; then
     if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+      # [ -x FILE ]  如果 FILE 存在且是可执行的则为真。
         # IBM's JDK on AIX uses strange locations for the executables
         JAVACMD="$JAVA_HOME/jre/sh/java"
     else
@@ -171,6 +175,8 @@ eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS "\"-Dorg.gradle.appname=$A
 
 # by default we should be in the correct project dir, but when run from Finder on Mac, the cwd is wrong
 if [ "$(uname)" = "Darwin" ] && [ "$HOME" = "$PWD" ]; then
+  #shell脚本中使用比较多的是
+  #cd `dirname $0`命令。这个命令的含义是 返回这个脚本文件放置的目录，并可以根据这个目录来定位所要运行程序的相对位置（绝对位置除外）。
   cd "$(dirname "$0")"
 fi
 

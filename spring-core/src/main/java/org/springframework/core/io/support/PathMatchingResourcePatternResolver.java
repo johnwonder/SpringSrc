@@ -54,6 +54,8 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
+//ResourcePatternResolver接口的实现，
+//可以解析指定的资源路径 为 一个或多个匹配资源。
 /**
  * A {@link ResourcePatternResolver} implementation that is able to resolve a
  * specified resource location path into one or more matching Resources.
@@ -306,7 +308,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/") + 1 :
 					locationPattern.indexOf(':') + 1);
 
-			//*通配符或者? 号
+			//判断截取前缀后是否有 *通配符或者? 号
 			if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
 				// a file pattern
 				return findPathMatchingResources(locationPattern);
@@ -357,6 +359,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		Enumeration<URL> resourceUrls = (cl != null ? cl.getResources(path) : ClassLoader.getSystemResources(path));
 		while (resourceUrls.hasMoreElements()) {
 			URL url = resourceUrls.nextElement();
+			//封装成一个URLResource返回
 			result.add(convertClassLoaderURL(url));
 		}
 		if ("".equals(path)) {
@@ -509,18 +512,27 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 * @see org.springframework.util.PathMatcher
 	 */
 	protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {
+		//探测根目录，比如classpath*:spring-bean*.xml 就返回classpath*:
 		String rootDirPath = determineRootDir(locationPattern);
+		//
 		String subPattern = locationPattern.substring(rootDirPath.length());
 
+		//又回调到getResources方法
 		//如果带上相对路径，那么会返回带resources目录并且带上父目录的资源路径
+		//如果rootDirPath:
+		//会带上classpath*:
 		Resource[] rootDirResources = getResources(rootDirPath);
 		Set<Resource> result = new LinkedHashSet<>(16);
 		for (Resource rootDirResource : rootDirResources) {
 			rootDirResource = resolveRootDirResource(rootDirResource);
 
 			//https://blog.csdn.net/zhangshk_/article/details/82704010
+			//1。如果是单个文件
 			//todo 如果不是相对路径 直接用诸如spring-config*.xml的话 会直接返回代表classes目录下的资源文件路径，导致找不到 2021-1-13
 			//调用ClassPathResource的 getURL  方法
+			//内部调用classLoader.getResource方法
+
+			//2。如果是classPath* 模式 那么 是 URLResource
 			URL rootDirUrl = rootDirResource.getURL();
 			if (equinoxResolveMethod != null && rootDirUrl.getProtocol().startsWith("bundle")) {
 				URL resolvedUrl = (URL) ReflectionUtils.invokeMethod(equinoxResolveMethod, null, rootDirUrl);
@@ -561,6 +573,18 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		int prefixEnd = location.indexOf(':') + 1;
 		int rootDirEnd = location.length();
 		while (rootDirEnd > prefixEnd && getPathMatcher().isPattern(location.substring(prefixEnd, rootDirEnd))) {
+			//fromIndex是指从当前索引往前推
+			//比如classpath*:/WEB-INF/*.xml 就找最后一个/ 的索引  返回找到的索引+1
+			//返回的end 是 之前的end -1
+
+			//classpath*:***//输出 classpath*:
+			//classpath*://*//*a输出 classpath*://
+			//classpath*:/* 输出 classpath*:/
+
+			//classpath*:*/ 输出 classpath*:
+
+			//classpath*://*//*a.xm 如果是rootDirEnd -1 就会死循环
+			//classpath*:/*/*a.xm 如果是rootDirEnd -1 也会死循环
 			rootDirEnd = location.lastIndexOf('/', rootDirEnd - 2) + 1;
 		}
 		if (rootDirEnd == 0) {

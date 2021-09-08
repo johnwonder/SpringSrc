@@ -20,5 +20,7 @@ public class StringJoinerDemo {
 		sj.add("john");
 
 		System.out.println(sj.toString());
+
+
 	}
 }

@@ -12,6 +12,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.ResolvableType;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Hello world!
  *
@@ -26,7 +30,7 @@ public class ObjectProviderBeanFactoryApp
 		BeanFactory beanFactory = applicationContext.getBeanFactory();
 
 		//根据类型直接获取
-		System.out.println("根据类型获取:" +beanFactory.getBean(IndexService.class));
+		//System.out.println("根据类型获取:" +beanFactory.getBean(IndexService.class));
 
 		//根据名称获取bean
 		System.out.println("根据名称获取:" +beanFactory.getBean("article"));
@@ -34,11 +38,28 @@ public class ObjectProviderBeanFactoryApp
 		//竟然输出org.springframework.beans.factory.support.DefaultListableBeanFactory$1@2d38eb89
 		System.out.println("获取到的BeanProvider为："+beanFactory.getBeanProvider(ArticleService.class));
 
-		//如果有效就会输出
-		System.out.println("BeanProvider有效后输出 ："+beanFactory.getBeanProvider(ArticleService.class).getIfAvailable());
 
-		ObjectProvider<ResolvableType> articleResolvableType = beanFactory.getBeanProvider(ResolvableType.forType(ArticleService.class));
-		System.out.println("article的ResolvableType为："+articleResolvableType.getIfAvailable());
+		//如果有效就会输出
+		//System.out.println("BeanProvider有效后输出 ："+beanFactory.getBeanProvider(ArticleService.class).getIfAvailable());
+
+		//ObjectProvider<Object> 可以向 ObjectProvider<ArticleService> 转型/。。
+		ObjectProvider<ArticleService> articleResolvableType = beanFactory.getBeanProvider(ResolvableType.forType(ArticleService.class));
+
+		for (ArticleService articleService : articleResolvableType.stream().collect(Collectors.toList())) {
+
+			System.out.println(articleService);
+
+		}
+		//https://blog.csdn.net/doncoder/article/details/90734268
+		//https://www.cnblogs.com/c-c-c-c/p/9176464.html
+		//编译没问题 运行报错了。
+		List<Integer> list = getList();
+		for (Integer integer : list) {
+			System.out.println(integer);
+		}
+
+		//Object obj = new ArticleService();
+		//ArticleService articleService  = (ArticleService) obj;
 
 		//输出article bean的类型
 		System.out.println(beanFactory.getType("article"));
@@ -66,6 +87,13 @@ public class ObjectProviderBeanFactoryApp
 		System.out.println("article 是否匹配 IndexService类型："+beanFactory.isTypeMatch("article", IndexService.class));
 
 
+	}
+
+	private  static <T>  List<T> getList(){
+
+    	List<T> tList = new ArrayList<>();
+    	tList.add((T)Boolean.TRUE);
+    	return  tList;
 	}
 
 

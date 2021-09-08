@@ -10,9 +10,12 @@
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-	<bean id="index" class="com.john.applicationContext.IndexService" autowire="constructor">
-	</bean>
+<!--	<bean id="index" class="com.john.applicationContext.IndexService" autowire="constructor">-->
+<!--	</bean>-->
 	<bean id="article" class="com.john.applicationContext.ArticleService">
 	</bean>
-
+	<bean id="article1" class="com.john.applicationContext.ArticleService">
+	</bean>
+	<bean id="article3" class="com.john.applicationContext.ArticleService">
+	</bean>
 </beans>

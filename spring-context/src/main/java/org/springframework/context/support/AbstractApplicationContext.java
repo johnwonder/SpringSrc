@@ -231,6 +231,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
+		// 获取资源模式解析器
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -563,6 +564,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				//通过PostProcessorRegistrationDelegate
 				//todo 执行完这个后 PropertyPlaceholderConfigurer 存入了 singleObjects 2020-09-12
 				//todo 此时定义的beandefinition 放入了 map中 2020-09-22
+				//bean还没实例化
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.

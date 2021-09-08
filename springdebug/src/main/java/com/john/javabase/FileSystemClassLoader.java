@@ -32,7 +32,7 @@ public class FileSystemClassLoader extends ClassLoader{
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(location);
-			byte[] buffer = new byte[4096];
+			byte[] buffer = new byte[0];
 			int readLen = 0;
 			while( (readLen = fis.read(buffer)) != -1 ) {
 				baos.write(buffer, 0, readLen);

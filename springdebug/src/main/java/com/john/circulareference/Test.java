@@ -13,7 +13,7 @@ public class Test {
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
 
-		System.out.println(applicationContext.getBean(X.class));
+		//System.out.println(applicationContext.getBean(Y.class));
 
 	}
 }

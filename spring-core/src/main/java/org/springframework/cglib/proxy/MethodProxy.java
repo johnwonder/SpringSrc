@@ -201,6 +201,9 @@ public class MethodProxy {
 		}
 	}
 
+	//如果obj不是代理对象,则相当于直接调用原对象的method1
+	//否则在就是调用动态代理类的method1方法, 会在其中再次调用拦截器
+	//https://blog.csdn.net/psd0503/article/details/107116881/
 	/**
 	 * Invoke the original method, on a different object of the same type.
 	 * @param obj the compatible object; recursion will result if you use the object passed as the first

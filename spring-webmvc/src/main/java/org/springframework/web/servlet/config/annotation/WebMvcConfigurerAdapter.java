@@ -36,6 +36,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
  * @deprecated as of 5.0 {@link WebMvcConfigurer} has default methods (made
  * possible by a Java 8 baseline) and can be implemented directly without the
  * need for this adapter
+ * 默认方法有个好处 就是实现类不必要实现每个方法。。。2021-08-26
  */
 @Deprecated
 public abstract class WebMvcConfigurerAdapter implements WebMvcConfigurer {

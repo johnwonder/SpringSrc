@@ -14,10 +14,10 @@ public class InstanceFactoryMethodInjectionDemo {
 		ClassPathXmlApplicationContext ac =new ClassPathXmlApplicationContext();
 		ac.setConfigLocations("spring-config-instance-factory.xml");
 		ac.refresh();
-		System.out.println(ac.getBean("instanceCar"));
+		//System.out.println(ac.getBean("instanceCar"));
 		//System.out.println(ac.getBean("car1"));
 
-		System.out.println(ac.getBean("&carFactory"));
+		//System.out.println(ac.getBean("&carFactory"));
 
 
 	}

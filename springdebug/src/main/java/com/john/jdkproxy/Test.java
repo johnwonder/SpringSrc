@@ -7,6 +7,7 @@ package com.john.jdkproxy;
  */
 public class Test {
 
+	//https://ytao.top/2020/04/05/20-java-proxy
 	//https://www.cnblogs.com/qlqwjy/p/7550609.html
 	//https://blog.csdn.net/f641385712/article/details/89362021
 	//spring aop

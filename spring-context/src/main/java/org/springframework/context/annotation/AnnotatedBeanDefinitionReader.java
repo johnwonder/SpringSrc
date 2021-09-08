@@ -229,7 +229,7 @@ public class AnnotatedBeanDefinitionReader {
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		abd.setScope(scopeMetadata.getScopeName());
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
-
+		//这里也会处理Primary注解
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {

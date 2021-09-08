@@ -16,6 +16,8 @@ public class AopTest1 {
 	public static void main(String[] args) {
 
 		//代理工厂
+		//实例化的时候会默认调用父类ProxyCreatorSupport的 构造函数
+		//实例化一个 this.aopProxyFactory = new DefaultAopProxyFactory();
 		ProxyFactory proxyFactory = new ProxyFactory(new FundsService());
 		//添加一个方法前置通知，判断用户名不是“路人”的时候，抛出非法访问异常
 		proxyFactory.addAdvice((MethodBeforeAdvice) (method, args1, target) -> {

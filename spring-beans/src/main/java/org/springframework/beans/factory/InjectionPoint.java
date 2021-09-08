@@ -121,6 +121,7 @@ public class InjectionPoint {
 		if (this.field != null) {
 			Annotation[] fieldAnnotations = this.fieldAnnotations;
 			if (fieldAnnotations == null) {
+				//根据反射获取成员变量的注解
 				fieldAnnotations = this.field.getAnnotations();
 				this.fieldAnnotations = fieldAnnotations;
 			}

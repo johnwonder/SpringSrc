@@ -112,6 +112,7 @@ public abstract class ClassUtils {
 
 
 	static {
+		//包装类型和原始类型的映射关系
 		primitiveWrapperTypeMap.put(Boolean.class, boolean.class);
 		primitiveWrapperTypeMap.put(Byte.class, byte.class);
 		primitiveWrapperTypeMap.put(Character.class, char.class);
@@ -130,10 +131,12 @@ public abstract class ClassUtils {
 
 		Set<Class<?>> primitiveTypes = new HashSet<>(32);
 		primitiveTypes.addAll(primitiveWrapperTypeMap.values());
+		//往primitiveTypes添加原始类型的数组类型
 		Collections.addAll(primitiveTypes, boolean[].class, byte[].class, char[].class,
 				double[].class, float[].class, int[].class, long[].class, short[].class);
 		primitiveTypes.add(void.class);
 		for (Class<?> primitiveType : primitiveTypes) {
+			//原始类型的名称和类型的映射关系
 			primitiveTypeNameMap.put(primitiveType.getName(), primitiveType);
 		}
 
@@ -180,6 +183,7 @@ public abstract class ClassUtils {
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader cl = null;
 		try {
+			//先获取当前线程上下文的加载器
 			cl = Thread.currentThread().getContextClassLoader();
 		}
 		catch (Throwable ex) {
@@ -273,6 +277,8 @@ public abstract class ClassUtils {
 			clToUse = getDefaultClassLoader();
 		}
 		try {
+			//https://www.cnblogs.com/jimoer/p/9185662.html
+			//如果ClassLoader不为空就通过ClassLoader去加载
 			return (clToUse != null ? clToUse.loadClass(name) : Class.forName(name));
 		}
 		catch (ClassNotFoundException ex) {
@@ -551,6 +557,11 @@ public abstract class ClassUtils {
 		return false;
 	}
 
+	////返回false
+	//		System.out.println(Boolean.class.isPrimitive());
+	//
+	//		//返回true
+	//System.out.println(boolean.class.isPrimitive());
 	/**
 	 * Determine if the given type is assignable from the given value,
 	 * assuming setting by reflection. Considers primitive wrapper classes

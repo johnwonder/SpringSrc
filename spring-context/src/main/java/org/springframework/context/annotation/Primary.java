@@ -73,6 +73,11 @@ import java.lang.annotation.Target;
  * component-scanning is being used. If a {@code @Primary}-annotated class is
  * declared via XML, {@code @Primary} annotation metadata is ignored, and
  * {@code <bean primary="true|false"/>} is respected instead.
+ * 因为allowBeanDefinitionOverriding 默认为true,所以xml 比 注解 后注册的时候会覆盖 通过注解注册的相同名字的bean
+ * 反过来 如果通过注解后注册的话 因为会通过 ClassPathBeanDefinitionScanner#checkCandidate 判断是否存在形同名字的beandefinition，
+ * 判断有的话就不会再注册
+ * 所以这里会这么说
+ * <ComponentScan/>
  *
  * @author Chris Beams
  * @author Juergen Hoeller

@@ -1,86 +1,56 @@
 [[beans]]
-= The IoC Container
+= IOC容器
 
-This chapter covers Spring's Inversion of Control (IoC) container.
+本章介绍Spring的控制反转（IoC）容器。
 
 
 
 [[beans-introduction]]
-== Introduction to the Spring IoC Container and Beans
+== Spring IOC容器和Beans的介绍
 
-This chapter covers the Spring Framework implementation of the Inversion of Control
-(IoC) principle. (See <<overview.adoc#background-ioc,Inversion of Control>>.) IoC
-is also known as dependency injection (DI). It is a process whereby objects define
-their dependencies (that is, the other objects they work with) only through constructor
-arguments, arguments to a factory method, or properties that are set on the object
-instance after it is constructed or returned from a factory method. The container then
-injects those dependencies when it creates the bean. This process is fundamentally
-the inverse (hence the name, Inversion of Control) of the bean itself
-controlling the instantiation or location of its dependencies by using direct
-construction of classes or a mechanism such as the Service Locator pattern.
+本章涵盖了Spring框架对控制反转(IOC)原则的实现。(参考<<overview.adoc#background-ioc,控制反转>>.)
+IOC也被叫做依赖注入(DI)。这是一个过程，其中对象仅通过构造函数参数、工厂方法的参数，
+从工厂方法返回或被构造函数调用后在对象实例上设置的属性来定义它们的依赖项（即，它们使用的其他对象）。
+然后容器在创建 bean 时注入这些依赖项。这个过程基本上是 bean 本身的逆过程（因此得名，控制反转），
+通过使用类的直接构造或诸如服务定位器模式(Service Locator pattern)之类的机制来控制其依赖项的实例化或位置。
 
-The `org.springframework.beans` and `org.springframework.context` packages are the basis
-for Spring Framework's IoC container. The
-{api-spring-framework}/beans/factory/BeanFactory.html[`BeanFactory`]
-interface provides an advanced configuration mechanism capable of managing any type of
-object.
-{api-spring-framework}/context/ApplicationContext.html[`ApplicationContext`]
-is a sub-interface of `BeanFactory`. It adds:
-* Easier integration with Spring's AOP features
-* Message resource handling (for use in internationalization)
-* Event publication
-* Application-layer specific contexts such as the `WebApplicationContext`
-for use in web applications.
+`org.springframework.beans` and `org.springframework.context` 这两个包是Spring框架IOC容器的基础。
+{api-spring-framework}/beans/factory/BeanFactory.html[`BeanFactory`] 接口提供能够管理任何类型对象的高级配置机制。
+{api-spring-framework}/context/ApplicationContext.html[`ApplicationContext`] 是`BeanFactory`的子接口。
+它添加了以下特性:
+* 跟Spring AOP特性的简单集成
+* 处理国际化
+* 事件发布
+* 应用层特定上下文，比如用于web应用的`WebApplicationContext`
 
-In short, the `BeanFactory` provides the configuration framework and basic
-functionality, and the `ApplicationContext` adds more enterprise-specific functionality.
-The `ApplicationContext` is a complete superset of the `BeanFactory` and is used
-exclusively in this chapter in descriptions of Spring's IoC container. For more
-information on using the `BeanFactory` instead of the `ApplicationContext,` see
-<<beans-beanfactory>>.
+简单来说，`BeanFactory`提供配置框架和一些基础功能，`ApplicationContext`添加更多的企业级能力。
+ `ApplicationContext`是`BeanFactory`的完整超集，本章会专门使用它来阐述Spring IOC容器。
+ 关于更多使用`BeanFactory`替换`ApplicationContext,`的悉尼下，可以参考<<beans-beanfactory>>。
 
-In Spring, the objects that form the backbone of your application and that are managed
-by the Spring IoC container are called beans. A bean is an object that is
-instantiated, assembled, and otherwise managed by a Spring IoC container. Otherwise, a
-bean is simply one of many objects in your application. Beans, and the dependencies
-among them, are reflected in the configuration metadata used by a container.
-
-
+在 Spring 中，构成应用程序主干并由 Spring IoC 容器管理的对象称为 bean。 bean 是由 Spring IoC 容器实例化、组装和管理的对象。
+否则，bean 只是应用程序中众多对象之一。 Bean 以及它们之间的依赖关系反映在容器使用的配置元数据中。
 
 
 [[beans-basics]]
-== Container Overview
+== 容器概述
 
-The `org.springframework.context.ApplicationContext` interface represents the Spring IoC
-container and is responsible for instantiating, configuring, and assembling the
-beans. The container gets its instructions on what objects to
-instantiate, configure, and assemble by reading configuration metadata. The
-configuration metadata is represented in XML, Java annotations, or Java code. It lets
-you express the objects that compose your application and the rich interdependencies
-between those objects.
+`org.springframework.context.ApplicationContext`接口可以代表 Spring IoC 容器，它负责实例化、配置和组装 bean。
+容器通过读取配置元数据获取有关实例化、配置和组装哪些对象的指令。配置元数据可以用 XML、Java 注解或 Java 代码表示。
+它可以让您表达组成应用程序的对象以及这些对象之间丰富的相互依赖关系。
 
-Several implementations of the `ApplicationContext` interface are supplied
-with Spring. In stand-alone applications, it is common to create an
-instance of
+Spring 提供了 ApplicationContext 接口的几种实现。在独立的应用程序中，创建一个
 {api-spring-framework}/context/support/ClassPathXmlApplicationContext.html[`ClassPathXmlApplicationContext`]
-or {api-spring-framework}/context/support/FileSystemXmlApplicationContext.html[`FileSystemXmlApplicationContext`].
-While XML has been the traditional format for defining configuration metadata, you can
-instruct the container to use Java annotations or code as the metadata format by
-providing a small amount of XML configuration to declaratively enable support for these
-additional metadata formats.
+或者 {api-spring-framework}/context/support/FileSystemXmlApplicationContext.html[`FileSystemXmlApplicationContext`]
+实例是很常见的。虽然 XML 一直是定义配置元数据的传统格式，但您可以通过提供少量 XML 配置来声明性地启用对这些附加元数据格式的支持，
+从而指示容器使用 Java 注释或代码作为元数据格式(比如<context:component-scan>)。
 
-In most application scenarios, explicit user code is not required to instantiate one or
-more instances of a Spring IoC container. For example, in a web application scenario, a
-simple eight (or so) lines of boilerplate web descriptor XML in the `web.xml` file
-of the application typically suffices (see <<context-create>>). If you use the
-https://spring.io/tools/sts[Spring Tool Suite] (an Eclipse-powered development
-environment), you can easily create this boilerplate configuration with a few mouse clicks or
-keystrokes.
+在大多数应用场景中，不需要显式的用户代码来实例化一个或多个 Spring IoC 容器实例。
+例如，在 Web 应用程序场景中，应用程序的 `web.xml` 文件中的简单八行（左右）样板 Web 描述符 XML 通常就足够了。
+如果你使用https://spring.io/tools/sts[Spring Tool Suite] (an Eclipse-powered development environment)，
+您只需点击几下鼠标或击键即可轻松创建此样板配置。
 
-The following diagram shows a high-level view of how Spring works. Your application classes
-are combined with configuration metadata so that, after the `ApplicationContext` is
-created and initialized, you have a fully configured and executable system or
-application.
+下图显示了 Spring 如何工作的高级视图。您的应用程序类与配置元数据相结合，
+以便在“ApplicationContext”创建和初始化之后，您就有了一个完全配置且可执行的系统或应用程序。
 
 .The Spring IoC container
 image::images/container-magic.png[]
@@ -88,13 +58,16 @@ image::images/container-magic.png[]
 
 
 [[beans-factory-metadata]]
-=== Configuration Metadata
+=== 配置元数据
 
+如上图所示，Spring IoC 容器使用一种形式的配置元数据。
+此配置元数据表示您作为应用程序开发人员如何告诉 Spring 容器实例化、配置和组装应用程序中的对象
 As the preceding diagram shows, the Spring IoC container consumes a form of
 configuration metadata. This configuration metadata represents how you, as an
 application developer, tell the Spring container to instantiate, configure, and assemble
 the objects in your application.
 
+配置元数据传统上以简单直观的 XML 格式提供，这是本章的大部分内容用于传达 Spring IoC 容器的关键概念和特性。
 Configuration metadata is traditionally supplied in a simple and intuitive XML format,
 which is what most of this chapter uses to convey key concepts and features of the
 Spring IoC container.

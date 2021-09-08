@@ -637,6 +637,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	@Bean
 	public FormattingConversionService mvcConversionService() {
 		FormattingConversionService conversionService = new DefaultFormattingConversionService();
+		//传入conversionService
 		addFormatters(conversionService);
 		return conversionService;
 	}

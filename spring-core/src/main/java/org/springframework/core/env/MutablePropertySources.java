@@ -43,6 +43,9 @@ import org.springframework.lang.Nullable;
  */
 public class MutablePropertySources implements PropertySources {
 
+	//https://baijiahao.baidu.com/s?id=1648624077736116382&wfr=spider&for=pc
+	//https://www.cnblogs.com/takumicx/p/9338983.html
+
 	//https://baijiahao.baidu.com/s?id=1636057331750965212&wfr=spider&for=pc
 //	优点
 //	对于一些读多写少的数据，这种做法的确很不错，例如配置、黑名单、物流地址等变化非常少的数据，这是一种无锁的实现。可以帮我们实现程序更高的并发。

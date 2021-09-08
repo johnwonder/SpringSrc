@@ -126,6 +126,7 @@ public class AnnotationAwareOrderComparator extends OrderComparator {
 	 * @see java.util.List#sort(java.util.Comparator)
 	 */
 	public static void sort(List<?> list) {
+		//通过调用自身，因为自身也是一个Comparator
 		if (list.size() > 1) {
 			list.sort(INSTANCE);
 		}

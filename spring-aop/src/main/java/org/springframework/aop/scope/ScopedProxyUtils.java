@@ -68,6 +68,8 @@ public abstract class ScopedProxyUtils {
 		proxyDefinition.getPropertyValues().add("targetBeanName", targetBeanName);
 		if (proxyTargetClass) {
 			targetDefinition.setAttribute(AutoProxyUtils.PRESERVE_TARGET_CLASS_ATTRIBUTE, Boolean.TRUE);
+
+			//ScopedProxyFactoryBean 的 proxyTargetClass 属性默认是true
 			// ScopedProxyFactoryBean's "proxyTargetClass" default is TRUE, so we don't need to set it explicitly here.
 		}
 		else {

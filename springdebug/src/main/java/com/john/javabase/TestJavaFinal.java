@@ -18,5 +18,8 @@ public class TestJavaFinal {
 		JavaFinalClass.finalMap.put("john","wonder"); //right
 
 		System.out.println(JavaFinalClass.finalMap);
+
+		//true
+		System.out.println((Object.class instanceof Class));
 	}
 }

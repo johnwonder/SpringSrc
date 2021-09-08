@@ -252,6 +252,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 
 		doScan(basePackages);
 
+		//默认是true
 		// Register annotation config processors, if necessary.
 		if (this.includeAnnotationConfig) {
 			AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
@@ -272,6 +273,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
 		for (String basePackage : basePackages) {
+			//findCandidateComponents内部会扫描
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
 				//todo 会合并scope属性 2021-04-16 比如 RequestScope  就会默认给scope加上 ProxyMode = targetClass
@@ -281,7 +283,10 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				if (candidate instanceof AbstractBeanDefinition) {
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
 				}
+				//todo 比如 @Component 类上标注了 @Lazy注解等。
+				//AnnotatedBeanDefinition
 				if (candidate instanceof AnnotatedBeanDefinition) {
+					//内部会处理@Primary注解
 					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
 				}
 				if (checkCandidate(beanName, candidate)) {
@@ -323,6 +328,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	}
 
 
+	//检测候选bean是否需要注册 或者 和现有bean 定义冲突
 	/**
 	 * Check the given candidate's bean name, determining whether the corresponding
 	 * bean definition needs to be registered or conflicts with an existing definition.
@@ -335,6 +341,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 * bean definition has been found for the specified name
 	 */
 	protected boolean checkCandidate(String beanName, BeanDefinition beanDefinition) throws IllegalStateException {
+		//判断是否有这个BeanDefinition了，没有就返回true。
 		if (!this.registry.containsBeanDefinition(beanName)) {
 			return true;
 		}
@@ -343,6 +350,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		if (originatingDef != null) {
 			existingDef = originatingDef;
 		}
+		//新的bean定义是否 和现有的bean定义兼容
+		//现有定义 不是  ScannedGenericBeanDefinition 就返回true
 		if (isCompatible(beanDefinition, existingDef)) {
 			return false;
 		}

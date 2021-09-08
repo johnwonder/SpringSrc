@@ -8,6 +8,26 @@ package com.john.javabase.iface;
 public interface Instrument {
 }
 
-class Wind{
+abstract  class Wind implements  IParentDefaultMethod{
 
+	//不加public会报错
+	public  abstract String getName();
+}
+
+interface IParentDefaultMethod {
+
+	String getName();
+}
+
+
+interface DefaultMethodInterface extends IParentDefaultMethod  {
+
+	////默认方法与接口抽象方法定义相同:默认方法会优先于接口抽象方法,接口定义的方法会被忽略;
+	//？？？
+	//https://www.cnblogs.com/yanbinfeng1995/p/13826126.html
+	 default String getName(){
+		return  "john";
+	}
+
+	//String getName();
 }

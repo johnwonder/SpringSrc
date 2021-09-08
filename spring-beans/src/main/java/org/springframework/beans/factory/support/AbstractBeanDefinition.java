@@ -64,6 +64,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public static final String SCOPE_DEFAULT = "";
 
+	//AutowireCapableBeanFactory 接口里定义的常量
 	/**
 	 * Constant that indicates no autowiring at all.
 	 * @see #setAutowireMode

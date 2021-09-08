@@ -13,6 +13,7 @@ public class ImportRegistrarDemo {
 
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 
+		//ImportConfig 变成 AnnotatedGenericBeanDefinition
 		applicationContext.register(ImportConfig.class);
 
 		//不刷新还会报错。。

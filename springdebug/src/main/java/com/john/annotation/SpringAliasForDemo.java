@@ -37,5 +37,8 @@ public class SpringAliasForDemo {
 		MyAliasAnnotation aliasAnnotation1 = AnnotatedElementUtils.findMergedAnnotation(MySubAnnotationClass.class.getMethod("one"), MyAliasAnnotation.class);
 		logic.accept(aliasAnnotation1);
 
+
+		//Java Annotation
+		//https://blog.csdn.net/shihlei/article/details/84914268
 	}
 }

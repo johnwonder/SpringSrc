@@ -144,9 +144,11 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	 * @param result the resulting aliases list
 	 */
 	private void retrieveAliases(String name, List<String> result) {
+		//递归 遍历名称 把别名放进集合
 		this.aliasMap.forEach((alias, registeredName) -> {
 			if (registeredName.equals(name)) {
 				result.add(alias);
+				//继续遍历 以别名为名称去查找
 				retrieveAliases(alias, result);
 			}
 		});
@@ -162,6 +164,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	public void resolveAliases(StringValueResolver valueResolver) {
 		Assert.notNull(valueResolver, "StringValueResolver must not be null");
 		synchronized (this.aliasMap) {
+			//拷贝一个新的别名集合 以供遍历使用
 			Map<String, String> aliasCopy = new HashMap<>(this.aliasMap);
 			aliasCopy.forEach((alias, registeredName) -> {
 				String resolvedAlias = valueResolver.resolveStringValue(alias);
@@ -190,6 +193,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 					this.aliasMap.put(resolvedAlias, resolvedName);
 				}
 				else if (!registeredName.equals(resolvedName)) {
+					//这种情况下 别名 跟解析过的别名一致，所以只需更新解析过的名称即可
 					this.aliasMap.put(alias, resolvedName);
 				}
 			});

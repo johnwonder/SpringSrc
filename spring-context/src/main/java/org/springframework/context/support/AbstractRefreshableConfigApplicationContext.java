@@ -93,6 +93,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 
 			this.configLocations = new String[locations.length];
 			for (int i = 0; i < locations.length; i++) {
+				//调用抽象父类 AbstractRefreshableConfigApplicationContext 的  resolvePath方法
 				this.configLocations[i] = resolvePath(locations[i]).trim();
 			}
 		}

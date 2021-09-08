@@ -1560,6 +1560,8 @@ public class BeanDefinitionParserDelegate {
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				//例如<aop:scoped-proxy>
+				//返回装饰过的BeanDefinition
 				finalDefinition = decorateIfRequired(node, finalDefinition, containingBd);
 			}
 		}

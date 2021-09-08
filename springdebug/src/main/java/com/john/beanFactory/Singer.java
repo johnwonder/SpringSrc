@@ -10,9 +10,10 @@ public class Singer {
 
 	}
 
-	public Singer(String country,String gender) {
+	public Singer(String country,String gender,String name) {
 		this.country = country;
 		this.gender =gender;
+		this.name =name;
 	}
 
 	public String getName() {

@@ -248,18 +248,23 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
 		//就像BeanFactory接口中getBean方法javadoc中说的 转换为对应的规范的Bean名称
-		//先会尝试去别名集合里去查找是否是别名
+		//第一步： 先会尝试去别名集合里去查找是否是别名
 		//Translates aliases back to the corresponding canonical bean name.
 		final String beanName = transformedBeanName(name);
+		//声明一个object类型的bean局部变量
 		Object bean;
 
 		// Eagerly(赶紧) check singleton cache for manually registered singletons.
+		//第二步：  尝试通过getSingleton 看看能否获取到 该bean名称的对应单例bean
 		//todo getSingleton 2020-08-30
 		Object sharedInstance = getSingleton(beanName);
+
+		//
 		//args参数是为了创建一个新的对象 所以 不为null 的时候 就直接走else了
 		//todo sharedInstance不为空 有两种情况
 		// 1. 就是 singletonObjects 2. 还是  earlySingletonObjects
 		if (sharedInstance != null && args == null) {
+
 			if (logger.isTraceEnabled()) {
 				if (isSingletonCurrentlyInCreation(beanName)) {
 					logger.trace("Returning eagerly cached instance of singleton bean '" + beanName +
@@ -269,21 +274,26 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
+
+			//如果获取到了该单例Bean 且 传入的bean参数为空 , 那就再调用getObjectForBeanInstance
 			//用于FactoryBean的 getObject方法处理
-			//已经获取到单例了。。
+			//此时已经获取到单例了。。
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
 		else {
+			//
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
 			if (isPrototypeCurrentlyInCreation(beanName)) {
+				//此处的意思是 如果两个bean是prototype 且 有 循环引用会导致创建失败
+				//其中一个不是prototype 就不会抛出此异常 2021-06-19
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
 			// Check if bean definition exists in this factory.
 			BeanFactory parentBeanFactory = getParentBeanFactory();
-			//todo 如果存在父工厂 那么 当前工厂再 不存在bean的话 才会去检查父工厂 2020-11-09 2021-02-09
+			//todo 如果存在父工厂 且 当前工厂 不存在bean名称对应的beandefinition的话 才会去检查父工厂 2020-11-09 2021-02-09
 			//BeanFactory接口中：Will ask the parent factory if the bean cannot be found in this factory instance
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -358,6 +368,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					////todo 如果有单例那直接返回了 ， args参数也就没啥用处了 2020-08-30
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							//创建bean开始
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -376,6 +387,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					Object prototypeInstance = null;
 					try {
 						beforePrototypeCreation(beanName);
+						//创建bean开始
 						prototypeInstance = createBean(beanName, mbd, args);
 					}
 					finally {
@@ -395,6 +407,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						throw new IllegalStateException("No Scope registered for scope name '" + scopeName + "'");
 					}
 					try {
+						//调用scope接口的get方法
+						//比如RequestScope-> AbstractRequestAttributesScope
 						Object scopedInstance = scope.get(beanName, () -> {
 							beforePrototypeCreation(beanName);
 							try {
@@ -543,6 +557,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	@Override
 	public boolean isTypeMatch(String name, ResolvableType typeToMatch) throws NoSuchBeanDefinitionException {
+
 		String beanName = transformedBeanName(name);
 
 		// Check manually registered singletons.
@@ -613,6 +628,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 		}
 
+		//会调用AbstractAutowireCapableBeanFactory重载的predictBeanType方法
 		Class<?> beanType = predictBeanType(beanName, mbd, typesToMatch);
 		if (beanType == null) {
 			return false;
@@ -620,7 +636,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 		// Check bean class whether we're dealing with a FactoryBean.
 		if (FactoryBean.class.isAssignableFrom(beanType)) {
+
 			if (!BeanFactoryUtils.isFactoryDereference(name) && beanInstance == null) {
+				//如果是获取真正的bean那么会进入 2021-07-25
 				// If it's a FactoryBean, we want to look at what it creates, not the factory class.
 				beanType = getTypeForFactoryBean(beanName, mbd);
 				if (beanType == null) {
@@ -640,6 +658,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 		ResolvableType resolvableType = mbd.targetType;
 		if (resolvableType == null) {
+			//直接获取beandefinition的 factoryMethodReturnType
 			resolvableType = mbd.factoryMethodReturnType;
 		}
 		if (resolvableType != null && resolvableType.resolve() == beanType) {
@@ -654,9 +673,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return isTypeMatch(name, ResolvableType.forRawClass(typeToMatch));
 	}
 
+	//BeanFactory 接口
 	@Override
 	@Nullable
 	public Class<?> getType(String name) throws NoSuchBeanDefinitionException {
+		//转换成正规bean 名称 会去别名集合里去找别名
 		String beanName = transformedBeanName(name);
 
 		// Check manually registered singletons.
@@ -967,6 +988,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	public void registerScope(String scopeName, Scope scope) {
 		Assert.notNull(scopeName, "Scope identifier must not be null");
 		Assert.notNull(scope, "Scope must not be null");
+		//不能替换singleton 和prototype
 		if (SCOPE_SINGLETON.equals(scopeName) || SCOPE_PROTOTYPE.equals(scopeName)) {
 			throw new IllegalArgumentException("Cannot replace existing scopes 'singleton' and 'prototype'");
 		}
@@ -1605,6 +1627,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	protected boolean isFactoryBean(String beanName, RootBeanDefinition mbd) {
 		//todo predictBeanType 会调用子类 AbstractAutowireCapableBeanFactory的predictBeanType方法 2021-1-18
+		//所以能获取到是否是FactoryBean类型  2021-07-25
 		Class<?> beanType = predictBeanType(beanName, mbd, FactoryBean.class);
 		return (beanType != null && FactoryBean.class.isAssignableFrom(beanType));
 	}
@@ -1630,6 +1653,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			return null;
 		}
 		try {
+			//获取factorybean本身。。。
 			FactoryBean<?> factoryBean = doGetBean(FACTORY_BEAN_PREFIX + beanName, FactoryBean.class, null, true);
 			return getTypeForFactoryBean(factoryBean);
 		}

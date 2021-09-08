@@ -617,6 +617,7 @@ public abstract class ReflectionUtils {
 	 */
 	public static Method[] getUniqueDeclaredMethods(Class<?> leafClass) {
 		final List<Method> methods = new ArrayList<>(32);
+		//会去接口或者父类获取方法
 		doWithMethods(leafClass, method -> {
 			boolean knownSignature = false;
 			Method methodBeingOverriddenWithCovariantReturnType = null;
@@ -626,6 +627,7 @@ public abstract class ReflectionUtils {
 					// Is this a covariant return type situation?
 					if (existingMethod.getReturnType() != method.getReturnType() &&
 							existingMethod.getReturnType().isAssignableFrom(method.getReturnType())) {
+						//方法被协变返回类型覆盖
 						methodBeingOverriddenWithCovariantReturnType = existingMethod;
 					}
 					else {

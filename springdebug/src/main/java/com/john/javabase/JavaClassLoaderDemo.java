@@ -23,6 +23,8 @@ public class JavaClassLoaderDemo {
 			Class cls2 = fscl2.loadClass("com.john.javabase.ClassLoaderObj");
 			System.out.println("class1: " + cls1);
 			System.out.println("class2: " + cls2);
+
+			//输出不相等。。
 			System.out.println("class1 == class2? " + (cls1 == cls2));
 		} catch (Exception e) {
 			e.printStackTrace();

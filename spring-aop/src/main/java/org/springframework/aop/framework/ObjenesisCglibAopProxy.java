@@ -84,6 +84,7 @@ class ObjenesisCglibAopProxy extends CglibAopProxy {
 			}
 		}
 
+		//cglib类 实现了Factory接口
 		((Factory) proxyInstance).setCallbacks(callbacks);
 		return proxyInstance;
 	}

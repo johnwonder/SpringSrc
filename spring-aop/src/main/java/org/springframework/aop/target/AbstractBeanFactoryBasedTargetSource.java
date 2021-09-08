@@ -182,6 +182,10 @@ public abstract class AbstractBeanFactoryBasedTargetSource implements TargetSour
 				ObjectUtils.nullSafeEquals(this.targetBeanName, otherTargetSource.targetBeanName));
 	}
 
+	//1。如果两个对象equals，Java运行时环境会认为他们的hashcode一定相等。
+	//2、如果两个对象不equals，他们的hashcode有可能相等。
+	//1。如果两个对象hashcode相等，他们不一定equals。
+	//2。如果两个对象hashcode不相等，他们一定不equals
 	@Override
 	public int hashCode() {
 		int hashCode = getClass().hashCode();

@@ -127,12 +127,14 @@ class ConstructorResolver {
 		ArgumentsHolder argsHolderToUse = null;
 		Object[] argsToUse = null;
 
+		//explicitArgs 为显式参数
 		if (explicitArgs != null) {
 			argsToUse = explicitArgs;
 		}
 		else {
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
+				//获取已经解析过的构造函数或者 factorymethod
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
 				if (constructorToUse != null && mbd.constructorArgumentsResolved) {
 					// Found a cached constructor...
@@ -188,10 +190,12 @@ class ConstructorResolver {
 			ConstructorArgumentValues resolvedValues = null;
 
 			int minNrOfArgs;
+			////explicitArgs 为显式参数
 			if (explicitArgs != null) {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
+				//todo 获取bean定义里本来就有的构造参数 2021-06-25
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);

@@ -51,8 +51,10 @@ public class ProxyFactory extends ProxyCreatorSupport {
 	 */
 	public ProxyFactory(Object target) {
 		//设置目标对象
+		//todo ProxyFactory 继承自 AdvisedSupport 类的 targetSource 成员变量
 		setTarget(target);
 		//获取目标对象的所有接口
+		//先清空interfaces集合 然后加到interfaces arrayList中。。
 		setInterfaces(ClassUtils.getAllInterfaces(target));
 	}
 

@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Import;
 //https://blog.csdn.net/tales522/article/details/89736753
 
 //https://www.cnblogs.com/duanxz/p/4875153.html
+////https://blog.csdn.net/zknxx/article/details/78388862 全注解开发
 /**
  * Adding this annotation to an {@code @Configuration} class imports the Spring MVC
  * configuration from {@link WebMvcConfigurationSupport}, e.g.:

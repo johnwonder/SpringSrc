@@ -32,6 +32,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+//https://blog.csdn.net/m0_37055174/article/details/99956750
 /**
  * Convenient proxy factory bean for scoped objects.
  *
@@ -67,6 +68,7 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 	private Object proxy;
 
 
+	//todo 默认设置为代理类 不是代理接口
 	/**
 	 * Create a new ScopedProxyFactoryBean instance.
 	 */
@@ -90,10 +92,13 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 		}
 		ConfigurableBeanFactory cbf = (ConfigurableBeanFactory) beanFactory;
 
+		//1.给scopedTargetSource设置beanFactory
 		this.scopedTargetSource.setBeanFactory(beanFactory);
 
+		//定一个代理工厂
 		ProxyFactory pf = new ProxyFactory();
 		pf.copyFrom(this);
+		//第三步
 		pf.setTargetSource(this.scopedTargetSource);
 
 		Assert.notNull(this.targetBeanName, "Property 'targetBeanName' is required");
@@ -116,6 +121,7 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 		// itself is not subject to auto-proxying! Only its target bean is.
 		pf.addInterface(AopInfrastructureBean.class);
 
+		//通过ProxyFactory返回代理
 		this.proxy = pf.getProxy(cbf.getBeanClassLoader());
 	}
 

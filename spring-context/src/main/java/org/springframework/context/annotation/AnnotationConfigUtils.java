@@ -253,10 +253,12 @@ public abstract class AnnotationConfigUtils {
 	//处理常用 beanDefinition注解
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
+		//@Bean方法标注有@Lazy注解那么就会采用@Bean方法上的@Lazy注解
 		if (lazy != null) {
 			abd.setLazyInit(lazy.getBoolean("value"));
 		}
 		else if (abd.getMetadata() != metadata) {
+			//todo @Configuration 上标注的Lazy注解
 			lazy = attributesFor(abd.getMetadata(), Lazy.class);
 			if (lazy != null) {
 				abd.setLazyInit(lazy.getBoolean("value"));

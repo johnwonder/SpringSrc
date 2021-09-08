@@ -42,6 +42,7 @@ import org.springframework.util.ResourceUtils;
 //资源的加载则由 ResourceLoader 来统一定义
 public interface ResourceLoader {
 
+	//标示是个ClassPathResource
 	/** Pseudo URL prefix for loading from the class path: "classpath:". */
 	String CLASSPATH_URL_PREFIX = ResourceUtils.CLASSPATH_URL_PREFIX;
 

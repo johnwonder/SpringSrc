@@ -27,6 +27,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 
+//通过标准反射实现的注解元信息
 /**
  * {@link AnnotationMetadata} implementation that uses standard reflection
  * to introspect a given {@link Class}.

@@ -17,7 +17,7 @@ public class AopTest2 {
 		proxyFactory.addAdvice(new SendMsgThrowsAdvice());
 		//通过代理工厂创建代理
 		FundsService proxy = (FundsService) proxyFactory.getProxy();
-		//调用代理的方法
+		//调用代理的方法 //抛出异常 调用SendMsgThrowsAdvice
 		proxy.cashOut("路人", 2000);
 	}
 }

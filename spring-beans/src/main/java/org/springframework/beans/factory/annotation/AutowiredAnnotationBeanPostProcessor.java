@@ -120,6 +120,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	//被解析的自动装配注解类型集合
 	private final Set<Class<? extends Annotation>> autowiredAnnotationTypes = new LinkedHashSet<>(4);
 
 	private String requiredParameterName = "required";
@@ -300,6 +301,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 						else if (primaryConstructor != null) {
 							continue;
 						}
+						//找到@Autowired标注的构造函数
 						AnnotationAttributes ann = findAutowiredAnnotation(candidate);
 						if (ann == null) {
 							Class<?> userClass = ClassUtils.getUserClass(beanClass);
@@ -375,8 +377,11 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 	@Override
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
+
+		//找到注入到元数据  比如@Autowired注解到成员变量
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
+			//开始注入
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (BeanCreationException ex) {
@@ -423,6 +428,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
 		// Quick check on the concurrent map first, with minimal locking.
 		InjectionMetadata metadata = this.injectionMetadataCache.get(cacheKey);
+		//metadata为空 或者目标类型不等于当前类型
 		if (InjectionMetadata.needsRefresh(metadata, clazz)) {
 			synchronized (this.injectionMetadataCache) {
 				metadata = this.injectionMetadataCache.get(cacheKey);
@@ -430,7 +436,9 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
+					//内部找到@Autowired注解的成员或者方法
 					metadata = buildAutowiringMetadata(clazz);
+					//放入缓存
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}
 			}
@@ -438,13 +446,18 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		return metadata;
 	}
 
+	//通过 clazz.getSuperClass 会去寻找父类
+	//返回一个InjectionMetadata实例
+	//里面是AutowiredFieldElement
 	private InjectionMetadata buildAutowiringMetadata(final Class<?> clazz) {
 		List<InjectionMetadata.InjectedElement> elements = new ArrayList<>();
 		Class<?> targetClass = clazz;
 
+		//通过 clazz.getSuperClass 会去寻找父类
 		do {
 			final List<InjectionMetadata.InjectedElement> currElements = new ArrayList<>();
 
+			//todo 查询成员变量上是否标注了@Autowired注解
 			ReflectionUtils.doWithLocalFields(targetClass, field -> {
 				AnnotationAttributes ann = findAutowiredAnnotation(field);
 				if (ann != null) {
@@ -456,6 +469,9 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 						return;
 					}
 					boolean required = determineRequiredStatus(ann);
+					//找到后加入currElements 集合
+					//AutowiredFieldElement
+					//一个field 一个 AutowiredFieldElement
 					currElements.add(new AutowiredFieldElement(field, required));
 				}
 			});
@@ -489,9 +505,12 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			});
 
 			elements.addAll(0, currElements);
+
+			//todo 会去寻找父类
 			targetClass = targetClass.getSuperclass();
 		}
 		while (targetClass != null && targetClass != Object.class);
+
 
 		return new InjectionMetadata(clazz, elements);
 	}
@@ -569,6 +588,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	}
 
 
+	//@Autowired成员变量
 	/**
 	 * Class representing injection information about an annotated field.
 	 */
@@ -594,10 +614,12 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				value = resolvedCachedArgument(beanName, this.cachedFieldValue);
 			}
 			else {
+				//构造一个DependencyDescriptor
 				DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
 				desc.setContainingClass(bean.getClass());
 				Set<String> autowiredBeanNames = new LinkedHashSet<>(1);
 				Assert.state(beanFactory != null, "No BeanFactory available");
+				//从beanFactory获取类型转换器
 				TypeConverter typeConverter = beanFactory.getTypeConverter();
 				try {
 					//todo 不允许循环依赖的情况下 会报错 2020-09-01
@@ -629,12 +651,14 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			}
 			if (value != null) {
 				ReflectionUtils.makeAccessible(field);
+				//设置成员变量
 				field.set(bean, value);
 			}
 		}
 	}
 
 
+	//方法注入的实现
 	/**
 	 * Class representing injection information about an annotated method.
 	 */
@@ -672,6 +696,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				TypeConverter typeConverter = beanFactory.getTypeConverter();
 				for (int i = 0; i < arguments.length; i++) {
 					MethodParameter methodParam = new MethodParameter(method, i);
+					//new 一个 方法参数的dependencyDescriptor
 					DependencyDescriptor currDesc = new DependencyDescriptor(methodParam, this.required);
 					currDesc.setContainingClass(bean.getClass());
 					descriptors[i] = currDesc;

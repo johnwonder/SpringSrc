@@ -5,5 +5,9 @@ package com.john.lazy;
  * @Author: johnwonder
  * @Date: 2021/6/15
  */
-public class LayAnnotaionDemo {
+public class Bean2 {
+
+	public Bean2() {
+		System.out.println("Bean2初始化");
+	}
 }

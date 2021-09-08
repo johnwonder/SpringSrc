@@ -9,6 +9,18 @@ public class JavaByteDemo {
 
 	public static void main(String[] args) {
 
+		//https://segmentfault.com/q/1010000000437587
+		//计算机可以通过补码，正确地运算二进制减法。
+		//
+		//我们再来用 3+(-2) 来验证一下。
+		// 正数 3 的补码仍然是 0000…0011，
+		// -2 的补码是 1111…1110，两者相加，最后得到了正确的结果 1 的二进制。
+
+		//https://blog.csdn.net/weixin_39669638/article/details/114127119
+		//byte，即字节，由8位的二进制组成。
+		// 在Java中，byte类型的数据是8位带符号的二进制数。
+		//在计算机中，8位带符号二进制数的取值范围是[-128, 127]，所以在Java中，byte类型的取值范围也是[-128, 127]。
+
 		//https://www.cnblogs.com/zhang188660586/p/9752394.html
 		//https://www.cnblogs.com/545018520xq/articles/6744933.html
 		//https://www.cnblogs.com/zl181015/archive/2004/01/13/9435035.html

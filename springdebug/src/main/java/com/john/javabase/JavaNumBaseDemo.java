@@ -27,5 +27,24 @@ public class JavaNumBaseDemo {
 		Format orFormat =new DecimalFormat("##,###.00");
 		System.out.println(orFormat.format(Double.valueOf("100005.756")) );
 
+		int i = -2 & 3;//负数与正数 为正数 为2
+		int j = -2 % 4;//为-2
+		int ii = -5 >>> 2;
+		System.out.println(i);
+		System.out.println(j);
+		System.out.println(ii);
+
+		int m = 5 &3;
+		int n = 5 %4;
+		System.out.println(m);
+		System.out.println(n);
+
+
+		int mm = -5 &3; //
+		int nn = -5 %4;
+		System.out.println(mm); //3
+		System.out.println(nn); //-1
+		//取模不等于 与运算
+		//https://developer.aliyun.com/article/772971?spm=a2c6h.12873581.0.0.12f2322ctvooSU&groupCode=java
 	}
 }

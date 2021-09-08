@@ -1,5 +1,6 @@
 package com.john.lazy;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -14,12 +15,12 @@ import org.springframework.context.annotation.Lazy;
 @ComponentScan(basePackages = "com.example.demo.lazy")
 public class LazyConfigBean {
 	@Bean
-	public Region getRegion(){
-		return new Region();
+	public Bean1 getBean1(){
+		return new Bean1();
 	}
 
 	@Bean
-	public Country getCountry(){
-		return new Country();
+	public Bean2 getBean2(){
+		return new Bean2();
 	}
 }

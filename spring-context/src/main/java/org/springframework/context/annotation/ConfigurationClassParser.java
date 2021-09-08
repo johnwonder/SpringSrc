@@ -163,7 +163,9 @@ class ConfigurationClassParser {
 		for (BeanDefinitionHolder holder : configCandidates) {
 			BeanDefinition bd = holder.getBeanDefinition();
 			try {
+				//AnnotationConfigApplicationContext 注册的 是 AnnotatedGenericBeanDefinition
 				if (bd instanceof AnnotatedBeanDefinition) {
+					//
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
 				}
 				else if (bd instanceof AbstractBeanDefinition && ((AbstractBeanDefinition) bd).hasBeanClass()) {
@@ -182,6 +184,7 @@ class ConfigurationClassParser {
 			}
 		}
 
+		//最后处理DeferredImportSelectors
 		processDeferredImportSelectors();
 	}
 
@@ -268,6 +271,7 @@ class ConfigurationClassParser {
 			throws IOException {
 
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
+			//内嵌类
 			// Recursively process any member (nested) classes first
 			processMemberClasses(configClass, sourceClass);
 		}
@@ -294,6 +298,8 @@ class ConfigurationClassParser {
 			for (AnnotationAttributes componentScan : componentScans) {
 				//todo 配置类 有@ComponentScan注解 那么立即执行scan 2021-2-1
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
+
+				//todo 内部会 用新的 ClassPathBeanDefinitionScanner 去扫描 并会加上Filter
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if needed
@@ -311,6 +317,8 @@ class ConfigurationClassParser {
 
 		//todo 处理@Import 注解 2020-11-17
 		// Process any @Import annotations
+		//通过getImports获取到Import注解里面的类
+		//内部会处理  ImportBeanDefinitionRegistrar 接口的类
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
@@ -391,6 +399,8 @@ class ConfigurationClassParser {
 			for (MethodMetadata methodMetadata : beanMethods) {
 				if (!methodMetadata.isAbstract()) {
 					// A default method or other concrete method on a Java 8+ interface...
+					//jdk8 允许 默认方法或者 静态方法
+					//https://www.cnblogs.com/yanbinfeng1995/p/13826126.html
 					configClass.addBeanMethod(new BeanMethod(methodMetadata, configClass));
 				}
 			}
@@ -548,9 +558,11 @@ class ConfigurationClassParser {
 			for (SourceClass annotation : sourceClass.getAnnotations()) {
 				String annName = annotation.getMetadata().getClassName();
 				if (!annName.startsWith("java") && !annName.equals(Import.class.getName())) {
+					//递归获取Import
 					collectImports(annotation, imports, visited);
 				}
 			}
+			//获取Import注解里的类数组
 			imports.addAll(sourceClass.getAnnotationAttributes(Import.class.getName(), "value"));
 		}
 	}
@@ -561,18 +573,22 @@ class ConfigurationClassParser {
 		if (deferredImports == null) {
 			return;
 		}
-
+		//排序
 		deferredImports.sort(DEFERRED_IMPORT_COMPARATOR);
 		Map<Object, DeferredImportSelectorGrouping> groupings = new LinkedHashMap<>();
 		Map<AnnotationMetadata, ConfigurationClass> configurationClasses = new HashMap<>();
 
 		//todo 访问LinkedList
 		for (DeferredImportSelectorHolder deferredImport : deferredImports) {
+			//获取import 组
 			Class<? extends Group> group = deferredImport.getImportSelector().getImportGroup();
+
 			DeferredImportSelectorGrouping grouping = groupings.computeIfAbsent(
 					(group != null ? group : deferredImport),
 					key -> new DeferredImportSelectorGrouping(createGroup(group)));
+			//添加deferredImport
 			grouping.add(deferredImport);
+
 			configurationClasses.put(deferredImport.getConfigurationClass().getMetadata(),
 					deferredImport.getConfigurationClass());
 		}
@@ -608,6 +624,7 @@ class ConfigurationClassParser {
 	private void processImports(ConfigurationClass configClass, SourceClass currentSourceClass,
 			Collection<SourceClass> importCandidates, boolean checkForCircularImports) {
 
+		//import候选者
 		if (importCandidates.isEmpty()) {
 			return;
 		}
@@ -618,6 +635,7 @@ class ConfigurationClassParser {
 		else {
 			this.importStack.push(configClass);
 			try {
+				//遍历importCandidates
 				for (SourceClass candidate : importCandidates) {
 
 					//https://blog.csdn.net/everyok/article/details/81350905
@@ -628,6 +646,8 @@ class ConfigurationClassParser {
 						ImportSelector selector = BeanUtils.instantiateClass(candidateClass, ImportSelector.class);
 						ParserStrategyUtils.invokeAwareMethods(
 								selector, this.environment, this.resourceLoader, this.registry);
+
+						//deferredImportSelectors 不为空才添加到deferredImportSelectors中
 						if (this.deferredImportSelectors != null && selector instanceof DeferredImportSelector) {
 							//向LinkedList 中添加元素
 							this.deferredImportSelectors.add(

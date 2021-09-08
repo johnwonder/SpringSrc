@@ -79,6 +79,7 @@ public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	@Override
 	protected void addFormatters(FormatterRegistry registry) {
+		//最主要是传入的 FormatterRegistry
 		this.configurers.addFormatters(registry);
 	}
 

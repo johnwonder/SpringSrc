@@ -56,6 +56,9 @@ public class TestStringTokens {
 			System.out.println("============================");
 		}
 
+		//彻底弄懂Unicode编码
+		//https://blog.csdn.net/hezh1994/article/details/78899683
+
 		//Collections
 
 		//Java中的UTF-8、UTF-16编码字符所占字节数

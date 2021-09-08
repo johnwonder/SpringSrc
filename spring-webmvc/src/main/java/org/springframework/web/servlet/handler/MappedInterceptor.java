@@ -26,6 +26,8 @@ import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+//包含 HandlerInterceptor
+//代理调用 HandlerInterceptor
 /**
  * Contains and delegates calls to a {@link HandlerInterceptor} along with
  * include (and optionally exclude) path patterns to which the interceptor should apply.
@@ -163,6 +165,7 @@ public final class MappedInterceptor implements HandlerInterceptor {
 		return false;
 	}
 
+	//调用 成员interceptor的方法
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {

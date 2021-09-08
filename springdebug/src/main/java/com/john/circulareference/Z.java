@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
  * @Author: johnwonder
  * @Date: 2020/8/28
  */
-@Component
+//@Component
 public class Z implements ApplicationContextAware {
 	@Autowired
 	X x;//注入X

@@ -126,6 +126,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	 * @see org.springframework.aop.target.SingletonTargetSource
 	 */
 	public void setTarget(Object target) {
+		//默认是SingletonTargetSource
 		setTargetSource(new SingletonTargetSource(target));
 	}
 

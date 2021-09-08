@@ -61,6 +61,8 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Lazy {
 
+	//https://github.com/spring-projects/spring-framework/issues/10262
+	//Provide @Lazy annotation for use in conjunction with individual @Bean methods or at the type level to indicate default lazy behavior for entire @Configuration classes.
 	/**
 	 * Whether lazy initialization should occur.
 	 */

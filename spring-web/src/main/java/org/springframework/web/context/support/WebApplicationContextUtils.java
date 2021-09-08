@@ -182,6 +182,7 @@ public abstract class WebApplicationContextUtils {
 	public static void registerWebApplicationScopes(ConfigurableListableBeanFactory beanFactory,
 			@Nullable ServletContext sc) {
 
+		//https://blog.csdn.net/m0_37055174/article/details/99956750
 		beanFactory.registerScope(WebApplicationContext.SCOPE_REQUEST, new RequestScope());
 		beanFactory.registerScope(WebApplicationContext.SCOPE_SESSION, new SessionScope());
 		if (sc != null) {

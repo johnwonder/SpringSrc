@@ -25,7 +25,7 @@ public class BeanAutowireCandidateConfigDemo {
 
 		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory)context.getBeanFactory();
 		//实现@Priority 注解
-		beanFactory.setDependencyComparator(PriorityOrderComparator.INSTANCE);
+		//beanFactory.setDependencyComparator(PriorityOrderComparator.INSTANCE);
 		ParentBean testBean= context.getBean(ParentBean.class);
 		System.out.println(testBean);
 	}

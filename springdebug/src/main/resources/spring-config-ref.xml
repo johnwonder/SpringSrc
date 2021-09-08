@@ -48,6 +48,7 @@
 			<set>
 				<bean class="com.john.xmlconfig.TeacherConverter"/>
 				<bean class="com.john.xmlconfig.StudentConverter"/>
+				<bean class="com.john.converter.SchoolConverter"/>
 
 			</set>
 		</property>

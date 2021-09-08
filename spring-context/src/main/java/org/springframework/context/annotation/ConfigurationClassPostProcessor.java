@@ -98,6 +98,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 	private ProblemReporter problemReporter = new FailFastProblemReporter();
 
+	//当前环境
 	@Nullable
 	private Environment environment;
 
@@ -257,7 +258,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			//todo 这里beanFactory 不一定是实现了 BeanDefinitionRegistry接口
 
 			//可能是因为 ConfigurationClassPostProcessor 是由 BeanDefinitionRegistry 注册进来的把
-			//
+			// 内部会处理@Import注解导入的类等等。。。 比如ImportBeanDefinitionRegistrar接口
 			processConfigBeanDefinitions((BeanDefinitionRegistry) beanFactory);
 		}
 
@@ -360,6 +361,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 			//todo 里面会调用ConditionEvaluator
 			// todo 配置类解析阶段
+			// configCandidates  -> candidates
 			parser.parse(candidates);
 			parser.validate();
 
@@ -403,7 +405,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					alreadyParsedClasses.add(configurationClass.getMetadata().getClassName());
 				}
 				for (String candidateName : newCandidateNames) {
-					//
+					//todo 遍历新的候选bean名称 和老的bean名称 做比较 2021-08-11
 					if (!oldCandidateNames.contains(candidateName)) {
 						BeanDefinition bd = registry.getBeanDefinition(candidateName);
 						if (ConfigurationClassUtils.checkConfigurationClassCandidate(bd, this.metadataReaderFactory) &&
@@ -438,8 +440,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	public void enhanceConfigurationClasses(ConfigurableListableBeanFactory beanFactory) {
 		Map<String, AbstractBeanDefinition> configBeanDefs = new LinkedHashMap<>();
+		//遍历bean工厂的beandefinitionNames集合
 		for (String beanName : beanFactory.getBeanDefinitionNames()) {
 			BeanDefinition beanDef = beanFactory.getBeanDefinition(beanName);
+			//判断configuration 类 是否是Full模式
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef)) {
 				if (!(beanDef instanceof AbstractBeanDefinition)) {
 					throw new BeanDefinitionStoreException("Cannot enhance @Configuration bean definition '" +
@@ -460,13 +464,18 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		ConfigurationClassEnhancer enhancer = new ConfigurationClassEnhancer();
+		//遍历configBeanDefs
 		for (Map.Entry<String, AbstractBeanDefinition> entry : configBeanDefs.entrySet()) {
 			AbstractBeanDefinition beanDef = entry.getValue();
+
+			//AbstractAutoProxyCreator#shouldProxyTargetClass方法中判断
+
 			// If a @Configuration class gets proxied, always proxy the target class
 			beanDef.setAttribute(AutoProxyUtils.PRESERVE_TARGET_CLASS_ATTRIBUTE, Boolean.TRUE);
 			try {
 				//设置 用户指定的bean类的增强子类
 				// Set enhanced subclass of the user-specified bean class
+				//内部调用ClassUtils.forName
 				Class<?> configClass = beanDef.resolveBeanClass(this.beanClassLoader);
 				if (configClass != null) {
 
@@ -477,7 +486,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 							logger.trace(String.format("Replacing bean definition '%s' existing class '%s' with " +
 									"enhanced class '%s'", entry.getKey(), configClass.getName(), enhancedClass.getName()));
 						}
-						//放入BeanDefinition 的beanClass属性中
+						//把增强过的configuration 类 放入BeanDefinition 的beanClass属性中
 						beanDef.setBeanClass(enhancedClass);
 					}
 				}

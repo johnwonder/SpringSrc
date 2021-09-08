@@ -43,6 +43,7 @@ package org.springframework.aop.framework;
  */
 public interface AopProxyFactory {
 
+	//基于AOP 配置创建一个 Aop代理
 	/**
 	 * Create an {@link AopProxy} for the given AOP configuration.
 	 * @param config the AOP configuration in the form of an

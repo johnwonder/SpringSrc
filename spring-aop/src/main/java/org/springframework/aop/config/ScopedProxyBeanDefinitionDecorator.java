@@ -49,6 +49,7 @@ class ScopedProxyBeanDefinitionDecorator implements BeanDefinitionDecorator {
 			}
 		}
 
+		//
 		// Register the original bean definition as it will be referenced by the scoped proxy
 		// and is relevant for tooling (validation, navigation).
 		BeanDefinitionHolder holder =

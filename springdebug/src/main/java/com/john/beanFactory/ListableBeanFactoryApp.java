@@ -13,6 +13,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 
+import java.util.Map;
+
 /**
  * Hello world!
  *
@@ -26,6 +28,15 @@ public class ListableBeanFactoryApp
 
 		ListableBeanFactory parentBeanFactory = parentContext.getBeanFactory();
 
+		//System.out.println(parentBeanFactory.getBean(MyFactoryBean.class));
+
+		//输出Person类的 bean集合
+		//因为includeNonSingletons 为true alowEagerInit为false 但是返回的是 MyFactoryBean 本身 所以可以获取到
+		Map<String, MyFactoryBean> eagerBeans = parentBeanFactory.getBeansOfType(MyFactoryBean.class,true,false);
+		for (String s : eagerBeans.keySet()) {
+			System.out.println(eagerBeans.get(s));
+		}
+		System.out.println("----------------------");
 
 		//循环输出BeanDefinition的 名字，只获取当前BeanFactory，不考虑父子关系。
 		//DefaultListableBeanFactory

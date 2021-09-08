@@ -1,8 +1,8 @@
 package com.john.javabase.collection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import org.springframework.util.Assert;
+
+import java.util.*;
 
 /**
  * @Description: 集合添加
@@ -23,6 +23,22 @@ public class CollectionAddDemo {
 
 		//System.out.println(maxRunLength());
 
+		Set<Class<?>> annotatedClasses = new LinkedHashSet<>();
+		//annotatedClasses.add(CollectionAddDemo.class);
+		boolean c = Collections.addAll(annotatedClasses,CollectionAddDemo.class,CollectionAddDemo.class);
+		for (Class<?> annotatedClass : annotatedClasses) {
+			System.out.println(annotatedClass);
+		}
+
+		boolean b = false;
+		//boolean 类型 或运算
+		b |= c;
+		System.out.println(b);
+	}
+
+	private static void register(Set<Class<?>> classes,Class<?>... annotatedClasses) {
+		//Assert.notEmpty(annotatedClasses, "At least one annotated class must be specified");
+		Collections.addAll(classes, annotatedClasses);
 	}
 
 	private static int minRunLength(int n) {

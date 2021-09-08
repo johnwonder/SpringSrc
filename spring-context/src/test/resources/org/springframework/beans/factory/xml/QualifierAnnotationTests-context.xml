@@ -5,6 +5,7 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
+	<!--这里注册了注解 的 processor-->
 	<context:annotation-config/>
 
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -19,6 +20,7 @@
 		<property name="name" value="LarryBean"/>
 	</bean>
 
+	<!--Qualifier 会去 找到larryBean的 别名集合-->
 	<alias name="${myProp}Bean" alias="someAlias"/>
 
 	<alias name="someAlias" alias="stooge"/>

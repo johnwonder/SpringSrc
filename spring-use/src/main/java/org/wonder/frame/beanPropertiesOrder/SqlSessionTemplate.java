@@ -6,4 +6,10 @@ package org.wonder.frame.beanPropertiesOrder;
  * @Date: 2021/1/21
  */
 public class SqlSessionTemplate {
+
+	private SqlSessionFactory sqlSessionFactory;
+	public SqlSessionFactory getSqlSessionFactory(){
+
+		return  sqlSessionFactory;
+	}
 }

@@ -152,6 +152,13 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 		String beanClassName = definition.getBeanClassName();
 		Assert.state(beanClassName != null, "No bean class name set");
 		String shortClassName = ClassUtils.getShortName(beanClassName);
+
+		//Java内省 Apache BeanUtils
+		//https://www.cnblogs.com/peida/archive/2013/06/03/3090842.html
+		//https://www.cnblogs.com/peida/tag/Guava%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/
+		//Guava
+		//  * Thus "FooBah" becomes "fooBah" and "X" becomes "x", but "URL" stays
+		//     * as "URL".
 		return Introspector.decapitalize(shortClassName);
 	}
 

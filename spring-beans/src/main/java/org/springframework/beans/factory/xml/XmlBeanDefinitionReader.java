@@ -340,6 +340,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
 				InputSource inputSource = new InputSource(inputStream);
+				//设置编码
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
