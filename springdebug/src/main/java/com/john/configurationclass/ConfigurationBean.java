@@ -1,6 +1,9 @@
 package com.john.configurationclass;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -9,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date: 2021/6/28
  */
 @Configuration
+@ComponentScan
 public class ConfigurationBean implements ConfigurationInterface {
 
 	public static void main(String[] args) {
@@ -21,5 +25,21 @@ public class ConfigurationBean implements ConfigurationInterface {
 		Person p = applicationContext.getBean(Person.class);
 		System.out.println(p);
 
+	}
+
+	private AutowireBean autowireBean;
+
+	@Autowired
+	public void autowireBean(AutowireBean autowireBean){
+
+		System.out.println("autowire called");
+		this.autowireBean = autowireBean;
+	}
+
+	@Bean
+	BeanMethodBean methodBean(){
+
+		System.out.println("beanmethod called:"+this.autowireBean);
+		return new BeanMethodBean();
 	}
 }

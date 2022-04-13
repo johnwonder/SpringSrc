@@ -16,7 +16,16 @@ public class TestHashMap1 {
 	//https://blog.csdn.net/weixin_43689776/article/details/99999126
 	public static void main(String[] args) {
 
+
+
 		Map<String, String> map = new HashMap<>();
+
+		changeValue(map);
+
+		for (String s : map.keySet()) {
+			System.out.println(s);
+		}
+
 		map.put("a", "1");
 		map.put("a", "2");
 		map.put("a", "3");
@@ -48,5 +57,10 @@ public class TestHashMap1 {
 		public Demo(int num) {
 			this.num = num;
 		}
+	}
+
+	private static void changeValue(Map map){
+		map = new HashMap();
+		map.put("test","111");
 	}
 }

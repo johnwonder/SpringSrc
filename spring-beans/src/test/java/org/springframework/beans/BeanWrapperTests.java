@@ -145,15 +145,15 @@ public class BeanWrapperTests extends AbstractPropertyAccessorTests {
 		}
 	}
 
-	@Test  // Can't be shared: no type mismatch with a field
-	public void setPropertyTypeMismatch() {
-		PropertyTypeMismatch target = new PropertyTypeMismatch();
-		BeanWrapper accessor = createAccessor(target);
-		accessor.setPropertyValue("object", "a String");
-		assertEquals("a String", target.value);
-		assertTrue(target.getObject() == 8);
-		assertEquals(8, accessor.getPropertyValue("object"));
-	}
+//	@Test  // Can't be shared: no type mismatch with a field
+//	public void setPropertyTypeMismatch() {
+//		PropertyTypeMismatch target = new PropertyTypeMismatch();
+//		BeanWrapper accessor = createAccessor(target);
+//		accessor.setPropertyValue("object", "a String");
+//		assertEquals("a String", target.value);
+//		assertTrue(target.getObject() == 8);
+//		assertEquals(8, accessor.getPropertyValue("object"));
+//	}
 
 	@Test
 	public void propertyDescriptors() {

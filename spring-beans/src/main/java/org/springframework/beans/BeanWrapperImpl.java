@@ -237,11 +237,14 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 
 	@Override
 	protected BeanWrapperImpl newNestedPropertyAccessor(Object object, String nestedPath) {
+		//传入了当前实例作为父实例
 		return new BeanWrapperImpl(object, nestedPath, this);
 	}
 
 	@Override
 	protected NotWritablePropertyException createNotWritablePropertyException(String propertyName) {
+
+		//todo 牛逼 可以找出可能的属性匹配
 		PropertyMatches matches = PropertyMatches.forProperty(propertyName, getRootClass());
 		throw new NotWritablePropertyException(getRootClass(), getNestedPath() + propertyName,
 				matches.buildErrorMessage(), matches.getPossibleMatches());
@@ -310,6 +313,7 @@ public class BeanWrapperImpl extends AbstractNestablePropertyAccessor implements
 			}
 			else {
 				ReflectionUtils.makeAccessible(readMethod);
+				//getWrappedInstance 获取父类 AbstractNestablePropertyAccessor 中的 wrappedObject
 				return readMethod.invoke(getWrappedInstance(), (Object[]) null);
 			}
 		}

@@ -69,6 +69,7 @@ public class ConcurrentMapCacheManagerTests {
 
 	@Test
 	public void testStaticMode() {
+		//cacheNames不为空就是静态模式
 		ConcurrentMapCacheManager cm = new ConcurrentMapCacheManager("c1", "c2");
 		Cache cache1 = cm.getCache("c1");
 		assertTrue(cache1 instanceof ConcurrentMapCache);

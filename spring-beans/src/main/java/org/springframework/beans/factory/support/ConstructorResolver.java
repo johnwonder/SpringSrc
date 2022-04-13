@@ -102,6 +102,7 @@ class ConstructorResolver {
 	}
 
 
+	//构造器自动注入
 	/**
 	 * "autowire constructor" (with constructor arguments by type) behavior.
 	 * Also applied if explicit constructor argument values are specified,

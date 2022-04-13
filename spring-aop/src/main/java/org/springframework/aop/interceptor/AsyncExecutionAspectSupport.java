@@ -154,6 +154,7 @@ public abstract class AsyncExecutionAspectSupport implements BeanFactoryAware {
 	}
 
 
+	//https://mp.weixin.qq.com/s/ky0j0AAMriYVhHEleHcXfg
 	/**
 	 * Determine the specific executor to use when executing the given method.
 	 * Should preferably return an {@link AsyncListenableTaskExecutor} implementation.
@@ -164,8 +165,10 @@ public abstract class AsyncExecutionAspectSupport implements BeanFactoryAware {
 		AsyncTaskExecutor executor = this.executors.get(method);
 		if (executor == null) {
 			Executor targetExecutor;
+			//获取@Async注解中配置的 线程池的bean名称
 			String qualifier = getExecutorQualifier(method);
 			if (StringUtils.hasLength(qualifier)) {
+				//去Bean工厂查找Executor类型的指定qualifier名称的异步任务处理器
 				targetExecutor = findQualifiedExecutor(this.beanFactory, qualifier);
 			}
 			else {

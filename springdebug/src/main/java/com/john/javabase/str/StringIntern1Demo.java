@@ -21,5 +21,8 @@ public class StringIntern1Demo {
 
 		System.out.println(s1 == s3);// true
            System.out.println(s1 == s4);// true
+
+		//s4已经等于s1的地址了 s4为首次出现hello时候放入常量池的引用
+		System.out.println(s2 == s4 ); //false
 	}
 }

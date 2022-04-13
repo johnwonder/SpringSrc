@@ -36,6 +36,7 @@ import org.springframework.mock.web.test.MockHttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -218,7 +219,9 @@ public class ExceptionHandlerExceptionResolverTests {
 		this.resolver.setApplicationContext(ctx);
 		this.resolver.afterPropertiesSet();
 
+		//
 		IllegalAccessException ex = new IllegalAccessException();
+		//handle
 		HandlerMethod handlerMethod = new HandlerMethod(new ResponseBodyController(), "handle");
 		ModelAndView mav = this.resolver.resolveException(this.request, this.response, handlerMethod, ex);
 
@@ -384,6 +387,15 @@ public class ExceptionHandlerExceptionResolverTests {
 		public String handleException(IllegalArgumentException ex) {
 			return ClassUtils.getShortName(ex.getClass());
 		}
+
+		//直接这个处理了
+		@ExceptionHandler
+		@ResponseBody
+		public String handleException(IllegalAccessException ex) {
+			return  "sasasaadad";
+		}
+
+
 	}
 
 

@@ -268,6 +268,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		//https://www.cnblogs.com/chenhuadong12/p/14245689.html
 		//5.2版本里 @Configuration 加了 proxyBeanMethods 配置可以 不增强 就是不创建代理类
 		enhanceConfigurationClasses(beanFactory);
+		//给beanFactory添加处理ImportAware接口的能力
 		beanFactory.addBeanPostProcessor(new ImportAwareBeanPostProcessor(beanFactory));
 	}
 
@@ -290,7 +291,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 			//判断bean的属性 class名+configurationClass 是否等于full
 
-			//todo 如果已经标记到 Full和lite 的configurationclass 就略过
+			//todo 如果已经标记到 Full和lite 的配置类 就略过
 
 			//带@Configuration 注解的类就是  Full模式的
 			//带@Component @ComponentScan @Import @ImportResource 的类就是 Lite模式的
@@ -444,6 +445,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		for (String beanName : beanFactory.getBeanDefinitionNames()) {
 			BeanDefinition beanDef = beanFactory.getBeanDefinition(beanName);
 			//判断configuration 类 是否是Full模式
+			//todo configuration 类 是Full模式 才会用cglib代理
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef)) {
 				if (!(beanDef instanceof AbstractBeanDefinition)) {
 					throw new BeanDefinitionStoreException("Cannot enhance @Configuration bean definition '" +
@@ -520,6 +522,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		public Object postProcessBeforeInitialization(Object bean, String beanName)  {
 			if (bean instanceof ImportAware) {
 				ImportRegistry ir = this.beanFactory.getBean(IMPORT_REGISTRY_BEAN_NAME, ImportRegistry.class);
+				//bean.getClass() 是cglib生成的子类
 				AnnotationMetadata importingClass = ir.getImportingClassFor(bean.getClass().getSuperclass().getName());
 				if (importingClass != null) {
 					((ImportAware) bean).setImportMetadata(importingClass);

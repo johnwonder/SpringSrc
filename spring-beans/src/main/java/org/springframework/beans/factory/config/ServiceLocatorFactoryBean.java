@@ -263,6 +263,7 @@ public class ServiceLocatorFactoryBean implements FactoryBean<Object>, BeanFacto
 			throw new IllegalArgumentException("Property 'serviceLocatorInterface' is required");
 		}
 
+		//https://yanbin.blog/spring-servicelocator-pattern/
 		// Create service locator proxy.
 		this.proxy = Proxy.newProxyInstance(
 				this.serviceLocatorInterface.getClassLoader(),
@@ -369,6 +370,7 @@ public class ServiceLocatorFactoryBean implements FactoryBean<Object>, BeanFacto
 		}
 
 		private Object invokeServiceLocatorMethod(Method method, Object[] args) throws Exception {
+			//通过方法返回类型获取
 			Class<?> serviceLocatorMethodReturnType = getServiceLocatorMethodReturnType(method);
 			try {
 				String beanName = tryGetBeanName(args);
@@ -378,6 +380,7 @@ public class ServiceLocatorFactoryBean implements FactoryBean<Object>, BeanFacto
 					return beanFactory.getBean(beanName, serviceLocatorMethodReturnType);
 				}
 				else {
+					//没有名称就通过类型获取
 					// Service locator for a bean type
 					return beanFactory.getBean(serviceLocatorMethodReturnType);
 				}
@@ -395,9 +398,11 @@ public class ServiceLocatorFactoryBean implements FactoryBean<Object>, BeanFacto
 		 */
 		private String tryGetBeanName(@Nullable Object[] args) {
 			String beanName = "";
+			//一个参数的情况下会获取
 			if (args != null && args.length == 1 && args[0] != null) {
 				beanName = args[0].toString();
 			}
+			//通过serviceMappings获取
 			// Look for explicit serviceId-to-beanName mappings.
 			if (serviceMappings != null) {
 				String mappedName = serviceMappings.getProperty(beanName);

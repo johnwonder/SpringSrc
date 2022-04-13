@@ -96,6 +96,7 @@ public abstract class AbstractCacheManager implements CacheManager, Initializing
 			synchronized (this.cacheMap) {
 				cache = this.cacheMap.get(name);
 				if (cache == null) {
+					//从真正的第三方缓存中获取
 					cache = getMissingCache(name);
 					if (cache != null) {
 						cache = decorateCache(cache);

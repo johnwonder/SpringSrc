@@ -103,8 +103,10 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	public boolean hasAlias(String name, String alias) {
 		for (Map.Entry<String, String> entry : this.aliasMap.entrySet()) {
 			String registeredName = entry.getValue();
+			//别名和已经注册的名称相同的情况下
 			if (registeredName.equals(name)) {
 				String registeredAlias = entry.getKey();
+				//已经注册的别名和当前传入的名称相同 或者 继续判断 已经注册的别名 和之前传入的名称
 				if (registeredAlias.equals(alias) || hasAlias(registeredAlias, alias)) {
 					return true;
 				}

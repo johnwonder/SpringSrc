@@ -278,6 +278,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	public RequestMappingHandlerMapping requestMappingHandlerMapping() {
 		RequestMappingHandlerMapping mapping = createRequestMappingHandlerMapping();
 		mapping.setOrder(0);
+		//获取拦截器列表 加入mapping的
 		mapping.setInterceptors(getInterceptors());
 		mapping.setContentNegotiationManager(mvcContentNegotiationManager());
 		mapping.setCorsConfigurations(getCorsConfigurations());
@@ -333,6 +334,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 			addInterceptors(registry);
 			registry.addInterceptor(new ConversionServiceExposingInterceptor(mvcConversionService()));
 			registry.addInterceptor(new ResourceUrlProviderExposingInterceptor(mvcResourceUrlProvider()));
+
+			//从注册中心获取拦截器列表 2021-09-27
 			this.interceptors = registry.getInterceptors();
 		}
 		return this.interceptors.toArray();

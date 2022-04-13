@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link UriComponentsBuilder}.
@@ -932,6 +933,53 @@ public class UriComponentsBuilderTests {
 				.queryParam("sort", "another_value").build().toString();
 
 		assertEquals("http://localhost:8081/{path}?sort={sort}&sort=another_value", uri);
+	}
+
+	@Test
+		// gh-27039
+	public void expandPortAndPathWithoutSeparator() {
+		URI uri = UriComponentsBuilder
+				.fromUriString("ws://localhost:{port}{path}")
+				.buildAndExpand(7777, "/test")
+				.toUri();
+
+		assertEquals("ws://localhost:7777/test",uri.toString());
+//		//assertThat(uri.toString()).isEqualTo("ws://localhost:7777/test");
+
+
+	}
+
+	@Test
+	// gh-27039
+	public void expandPortAndPath() {
+
+		//https://github.com/Zoran0104/spring-framework/commit/f28386624ad18768ce267d0872351994f923d874
+		//https://github.com/spring-projects/spring-framework/pull/26905
+		UriComponents stringPort = UriComponentsBuilder.fromUriString("http://localhost:5000/path").build();
+		assertEquals(stringPort.getScheme(),"http");
+		assertEquals(stringPort.getHost(),"localhost");
+
+		//private static final String PORT_PATTERN =  "(\\d*(?:\\{[^/]+?\\})?)";
+		//此种情况没捕捉到端口 导致path被解析为port/path
+
+		//private static final String PORT_PATTERN = "([^/?#]*)";
+		//换成这样能解析到port 这个端口了，但是又引发了下面一个问题
+
+		assertEquals(stringPort.getPath(),"/path");
+
+
+		//java.lang.NumberFormatException: For input string: "7777/test"
+		URI uri = UriComponentsBuilder
+				.fromUriString("ws://localhost:{port}{path}")
+				.buildAndExpand(7777, "/test")
+				.toUri();
+
+		assertEquals("ws://localhost:7777/test",uri.toString());
+//		//assertThat(uri.toString()).isEqualTo("ws://localhost:7777/test");
+
+		//所以改为
+		//private static final String PORT_PATTERN = "(\\{[^}]+\\}?|[^/?#]*)";
+
 	}
 
 }

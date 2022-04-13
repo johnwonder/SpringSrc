@@ -76,6 +76,7 @@ public class ScopingTests {
 	private GenericApplicationContext createContext(Class<?> configClass) {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		if (customScope != null) {
+			//注册Scope到工厂
 			beanFactory.registerScope(SCOPE, customScope);
 		}
 		beanFactory.registerBeanDefinition("config", new RootBeanDefinition(configClass));

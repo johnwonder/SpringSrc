@@ -131,6 +131,7 @@ import org.springframework.util.ReflectionUtils;
  * @see org.springframework.context.MessageSource
  */
 //ApplicationContext的抽象实现
+//ConfigurableApplicationContext 继承了ApplicationContext接口
 public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		implements ConfigurableApplicationContext {
 
@@ -215,10 +216,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Nullable
 	private MessageSource messageSource;
 
+	//事件发布帮助类
 	/** Helper class used in event publishing. */
 	@Nullable
 	private ApplicationEventMulticaster applicationEventMulticaster;
 
+	//静态应用监听器
 	/** Statically specified listeners. */
 	private final Set<ApplicationListener<?>> applicationListeners = new LinkedHashSet<>();
 
@@ -227,6 +230,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private Set<ApplicationEvent> earlyApplicationEvents;
 
 
+	//实例化的时候就获取资源解析器
 	/**
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
@@ -289,6 +293,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.displayName;
 	}
 
+	//获取父级上下文
 	/**
 	 * Return the parent context, or {@code null} if there is no parent
 	 * (that is, this context is the root of the context hierarchy).
@@ -299,6 +304,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.parent;
 	}
 
+	//-----ConfigurableApplicationContext 接口的实现----
+
+	//设置当前上下文环境
+	//默认值通过  createEnvironment方法 来决定
+	//可以通过这个方法来替换默认值
+	//也可以通过getEnvrionment来配置（因为返回的是ConfigurableEnvironment)
+	//这些修改应该在refresh方法调用之前执行。
 	/**
 	 * Set the {@code Environment} for this application context.
 	 * <p>Default value is determined by {@link #createEnvironment()}. Replacing the
@@ -312,6 +324,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		this.environment = environment;
 	}
 
+	//以可配置的形式 返回 应用上下文的环境
 	/**
 	 * Return the {@code Environment} for this application context in configurable
 	 * form, allowing for further customization.
@@ -325,7 +338,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 		return this.environment;
 	}
-
+//-----ConfigurableApplicationContext 接口的实现----
 	/**
 	 * Create and return a new {@link StandardEnvironment}.
 	 * <p>Subclasses may override this method in order to supply
@@ -336,6 +349,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		//StandardEnvironment 构造函数 会 使他的抽象父类 也执行构造函数
 		return new StandardEnvironment();
 	}
+
 
 	/**
 	 * Return this context's internal bean factory as AutowireCapableBeanFactory,
@@ -1203,30 +1217,35 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBean(name, requiredType);
 	}
 
 	@Override
 	public Object getBean(String name, Object... args) throws BeansException {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBean(name, args);
 	}
 
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws BeansException {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBean(requiredType);
 	}
 
 	@Override
 	public <T> T getBean(Class<T> requiredType, Object... args) throws BeansException {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBean(requiredType, args);
 	}
 
 	@Override
 	public <T> ObjectProvider<T> getBeanProvider(Class<T> requiredType) {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeanProvider(requiredType);
 	}
@@ -1244,18 +1263,21 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
+		//	////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().isSingleton(name);
 	}
 
 	@Override
 	public boolean isPrototype(String name) throws NoSuchBeanDefinitionException {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().isPrototype(name);
 	}
 
 	@Override
 	public boolean isTypeMatch(String name, ResolvableType typeToMatch) throws NoSuchBeanDefinitionException {
+		//	////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().isTypeMatch(name, typeToMatch);
 	}
@@ -1279,6 +1301,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 
+	//ListableBeanFactory接口的实现
 	//---------------------------------------------------------------------
 	// Implementation of ListableBeanFactory interface
 	//---------------------------------------------------------------------
@@ -1290,34 +1313,42 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public int getBeanDefinitionCount() {
+		//getBeanFactory为自己定义的抽象方法 ，由子类负责实现
+		//获取bean工厂后再获取bean工厂的bean定义数量
 		return getBeanFactory().getBeanDefinitionCount();
 	}
 
 	@Override
 	public String[] getBeanDefinitionNames() {
+		//getBeanFactory为自己定义的抽象方法 ，由子类负责实现
+		//获取bean工厂后再获取bean工厂的bean定义名称列表
 		return getBeanFactory().getBeanDefinitionNames();
 	}
 
 	@Override
 	public String[] getBeanNamesForType(ResolvableType type) {
+		//首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeanNamesForType(type);
 	}
 
 	@Override
 	public String[] getBeanNamesForType(@Nullable Class<?> type) {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeanNamesForType(type);
 	}
 
 	@Override
 	public String[] getBeanNamesForType(@Nullable Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
 	}
 
 	@Override
 	public <T> Map<String, T> getBeansOfType(@Nullable Class<T> type) throws BeansException {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeansOfType(type);
 	}
@@ -1325,13 +1356,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public <T> Map<String, T> getBeansOfType(@Nullable Class<T> type, boolean includeNonSingletons, boolean allowEagerInit)
 			throws BeansException {
-
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeansOfType(type, includeNonSingletons, allowEagerInit);
 	}
 
 	@Override
 	public String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeanNamesForAnnotation(annotationType);
 	}
@@ -1339,7 +1371,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType)
 			throws BeansException {
-
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().getBeansWithAnnotation(annotationType);
 	}
@@ -1348,7 +1380,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Nullable
 	public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType)
 			throws NoSuchBeanDefinitionException{
-
+		////首先要确认当前工厂是否为活跃状态
 		assertBeanFactoryActive();
 		return getBeanFactory().findAnnotationOnBean(beanName, annotationType);
 	}

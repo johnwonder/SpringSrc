@@ -1260,6 +1260,7 @@ public abstract class StringUtils {
 		while (it.hasNext()) {
 			sb.append(prefix).append(it.next()).append(suffix);
 			if (it.hasNext()) {
+				//这是为了coll有多个
 				sb.append(delim);
 			}
 		}

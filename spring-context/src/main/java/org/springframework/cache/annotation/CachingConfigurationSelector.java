@@ -40,6 +40,7 @@ import org.springframework.util.StringUtils;
  */
 public class CachingConfigurationSelector extends AdviceModeImportSelector<EnableCaching> {
 
+
 	private static final String PROXY_JCACHE_CONFIGURATION_CLASS =
 			"org.springframework.cache.jcache.config.ProxyJCacheConfiguration";
 
@@ -84,6 +85,7 @@ public class CachingConfigurationSelector extends AdviceModeImportSelector<Enabl
 	 */
 	private String[] getProxyImports() {
 		List<String> result = new ArrayList<>(3);
+		//事务管理配置选择器 TransactionManagementConfigurationSelector 也会加入
 		result.add(AutoProxyRegistrar.class.getName());
 		result.add(ProxyCachingConfiguration.class.getName());
 		if (jsr107Present && jcacheImplPresent) {

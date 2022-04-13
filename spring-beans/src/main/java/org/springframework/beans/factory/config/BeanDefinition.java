@@ -21,6 +21,7 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.AttributeAccessor;
 import org.springframework.lang.Nullable;
 
+//一个BeanDefinition可以描述一个Bean实例，它有属性值，构造函数值和具体实现提供的更多信息。
 /**
  * A BeanDefinition describes a bean instance, which has property values,
  * constructor argument values, and further information supplied by
@@ -101,6 +102,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	@Nullable
 	String getParentName();
 
+	//可以在bean factory PostProcessor中获取到beandefinition 然后 修改 替换原来的class
 	/**
 	 * Specify the bean class name of this bean definition.
 	 * <p>The class name can be modified during bean factory post-processing,
@@ -163,6 +165,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 */
 	void setDependsOn(@Nullable String... dependsOn);
 
+	//返回当前bean依赖的bean名称列表
 	/**
 	 * Return the bean names that this bean depends on.
 	 */

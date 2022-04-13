@@ -220,6 +220,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	@Override
 	@Nullable
 	protected RequestMappingInfo getMappingForMethod(Method method, Class<?> handlerType) {
+		//todo 很重要获取标注 @RequestMapping注解的 方法 2021-09-26
 		RequestMappingInfo info = createRequestMappingInfo(method);
 		if (info != null) {
 			RequestMappingInfo typeInfo = createRequestMappingInfo(handlerType);
@@ -306,7 +307,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 		RequestMappingInfo.Builder builder = RequestMappingInfo
 				.paths(resolveEmbeddedValuesInPatterns(requestMapping.path()))
-				.methods(requestMapping.method())
+				.methods(requestMapping.method()) //请求方式
 				.params(requestMapping.params())
 				.headers(requestMapping.headers())
 				.consumes(requestMapping.consumes())

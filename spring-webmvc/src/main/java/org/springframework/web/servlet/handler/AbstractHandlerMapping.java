@@ -398,6 +398,10 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		//getHandler方法中先调用RequestMappingHandlerMapping的getHandlerInternal方法，根据当前请求的路径从基类AbstractHandlerMethodMapping的内部类MappingRegistry中匹配出对应的HandlerMethod然后返回
+
+		//链接：https://www.jianshu.com/p/8a5637874d3d
+
 		Object handler = getHandlerInternal(request);
 		if (handler == null) {
 			handler = getDefaultHandler();
@@ -411,8 +415,10 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			handler = obtainApplicationContext().getBean(handlerName);
 		}
 
+		//方法中接着调用getHandlerExecutionChain方法，
+		// 创建新的HandlerExecutionChain，并将配置的拦截器添加到HandlerExecutionChain上，最后返回。
 		//把handler 转换为 HandlerExecutionChain
-		//并把HandlerInterceptor 加入HandlerExecutionChain 执行链
+		//todo 并把HandlerInterceptor 加入HandlerExecutionChain 执行链
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 
 		if (logger.isTraceEnabled()) {
@@ -476,6 +482,8 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 				(HandlerExecutionChain) handler : new HandlerExecutionChain(handler));
 
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request);
+
+		//添加拦截器 2021-09-27
 		//遍历adaptedInterceptors
 		for (HandlerInterceptor interceptor : this.adaptedInterceptors) {
 			if (interceptor instanceof MappedInterceptor) {

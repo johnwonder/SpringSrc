@@ -12,6 +12,8 @@ import java.lang.reflect.Proxy;
  */
 public class ProxyClassDemo {
 
+	//这种方法跟Proxy.newInstance 异曲同工
+	//因为Proxy.newInstance内部也是通过 getProxyClass0去获取代理类，然后根据构造函数去生成一个代理实例
 	public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
 		//参考 https://ytao.top/2020/04/05/20-java-proxy

@@ -20,5 +20,8 @@ public class JavaVariableDemo {
 		String[]  strArray = new String[16];
 		//打印出16
 		System.out.println(strArray.length);
+
+		System.out.println(Integer.MAX_VALUE);
+		System.out.println(Integer.MIN_VALUE);
 	}
 }

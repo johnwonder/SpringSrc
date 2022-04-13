@@ -14,6 +14,11 @@ public class PriorityQueueDemo {
 	public static void main(String[] args) {
 
 
+		//https://zhuanlan.zhihu.com/p/78071908
+
+		//https://blog.csdn.net/h999234/article/details/84126555
+
+		//https://blog.csdn.net/fearlesslpp/article/details/88960679
 		//https://blog.csdn.net/prestigeding/category_6431121.html
 		//https://blog.csdn.net/prestigeding/article/details/53524958
 		Queue<Integer> pq = new PriorityQueue<>();
@@ -24,5 +29,8 @@ public class PriorityQueueDemo {
 		while(pq.peek()!=null){
 			System.out.println(pq.poll() + " ");
 		}
+
+		//System.arraycopy();
+
 	}
 }

@@ -21,6 +21,10 @@ public class ImportBeanFactory implements FactoryBean {
 		this.mapper = mapper;
 	}
 
+	public ImportBeanFactory() {
+//		this.mapper = mapper;
+	}
+
 	@Nullable
 	@Override
 	public Object getObject() throws Exception {

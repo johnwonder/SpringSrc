@@ -26,6 +26,8 @@ import java.lang.annotation.Target;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
+//https://mp.weixin.qq.com/s?__biz=MzI1NDY0MTkzNQ==&mid=2247486694&idx=2&sn=8f5b293ab5707b97ef16ddf553575b82&chksm=e9c35e86deb4d7909ea7adf3a0b0507204a900088e4ec56a5efc0392f9948d660e4f29e31eb0&scene=21#wechat_redirect
+//定义@ExceptionHandler @InitBinder @ModelAttribute，在多个@Controller类 之间共享
 /**
  * Specialization of {@link Component @Component} for classes that declare
  * {@link ExceptionHandler @ExceptionHandler}, {@link InitBinder @InitBinder}, or

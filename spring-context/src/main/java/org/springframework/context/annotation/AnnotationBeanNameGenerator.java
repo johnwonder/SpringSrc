@@ -75,6 +75,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 				return beanName;
 			}
 		}
+		//获取类型的短名称
 		// Fallback: generate a unique default bean name.
 		return buildDefaultBeanName(definition, registry);
 	}
@@ -91,11 +92,13 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 		String beanName = null;
 		for (String type : types) {
 			AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(amd, type);
+			//判断自身类型 或者 元注解 是否是 Stereotype
 			if (attributes != null && isStereotypeWithNameValue(type, amd.getMetaAnnotationTypes(type), attributes)) {
 				Object value = attributes.get("value");
 				if (value instanceof String) {
 					String strVal = (String) value;
 					if (StringUtils.hasLength(strVal)) {
+						//如果有不同的名称 会抛出错误
 						if (beanName != null && !strVal.equals(beanName)) {
 							throw new IllegalStateException("Stereotype annotations suggest inconsistent " +
 									"component names: '" + beanName + "' versus '" + strVal + "'");
@@ -124,6 +127,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 				annotationType.equals("javax.annotation.ManagedBean") ||
 				annotationType.equals("javax.inject.Named");
 
+		//@Component 且包含value
 		return (isStereotype && attributes != null && attributes.containsKey("value"));
 	}
 

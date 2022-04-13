@@ -50,6 +50,7 @@ public class ConcurrentMapCacheManager implements CacheManager, BeanClassLoaderA
 
 	private final ConcurrentMap<String, Cache> cacheMap = new ConcurrentHashMap<>(16);
 
+	//默认动态模式
 	private boolean dynamic = true;
 
 	private boolean allowNullValues = true;
@@ -165,6 +166,7 @@ public class ConcurrentMapCacheManager implements CacheManager, BeanClassLoaderA
 	@Nullable
 	public Cache getCache(String name) {
 		Cache cache = this.cacheMap.get(name);
+		//动态模式下会 自动床缓存
 		if (cache == null && this.dynamic) {
 			synchronized (this.cacheMap) {
 				cache = this.cacheMap.get(name);

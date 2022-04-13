@@ -44,6 +44,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
 
+	//配置混合器
 	private final WebMvcConfigurerComposite configurers = new WebMvcConfigurerComposite();
 
 
@@ -83,6 +84,7 @@ public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
 		this.configurers.addFormatters(registry);
 	}
 
+	//给registry添加Interceptors
 	@Override
 	protected void addInterceptors(InterceptorRegistry registry) {
 		this.configurers.addInterceptors(registry);

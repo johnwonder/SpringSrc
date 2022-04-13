@@ -54,7 +54,7 @@ public class JavaByteDemo {
 
 		//511的原码是111111111
 		// 11111111 表示补码 以补码保存
-		// 11111111的原码为10000001 为-1
+		// 11111111的原码为00000001 为1
 		int h = 511;
 		byte testH = (byte) h;
 		System.out.println(testH); //打印-1
@@ -75,5 +75,12 @@ public class JavaByteDemo {
 		//补码
 		//补码 到原码
 		//取反 + 1
+		int cc = 230; //1110 0110;
+		byte testCC = (byte) cc; // 相当于 1110 0110 以补码形式保存
+		System.out.println(testCC); //打印-26
+
+		int dd =241; // 1 111 0001;
+		byte testDD = (byte) dd; // 相当于 1110 0110 以补码形式保存
+		System.out.println(testDD); //打印-26
 	}
 }

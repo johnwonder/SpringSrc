@@ -163,7 +163,9 @@ public class AsyncAnnotationAdvisor extends AbstractPointcutAdvisor implements B
 	protected Pointcut buildPointcut(Set<Class<? extends Annotation>> asyncAnnotationTypes) {
 		ComposablePointcut result = null;
 		for (Class<? extends Annotation> asyncAnnotationType : asyncAnnotationTypes) {
+			//类的pointcut
 			Pointcut cpc = new AnnotationMatchingPointcut(asyncAnnotationType, true);
+			//方法的pointcut
 			Pointcut mpc = new AnnotationMatchingPointcut(null, asyncAnnotationType, true);
 			if (result == null) {
 				result = new ComposablePointcut(cpc);

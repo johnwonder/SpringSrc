@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 
 //如果在应用程序上下文中没有注册HandlerMapping bean，则BeanNameUrlHandlerMapping是默认值
+//请求到处理器的映射，如果映射成功返回一个HandlerExecutionChain对象（包含一个Handler处理器（页面控制器）对象、
+// 多个HandlerInterceptor拦截器）对象；如BeanNameUrlHandlerMapping将URL与Bean名字映射，映射成功的Bean就是此处的处理器；
 /**
  * Interface to be implemented by objects that define a mapping between
  * requests and handler objects.

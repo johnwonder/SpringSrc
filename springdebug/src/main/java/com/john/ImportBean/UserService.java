@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserService {
 
-	@Autowired
-	@Qualifier("UserMapper")
+	//@Autowired
+	//@Qualifier("UserMapper")
 	private UserMapper userMapper;
 
 //	@Autowired

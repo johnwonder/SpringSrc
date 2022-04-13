@@ -336,12 +336,14 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 				PropertyEditor editor = getCustomEditor(propertyPath, requiredType);
 				if (editor == null) {
 					List<String> strippedPaths = new ArrayList<>();
+					//todo 比如stringArray[0] 就把stringArray放入strippedPaths
 					addStrippedPropertyPaths(strippedPaths, "", propertyPath);
 
 					//遍历strppedPaths 根据strippedPath 查找 customEditor
+					//editor为空才会继续遍历
 					for (Iterator<String> it = strippedPaths.iterator(); it.hasNext() && editor == null;) {
 						String strippedPath = it.next();
-						//根据propertyPath获取自定义编辑器
+						//todo 根据propertyPath继续获取自定义编辑器
 						editor = getCustomEditor(strippedPath, requiredType);
 					}
 				}
@@ -349,6 +351,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 					return editor;
 				}
 			}
+			//牛逼 这里还会根据属性路径查找 属性类型 比如 map[key1]
 			if (requiredType == null) {
 				requiredTypeToUse = getPropertyType(propertyPath);
 			}

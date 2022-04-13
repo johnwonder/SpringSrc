@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<!--<bean id="loginService" class="com.john.LoginImpl"/>-->
+
+	<bean id="beanAbstract1" abstract="true">
+		<property name="id" value="1"/>
+		<property name="name" value="John"/>
+	</bean>
+
+	<bean id="beanAbstract" parent="beanAbstract1" abstract="true">
+	<property name="id" value="2"/>
+<!--	<property name="name" value="Jack"/>-->
+	</bean>
+
+	<bean id="childBean"  abstract="true" class="org.wonder.frame.beandefinition.ChildBean" parent="beanAbstract">
+	<!-- 可以覆盖父类赋予的值 -->
+<!--	<property name="name" value="Tom"/>-->
+<!--	<property name="password" value="123"/>-->
+	</bean>
+	<!--<bean id="bean4" class="com.john.Bean2" parent="beanAbstract">-->
+	<!--<property name="loginpass" value="123"/>-->
+	<!--</bean>-->
+
+	<!--通过FactoryBean类来返回的bean -->
+	<!--<bean id="car" class="com.john.factorybean.CarFactoryBean">-->
+	<!--<property name="carInfo" value="超级跑车,400,2000000"/>-->
+	<!--</bean>-->
+
+	<!--https://www.iteye.com/problems/92270-->
+	<!--<bean id="myBeanFactory" class="com.john.beanFactory.MyBeanFactory"></bean>-->
+	<!--https://www.cnblogs.com/sishang/p/6583057.html-->
+	<!--<bean id="autowireTest1" class="com.john.autowire.AutowireTest1" autowire="byType"/>-->
+
+	<!--<bean id="autowireTest2" class="com.john.autowire.AutowireTest2">-->
+	<!--</bean>-->
+
+	<!--<context:component-scan base-package="com.john" />-->
+	<!--<context:component-scan base-package="com.john" />-->
+
+	<!--<aop:aspectj-autoproxy/>-->
+	<!--<bean id="carFactory" class="com.john.factorybeanpro.CarFactory" />-->
+	<!--<bean id="car5" factory-bean="carFactory" factory-method="createCar">-->
+	<!--</bean>-->
+
+	<bean id="ChineseFemaleSinger" class="com.john.beanFactory.Singer" abstract="true">
+		<property name="country" value="中国"/>
+		<property name="gender" value="女"/>
+		<!--<property name="gender" value="女"/>-->
+
+	</bean>
+
+	<bean id="user1" class="org.wonder.frame.objectProvider.UserObject">
+
+	</bean>
+	<bean id="user2" class="org.wonder.frame.objectProvider.UserObject">
+
+	</bean>
+	<bean id="user3" class="org.wonder.frame.objectProvider.UserObject">
+
+	</bean>
+	<!--<bean id="Jane" parent="ChineseFemaleSinger">-->
+	<!--<property name="name" value="张靓颖"/>-->
+	<!--</bean>-->
+	<!--<bean id="Bibi" parent="ChineseFemaleSinger">-->
+	<!--<property name="name" value="周笔畅"/>-->
+	<!--</bean>-->
+</beans>

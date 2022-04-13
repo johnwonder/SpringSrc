@@ -211,6 +211,7 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 				"If there are no cacheable methods, then don't use a cache aspect.");
 	}
 
+	//单例初始化完以后执行
 	@Override
 	public void afterSingletonsInstantiated() {
 		if (getCacheResolver() == null) {
@@ -369,6 +370,10 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		return AopProxyUtils.ultimateTargetClass(target);
 	}
 
+	//抽象的核心是将缓存应用于Java方法，从而减少了基于缓存中可用信息的执行次数。
+	// 也就是说，每次调用目标方法时，抽象都会应用缓存行为检查方法是否已经为给定的参数执行。
+	// 如果有，则返回缓存的结果，而不必执行实际的方法;如果没有，则执行方法，缓存结果并返回给用户，以便在下次调用方法时返回缓存的结果。这样，对于给定的一组参数，昂贵的方法(CPU或IO绑定)只能执行一次，并且结果可以重用，而不必实际再次执行该方法。缓存逻辑被透明地应用，没有任何对调用程序的干扰。
+	//原文链接：https://blog.csdn.net/niugang0920/article/details/89173923
 	@Nullable
 	private Object execute(final CacheOperationInvoker invoker, Method method, CacheOperationContexts contexts) {
 		// Special handling of synchronized invocation
@@ -410,17 +415,22 @@ public abstract class CacheAspectSupport extends AbstractCacheInvoker
 		Object cacheValue;
 		Object returnValue;
 
+		//
 		if (cacheHit != null && !hasCachePut(contexts)) {
 			// If there are no put requests, just use the cache hit
 			cacheValue = cacheHit.get();
+			//内部主要是Optional类型的处理
 			returnValue = wrapCacheValue(method, cacheValue);
 		}
 		else {
+			//todo 很重要 调用方法 获取调用的返回值
 			// Invoke the method if we don't have a cache hit
 			returnValue = invokeOperation(invoker);
+
 			cacheValue = unwrapReturnValue(returnValue);
 		}
 
+		//放入缓存
 		// Collect any explicit @CachePuts
 		collectPutRequests(contexts.get(CachePutOperation.class), cacheValue, cachePutRequests);
 

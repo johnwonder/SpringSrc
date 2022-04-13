@@ -67,6 +67,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			synchronized (bd.constructorArgumentLock) {
 				constructorToUse = (Constructor<?>) bd.resolvedConstructorOrFactoryMethod;
 				if (constructorToUse == null) {
+					//todo 获取bean类型的时候如果 beanClassObject 为空就报错
 					final Class<?> clazz = bd.getBeanClass();
 					if (clazz.isInterface()) {
 						throw new BeanInstantiationException(clazz, "Specified class is an interface");

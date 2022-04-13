@@ -39,6 +39,9 @@ import org.springframework.lang.Nullable;
  */
 public interface BeanDefinitionReader {
 
+	//1.返回注册beandefinition的bean工厂
+	//2.工厂通过BeanDefinitionRegistry接口暴露
+	//3.工厂封装与bean定义处理相关的方法
 	/**
 	 * Return the bean factory to register the bean definitions with.
 	 * <p>The factory is exposed through the BeanDefinitionRegistry interface,
@@ -46,6 +49,7 @@ public interface BeanDefinitionReader {
 	 */
 	BeanDefinitionRegistry getRegistry();
 
+	//返回用于加载指定路径资源的资源加载器
 	/**
 	 * Return the resource loader to use for resource locations.
 	 * Can be checked for the <b>ResourcePatternResolver</b> interface and cast
@@ -66,6 +70,9 @@ public interface BeanDefinitionReader {
 	@Nullable
 	ResourceLoader getResourceLoader();
 
+	//返回bean类型的类加载器。
+	//如果是null,那么建议不要过早加载bean类型，只使用类型名称注册bean定义
+	//可以参考BeanDefinitionReaderUtils类createBeanDefinition
 	/**
 	 * Return the class loader to use for bean classes.
 	 * <p>{@code null} suggests to not load bean classes eagerly

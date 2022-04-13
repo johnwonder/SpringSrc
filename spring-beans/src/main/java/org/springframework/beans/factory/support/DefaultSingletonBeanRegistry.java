@@ -108,15 +108,15 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/** Map between containing bean names: bean name to Set of bean names that the bean contains. */
 	private final Map<String, Set<String>> containedBeanMap = new ConcurrentHashMap<>(16);
 
-	//依赖于这个bean的 bean集合
-	//key ： 被依赖的bean
-	//value: 依赖key这个 bean的bean集合
+	//bean -- bean的 依赖bean集合
+	//key ： bean
+	//value: key这个 bean的依赖bean集合
 	/** Map between dependent bean names: bean name to Set of dependent bean names. */
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
-	//bean 依赖其他bean的集合
+	//bean -- bean依赖 的集合
 	//key : bean名称
-	//value : key这个bean 依赖的 bean集合
+	//value : key这个bean bean依赖集合
 	/** Map between depending bean names: bean name to Set of bean names for the bean's dependencies. */
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
 
@@ -408,10 +408,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				return;
 			}
 		}
+		//todo 外部Bean依赖于被包含bean 2021-01-11
 		registerDependentBean(containedBeanName, containingBeanName);
 	}
 
 	//注册一个从属Bean
+	//在beanName销毁之前 就销毁
 	/**
 	 * Register a dependent bean for the given bean,
 	 * to be destroyed before the given bean is destroyed.
@@ -430,7 +432,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			}
 		}
 
-		//todo Bean 依赖另外的Bean集合 2020-10-13
+		//todo Bean 的 依赖Bean集合 2020-10-13
 		synchronized (this.dependenciesForBeanMap) {
 			Set<String> dependenciesForBean =
 					this.dependenciesForBeanMap.computeIfAbsent(dependentBeanName, k -> new LinkedHashSet<>(8));

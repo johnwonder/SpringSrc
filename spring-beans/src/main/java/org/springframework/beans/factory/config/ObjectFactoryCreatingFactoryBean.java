@@ -24,6 +24,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//https://oomake.com/question/939570
 /**
  * A {@link org.springframework.beans.factory.FactoryBean} implementation that
  * returns a value which is an {@link org.springframework.beans.factory.ObjectFactory}
@@ -101,6 +102,7 @@ public class ObjectFactoryCreatingFactoryBean extends AbstractFactoryBean<Object
 	private String targetBeanName;
 
 
+	//一般都是原型bean
 	/**
 	 * Set the name of the target bean.
 	 * <p>The target does not <i>have</i> to be a non-singleton bean, but realistically
@@ -133,6 +135,7 @@ public class ObjectFactoryCreatingFactoryBean extends AbstractFactoryBean<Object
 	}
 
 
+	//
 	/**
 	 * Independent inner class - for serialization purposes.
 	 */

@@ -128,6 +128,7 @@ class BeanDefinitionValueResolver {
 				throw new BeanDefinitionStoreException(
 						"Invalid bean name '" + refName + "' in bean reference for " + argName);
 			}
+			//还是返回一个名称
 			return refName;
 		}
 		else if (value instanceof BeanDefinitionHolder) {
@@ -312,12 +313,13 @@ class BeanDefinitionValueResolver {
 	private Object resolveInnerBean(Object argName, String innerBeanName, BeanDefinition innerBd) {
 		RootBeanDefinition mbd = null;
 		try {
-			//获取合并过后的beandefinition
+			//获取合并过后的beandefinition scope会带上beanDefinition的scope
 			mbd = this.beanFactory.getMergedBeanDefinition(innerBeanName, innerBd, this.beanDefinition);
 			// Check given bean name whether it is unique. If not already unique,
 			// add counter - increasing the counter until the name is unique.
 			String actualInnerBeanName = innerBeanName;
 			if (mbd.isSingleton()) {
+				//内部会判断容器内部是否已经存在这个名称的bean
 				actualInnerBeanName = adaptInnerBeanName(innerBeanName);
 			}
 			this.beanFactory.registerContainedBean(actualInnerBeanName, this.beanName);

@@ -364,6 +364,7 @@ public class PropertiesBeanDefinitionReader extends AbstractBeanDefinitionReader
 				throw new IllegalArgumentException("Illegal key [" + key + "]: only Strings allowed");
 			}
 			String keyString = (String) key;
+			//prefix为空的话直接为真了
 			if (keyString.startsWith(prefix)) {
 				// Key is of form: prefix<name>.property
 				String nameAndProperty = keyString.substring(prefix.length());

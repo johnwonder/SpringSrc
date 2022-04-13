@@ -270,11 +270,12 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 		}
 	}
 
+	//https://www.jianshu.com/p/acf7fdf20326
 	private void initExceptionHandlerAdviceCache() {
 		if (getApplicationContext() == null) {
 			return;
 		}
-
+		//查找容器中所有@ControllerAdvice的Bean
 		List<ControllerAdviceBean> adviceBeans = ControllerAdviceBean.findAnnotatedBeans(getApplicationContext());
 		AnnotationAwareOrderComparator.sort(adviceBeans);
 
@@ -283,7 +284,10 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
+			//
+			//todo @ControllerAdvice 和@ExceptionHandler的关键在这边 2022-03-28
 			ExceptionHandlerMethodResolver resolver = new ExceptionHandlerMethodResolver(beanType);
+			//todo 判断是否有匹配到的方法 根据方法上是否有ExceptionHandler注解
 			if (resolver.hasExceptionMappings()) {
 				this.exceptionHandlerAdviceCache.put(adviceBean, resolver);
 			}
@@ -458,6 +462,7 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 		Class<?> handlerType = null;
 
 		if (handlerMethod != null) {
+			//todo Controller自己内部的ExceptionHandler处理
 			// Local exception handler methods on the controller class itself.
 			// To be invoked through the proxy, even in case of an interface-based proxy.
 			handlerType = handlerMethod.getBeanType();
@@ -477,6 +482,7 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 			}
 		}
 
+		//去exceptionHandlerAdvice 查询有无合适的
 		for (Map.Entry<ControllerAdviceBean, ExceptionHandlerMethodResolver> entry : this.exceptionHandlerAdviceCache.entrySet()) {
 			ControllerAdviceBean advice = entry.getKey();
 			if (advice.isApplicableToBeanType(handlerType)) {

@@ -31,7 +31,8 @@ public class ArrayQueueDemo {
 		}
 
 
-		Queue<String> queue = new ArrayDeque<String>();
+		ArrayDeque<String> queue = new ArrayDeque<String>();
+		queue.addFirst("0");
 		queue.add("1");
 		queue.add("2");
 		queue.add("3");
@@ -47,5 +48,17 @@ public class ArrayQueueDemo {
 		int i = -1 & 7;
 		//输出7
 		System.out.println(i);
+
+		ArrayDeque<String> queue1 = new ArrayDeque<String>();
+		queue1.addFirst("0");
+		queue1.addFirst("1");
+		//queue1.pollFirst();
+		System.out.println(queue1.size());
+
+		queue1.removeFirstOccurrence("0");
+
+		Object[] elements = new Object[16];
+		//length为0不报错
+		System.arraycopy(elements, 16, elements, 15, 0);
 	}
 }

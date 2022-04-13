@@ -97,6 +97,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.WebUtils;
 
+//RequestMappingHandlerAdapter的bean，
+// 这个bean就是@RequestMapping注解能起作用的关键
 /**
  * Extension of {@link AbstractHandlerMethodAdapter} that supports
  * {@link RequestMapping} annotated {@code HandlerMethod RequestMapping} annotated {@code HandlerMethods}.
@@ -565,6 +567,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		initControllerAdviceCache();
 
 		if (this.argumentResolvers == null) {
+			//获取默认的参数解析器 然后添加到HandlerMethodArgumentResolverComposite
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultArgumentResolvers();
 			this.argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
@@ -637,6 +640,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				RequestResponseBodyAdviceChain.getAdviceByType(advice, ResponseBodyAdvice.class).size();
 	}
 
+	//方法参数解析器
 	//todo 很重要 添加了N多的 HandlerMethodArgumentResolver
 	/**
 	 * Return the list of argument resolvers to use including built-in resolvers
@@ -718,6 +722,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return resolvers;
 	}
 
+	//方法返回值解析器
 	/**
 	 * Return the list of return value handlers to use including built-in and
 	 * custom handlers provided via {@link #setReturnValueHandlers}.

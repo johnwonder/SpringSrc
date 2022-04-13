@@ -22,5 +22,9 @@ public class StringJoinerDemo {
 		System.out.println(sj.toString());
 
 
+		String splits = "/ss";
+		String[] splitArr = splits.split("/");
+		System.out.println(splitArr.length);
+
 	}
 }

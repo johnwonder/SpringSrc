@@ -153,6 +153,7 @@ class TypeConverterDelegate {
 			@Nullable Class<T> requiredType, @Nullable TypeDescriptor typeDescriptor) throws IllegalArgumentException {
 
 		//todo 1。 查找这个类型是否有自定义的属性编辑器 2020-12-23
+		//todo 自定义的属性编辑器为空才会去 找默认的属性编辑器
 		// Custom editor for this type?
 		PropertyEditor editor = this.propertyEditorRegistry.findCustomEditor(requiredType, propertyName);
 
@@ -179,6 +180,7 @@ class TypeConverterDelegate {
 		//todo 编辑器不为空 或者 转换过后的值 不是需要的类型 2020-12-23
 		// Value not of required type?
 		if (editor != null || (requiredType != null && !ClassUtils.isAssignableValue(requiredType, convertedValue))) {
+			//todo convertedValue必须为String
 			if (typeDescriptor != null && requiredType != null && Collection.class.isAssignableFrom(requiredType) &&
 					convertedValue instanceof String) {
 				TypeDescriptor elementTypeDesc = typeDescriptor.getElementTypeDescriptor();
@@ -193,6 +195,7 @@ class TypeConverterDelegate {
 			if (editor == null) {
 				editor = findDefaultEditor(requiredType);
 			}
+			//todo 这边有可能先使用editor 把 字符串 转换成字符串数组，比如默认的StringArrayPropertyEditor
 			convertedValue = doConvertValue(oldValue, convertedValue, requiredType, editor);
 		}
 
@@ -210,6 +213,8 @@ class TypeConverterDelegate {
 					if (convertedValue instanceof String && Enum.class.isAssignableFrom(requiredType.getComponentType())) {
 						convertedValue = StringUtils.commaDelimitedListToStringArray((String) convertedValue);
 					}
+					//requiredType为数组
+					//todo 这边会将ArrayList 转换为String[]
 					return (T) convertToTypedArray(convertedValue, propertyName, requiredType.getComponentType());
 				}
 				else if (convertedValue instanceof Collection) {
@@ -230,6 +235,7 @@ class TypeConverterDelegate {
 				}
 				if (String.class == requiredType && ClassUtils.isPrimitiveOrWrapper(convertedValue.getClass())) {
 					// We can stringify any primitive value...
+					//todo 这边会把原始类型转换为字符串 2022-02-08
 					return (T) convertedValue.toString();
 				}
 				else if (convertedValue instanceof String && !requiredType.isInstance(convertedValue)) {
@@ -323,6 +329,7 @@ class TypeConverterDelegate {
 	private Object attemptToConvertStringToEnum(Class<?> requiredType, String trimmedValue, Object currentConvertedValue) {
 		Object convertedValue = currentConvertedValue;
 
+		//todo 泛型枚举赋值 2022-02-08
 		if (Enum.class == requiredType && this.targetObject != null) {
 			// target type is declared as raw enum, treat the trimmed value as <enum.fqn>.FIELD_NAME
 			//目标类型被声明为原始枚举，请使用调整后的值
@@ -481,11 +488,15 @@ class TypeConverterDelegate {
 			//todo 有意思 吞下并继续 2020-10-11
 			// Swallow and proceed.
 		}
+		//设置文本 比如PropertiesEditor
 		editor.setAsText(newTextValue);
 		return editor.getValue();
 	}
 
+	//todo 从判断需要的类型那边进入
 	private Object convertToTypedArray(Object input, @Nullable String propertyName, Class<?> componentType) {
+
+		//todo input为List 或者Set 时都会进入这边
 		if (input instanceof Collection) {
 			// Convert Collection elements to array elements.
 			Collection<?> coll = (Collection<?>) input;
@@ -499,6 +510,7 @@ class TypeConverterDelegate {
 			return result;
 		}
 		else if (input.getClass().isArray()) {
+			//todo 比如 从String[] 转换到int[]
 			// Convert array elements, if necessary.
 			if (componentType.equals(input.getClass().getComponentType()) &&
 					!this.propertyEditorRegistry.hasCustomEditorForElement(componentType, propertyName)) {
@@ -507,6 +519,7 @@ class TypeConverterDelegate {
 			int arrayLength = Array.getLength(input);
 			Object result = Array.newInstance(componentType, arrayLength);
 			for (int i = 0; i < arrayLength; i++) {
+				//todo  buildIndexedPropertyName 会构造 比如stringArray[0] 这种带索引的属性名称
 				Object value = convertIfNecessary(
 						buildIndexedPropertyName(propertyName, i), null, Array.get(input, i), componentType);
 				Array.set(result, i, value);
@@ -514,6 +527,7 @@ class TypeConverterDelegate {
 			return result;
 		}
 		else {
+			//todo 这边会把单个元素转换成数组
 			// A plain value: convert it to an array with a single component.
 			Object result = Array.newInstance(componentType, 1);
 			Object value = convertIfNecessary(
@@ -581,6 +595,7 @@ class TypeConverterDelegate {
 		for (; it.hasNext(); i++) {
 			Object element = it.next();
 			String indexedPropertyName = buildIndexedPropertyName(propertyName, i);
+			//todo 转换集合中的各个元素
 			Object convertedElement = convertIfNecessary(indexedPropertyName, null, element,
 					(elementType != null ? elementType.getType() : null) , elementType);
 			try {

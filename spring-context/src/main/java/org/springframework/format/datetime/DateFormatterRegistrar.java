@@ -26,6 +26,15 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//什么是adhoc？
+//在很多场合听到过这个词，以为是什么特定领域的专有名词。第一次是在做PC的dashboard的时候，接触到ad-hoc issues。后来在看sap overview文档的时候又看到了。
+//
+//查了一下：
+//
+//“Ad hoc”一词来源于拉丁语，意思是“专用的、特定的”。
+//
+//原来只是和particular，special类似意思的词而已
+//https://www.cnblogs.com/jojozhuang/archive/2011/05/26/2059029.html
 /**
  * Configures basic date formatting for use with Spring, primarily for
  * {@link org.springframework.format.annotation.DateTimeFormat} declarations.

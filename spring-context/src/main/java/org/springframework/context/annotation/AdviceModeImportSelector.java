@@ -24,6 +24,8 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+//AsyncConfigurationSelector 注入了BeanPostProcessor,
+//TransactionManagementConfigurationSelector 注入了自动代理 和aop advisor
 /**
  * Convenient base class for {@link ImportSelector} implementations that select imports
  * based on an {@link AdviceMode} value from an annotation (such as the {@code @Enable*}
@@ -34,6 +36,7 @@ import org.springframework.util.Assert;
  * @param <A> annotation containing {@linkplain #getAdviceModeAttributeName() AdviceMode attribute}
  */
 public abstract class AdviceModeImportSelector<A extends Annotation> implements ImportSelector {
+
 
 	/**
 	 * The default advice mode attribute name.

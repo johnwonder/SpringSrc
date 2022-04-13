@@ -266,6 +266,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	@Override
 	public void addAdvisor(int pos, Advisor advisor) throws AopConfigException {
 		if (advisor instanceof IntroductionAdvisor) {
+			//调用advisor.validateInterfaces 验证
 			validateIntroductionAdvisor((IntroductionAdvisor) advisor);
 		}
 		addAdvisorInternal(pos, advisor);
@@ -359,6 +360,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		advisor.validateInterfaces();
 		// If the advisor passed validation, we can make the change.
 		Class<?>[] ifcs = advisor.getInterfaces();
+		//这里会添加 IntroductionAdvisor的接口
 		for (Class<?> ifc : ifcs) {
 			addInterface(ifc);
 		}
@@ -407,6 +409,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	@Override
 	public void addAdvice(int pos, Advice advice) throws AopConfigException {
 		Assert.notNull(advice, "Advice must not be null");
+		//IntroductionInfo会默认 加入DefaultIntroductionAdvisor
 		if (advice instanceof IntroductionInfo) {
 			// We don't need an IntroductionAdvisor for this kind of introduction:
 			// It's fully self-describing.

@@ -42,7 +42,7 @@ import org.springframework.util.Assert;
  * <p>In case of multiple {@code @Configuration} classes, @{@link Bean} methods defined in
  * later classes will override those defined in earlier classes. This can be leveraged to
  * deliberately override certain bean definitions via an extra {@code @Configuration}
- * class.（这可以用来通过额外的@Configuration类故意重写某些be an定义）
+ * class.（这可以用来通过额外的@Configuration类故意重写某些bean定义）
  *
  * <p>See @{@link Configuration}'s javadoc for usage examples.
  *
@@ -112,6 +112,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(String... basePackages) {
 		this();
+		//内部注册BeanDefinitions
 		scan(basePackages);
 		refresh();
 	}

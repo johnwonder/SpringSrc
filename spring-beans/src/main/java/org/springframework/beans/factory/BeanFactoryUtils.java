@@ -46,6 +46,7 @@ import org.springframework.util.StringUtils;
  */
 public abstract class BeanFactoryUtils {
 
+	//生成bean名称的分隔符，主要用于用于自动生成bean名称
 	/**
 	 * Separator for generated bean names. If a class name or parent name is not
 	 * unique, "#1", "#2" etc will be appended, until the name becomes unique.
@@ -71,6 +72,7 @@ public abstract class BeanFactoryUtils {
 		return (name != null && name.startsWith(BeanFactory.FACTORY_BEAN_PREFIX));
 	}
 
+	//返回实际的bean名称，去除factorybean的解引用前缀
 	/**
 	 * Return the actual bean name, stripping out the factory dereference
 	 * prefix (if any, also stripping repeated factory prefixes if found).
@@ -92,6 +94,7 @@ public abstract class BeanFactoryUtils {
 		});
 	}
 
+	//判断名称是否是自动生成的
 	/**
 	 * Return whether the given name is a bean name which has been generated
 	 * by the default naming strategy (containing a "#..." part).
@@ -121,6 +124,7 @@ public abstract class BeanFactoryUtils {
 
 	// Retrieval of bean names
 
+	//重写的(相同名字的)只会计算一次
 	/**
 	 * Count all beans in any hierarchy in which this factory participates.
 	 * Includes counts of ancestor bean factories.
@@ -187,12 +191,19 @@ public abstract class BeanFactoryUtils {
 	 */
 	public static String[] beanNamesForTypeIncludingAncestors(ListableBeanFactory lbf, Class<?> type) {
 		Assert.notNull(lbf, "ListableBeanFactory must not be null");
+		//getBeanNamesForType 内部 会有缓存机制
+		//获取bean类型为此类型的所有bean名称
+		//包含prototype 和 factorybean
 		String[] result = lbf.getBeanNamesForType(type);
+		//如果当前工厂也是嵌套工厂，那么就继续获取父工厂中 此类型的所有bean名称
 		if (lbf instanceof HierarchicalBeanFactory) {
 			HierarchicalBeanFactory hbf = (HierarchicalBeanFactory) lbf;
+			//获取父工厂
 			if (hbf.getParentBeanFactory() instanceof ListableBeanFactory) {
+				//递归获取父工厂中此类型的bean集合
 				String[] parentResult = beanNamesForTypeIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), type);
+				//bean名称相同的合并
 				result = mergeNamesWithParent(result, parentResult, hbf);
 			}
 		}
@@ -304,6 +315,13 @@ public abstract class BeanFactoryUtils {
 		return result;
 	}
 
+	//如果当前bean工厂是 分级工厂，那么会查找父级工厂
+
+	//allowEagerInit  设置为true的话 FactoryBeans会初始化。
+
+	//If the object created by the
+	// FactoryBean doesn't match, the raw FactoryBean itself will be matched against the
+	// type  DefaultListableBeanFactory 567行体现
 	/**
 	 * Return all beans of the given type or subtypes, also picking up beans defined in
 	 * ancestor bean factories if the current bean factory is a HierarchicalBeanFactory.
@@ -337,12 +355,15 @@ public abstract class BeanFactoryUtils {
 
 		Assert.notNull(lbf, "ListableBeanFactory must not be null");
 		Map<String, T> result = new LinkedHashMap<>(4);
+		//因为ListableBeanFactory不考虑嵌套工厂。
 		result.putAll(lbf.getBeansOfType(type, includeNonSingletons, allowEagerInit));
 		if (lbf instanceof HierarchicalBeanFactory) {
 			HierarchicalBeanFactory hbf = (HierarchicalBeanFactory) lbf;
 			if (hbf.getParentBeanFactory() instanceof ListableBeanFactory) {
 				Map<String, T> parentResult = beansOfTypeIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), type, includeNonSingletons, allowEagerInit);
+
+				//会合并
 				parentResult.forEach((beanName, beanType) -> {
 					if (!result.containsKey(beanName) && !hbf.containsLocalBean(beanName)) {
 						result.put(beanName, beanType);
@@ -494,6 +515,8 @@ public abstract class BeanFactoryUtils {
 		List<String> merged = new ArrayList<>(result.length + parentResult.length);
 		merged.addAll(Arrays.asList(result));
 		for (String beanName : parentResult) {
+			//合并过的集合里没有 且 当前工厂里也没有这个bean名称 那么就添加到merged集合里
+			//todo 为啥还要用containsLocalBean 因为有可能是别名
 			if (!merged.contains(beanName) && !hbf.containsLocalBean(beanName)) {
 				merged.add(beanName);
 			}
@@ -501,6 +524,7 @@ public abstract class BeanFactoryUtils {
 		return StringUtils.toStringArray(merged);
 	}
 
+	//直接使用map的values的 iterator获取结果
 	/**
 	 * Extract a unique bean for the given type from the given Map of matching beans.
 	 * @param type type of bean to match

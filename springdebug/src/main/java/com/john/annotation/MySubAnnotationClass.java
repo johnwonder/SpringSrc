@@ -7,7 +7,8 @@ package com.john.annotation;
  */
 public class MySubAnnotationClass {
 
-	@MySubAnnotation(location = "这是值")
+	//location 和value 只能设置的一样 ，不然报错
+	@MySubAnnotation(location = "这是值",value = "这是值")
 	public static void one(){
 	}
 }

@@ -16,6 +16,8 @@ public class JavaClassLoaderDemo {
 //			e.printStackTrace();
 //		}
 
+
+
 		FileSystemClassLoader fscl1 = new FileSystemClassLoader("/Users/zhangjiong/code/SpringSrc/springdebug/src/main/java/");
 		FileSystemClassLoader fscl2 = new FileSystemClassLoader("/Users/zhangjiong/code/SpringSrc/springdebug/src/main/java/");
 		try {

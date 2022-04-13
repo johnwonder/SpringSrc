@@ -151,6 +151,7 @@ public class BeanWrapperAutoGrowingTests {
 
 	@Test(expected = InvalidPropertyException.class)
 	public void getPropertyValueAutoGrowListNotParameterized() {
+		//todo 非泛型不行
 		wrapper.getPropertyValue("listNotParameterized[0]");
 	}
 

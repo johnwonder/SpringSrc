@@ -103,7 +103,7 @@ public abstract class AbstractPropertyAccessorTests {
 		AbstractPropertyAccessor accessor = createAccessor(new Simple("John", 2));
 
 		System.out.println(accessor.getPropertyType("name"));//class java.lang.String
-		assertThat(accessor.isReadableProperty("sex"), is(true));
+		assertThat(accessor.isReadableProperty("name"), is(true));
 	}
 
 	@Test
@@ -292,6 +292,7 @@ public abstract class AbstractPropertyAccessorTests {
 		AbstractPropertyAccessor accessor = createAccessor(target);
 
 		thrown.expect(NotReadablePropertyException.class);
+		//
 		accessor.getPropertyValue("address.bar");
 	}
 
@@ -389,6 +390,7 @@ public abstract class AbstractPropertyAccessorTests {
 			accessor.getPropertyValue("spouse.bla");
 		}
 		catch (NotReadablePropertyException ex) {
+			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().contains(TestBean.class.getName()));
 		}
 	}
@@ -783,7 +785,8 @@ public abstract class AbstractPropertyAccessorTests {
 	public void setGenericEnumProperty() {
 		EnumConsumer target = new EnumConsumer();
 		AbstractPropertyAccessor accessor = createAccessor(target);
-		accessor.setPropertyValue("enumValue", TestEnum.class.getName() + ".TEST_VALUE");
+		//todo 貌似也能设置成功
+		accessor.setPropertyValue("enumValue", Test1Enum.class.getName() + ".TEST_VALUE");
 		assertEquals(TestEnum.TEST_VALUE, target.getEnumValue());
 	}
 
@@ -798,11 +801,13 @@ public abstract class AbstractPropertyAccessorTests {
 	@Test
 	public void setPropertiesProperty() throws Exception {
 		PropsTester target = new PropsTester();
+		//todo 会注册默认属性编辑器
 		AbstractPropertyAccessor accessor = createAccessor(target);
 		accessor.setPropertyValue("name", "ptest");
 
 		// Note format...
 		String ps = "peace=war\nfreedom=slavery";
+		//todo 因为默认属性编辑器 PropertiesEditor
 		accessor.setPropertyValue("properties", ps);
 
 		assertTrue("name was set", target.name.equals("ptest"));
@@ -827,11 +832,11 @@ public abstract class AbstractPropertyAccessorTests {
 		list.add("foo");
 		list.add("fi");
 		list.add("fi");
-		list.add("fum");
+		list.add("fum1");
 		accessor.setPropertyValue("stringArray", list);
 		assertTrue("stringArray length = 4", target.stringArray.length == 4);
 		assertTrue("correct values", target.stringArray[0].equals("foo") && target.stringArray[1].equals("fi") &&
-				target.stringArray[2].equals("fi") && target.stringArray[3].equals("fum"));
+				target.stringArray[2].equals("fi") && target.stringArray[3].equals("fum1"));
 
 		Set<String> set = new HashSet<>();
 		set.add("foo");
@@ -842,10 +847,12 @@ public abstract class AbstractPropertyAccessorTests {
 		List<String> result = Arrays.asList(target.stringArray);
 		assertTrue("correct values", result.contains("foo") && result.contains("fi") && result.contains("fum"));
 
+		//todo TypeConverterDelegate的 convertToTypedArray 默认会 把字符串转换为字符串数组
 		accessor.setPropertyValue("stringArray", "one");
 		assertTrue("stringArray length = 1", target.stringArray.length == 1);
 		assertTrue("stringArray elt is ok", target.stringArray[0].equals("one"));
 
+		//直接通过field.invoke
 		accessor.setPropertyValue("stringArray", null);
 		assertTrue("stringArray is null", target.stringArray == null);
 	}
@@ -854,6 +861,7 @@ public abstract class AbstractPropertyAccessorTests {
 	public void setStringArrayPropertyWithCustomStringEditor() throws Exception {
 		PropsTester target = new PropsTester();
 		AbstractPropertyAccessor accessor = createAccessor(target);
+		//todo 注册了 customEditorsForPath
 		accessor.registerCustomEditor(String.class, "stringArray", new PropertyEditorSupport() {
 			@Override
 			public void setAsText(String text) {
@@ -894,6 +902,7 @@ public abstract class AbstractPropertyAccessorTests {
 	public void setStringArrayPropertyWithStringSplitting() throws Exception {
 		PropsTester target = new PropsTester();
 		AbstractPropertyAccessor accessor = createAccessor(target);
+		//todo 注册StringArrayPropertyEditor
 		accessor.useConfigValueEditors();
 		accessor.setPropertyValue("stringArray", "a1,b2");
 		assertTrue("stringArray length = 2", target.stringArray.length == 2);
@@ -1132,12 +1141,12 @@ public abstract class AbstractPropertyAccessorTests {
 		AbstractPropertyAccessor accessor = createAccessor(target);
 		accessor.setAutoGrowNestedPaths(true);
 
-		accessor.setPropertyValue("array[0]", 1);
-		assertEquals(1, target.getArray().length);
+//		accessor.setPropertyValue("array[0]", 1);
+//		assertEquals(1, target.getArray().length);
 
 		accessor.setPropertyValue("array[2]", 3);
 		assertEquals(3, target.getArray().length);
-		assertTrue("correct values", target.getArray()[0] == 1 && target.getArray()[1] == 0 &&
+		assertTrue("correct values", target.getArray()[0] == 0 && target.getArray()[1] == 0 &&
 				target.getArray()[2] == 3);
 	}
 
@@ -1317,6 +1326,7 @@ public abstract class AbstractPropertyAccessorTests {
 		accessor.setPropertyValue("sortedSet", "sortedSet1");
 		Set<String> list = new HashSet<>();
 		list.add("list1");
+		//todo 因为注册了 默认属性编辑器CustomCollectionEditor
 		accessor.setPropertyValue("list", "list1");
 		assertEquals(1, target.getSet().size());
 		assertTrue(target.getSet().containsAll(set));
@@ -1333,6 +1343,7 @@ public abstract class AbstractPropertyAccessorTests {
 		accessor.registerCustomEditor(String.class, "set", new StringTrimmerEditor(false));
 		accessor.registerCustomEditor(String.class, "list", new StringTrimmerEditor(false));
 
+		//todo convertToTypedCollection 方法中 还会转换各个元素
 		accessor.setPropertyValue("set", "set1 ");
 		accessor.setPropertyValue("sortedSet", "sortedSet1");
 		accessor.setPropertyValue("list", "list1 ");
@@ -1361,6 +1372,7 @@ public abstract class AbstractPropertyAccessorTests {
 		assertSame(sortedMap, target.getSortedMap());
 	}
 
+	//todo 类型不匹配也能设置成功
 	@Test
 	public void setMapPropertyNonMatchingType() {
 		IndexedTestBean target = new IndexedTestBean();
@@ -1370,6 +1382,7 @@ public abstract class AbstractPropertyAccessorTests {
 		accessor.setPropertyValue("map", map);
 		Map<String, String> sortedMap = new TreeMap<>();
 		sortedMap.put("sortedKey", "sortedValue");
+		//sortedMap为 SortedMap 类型
 		accessor.setPropertyValue("sortedMap", sortedMap);
 		assertEquals(1, target.getMap().size());
 		assertEquals("value", target.getMap().get("key"));
@@ -1487,6 +1500,7 @@ public abstract class AbstractPropertyAccessorTests {
 		catch (NotWritablePropertyException e) {
 			assertEquals(Simple.class, e.getBeanClass());
 			assertEquals("name1", e.getPropertyName());
+			//todo 通过 PropertyMatches类的	calculateStringDistance 算法算出可能的匹配
 			assertEquals("Invalid number of possible matches", 1, e.getPossibleMatches().length);
 			assertEquals("name", e.getPossibleMatches()[0]);
 		}
@@ -1536,11 +1550,13 @@ public abstract class AbstractPropertyAccessorTests {
 		TestBean target = new TestBean();
 		try {
 			AbstractPropertyAccessor accessor = createAccessor(target);
-			accessor.setPropertyValue("age", "foobar");
+			//todo 有CustomNumberEditor
+			accessor.setPropertyValue("age", "2");
 			fail("Should throw exception on type mismatch");
 		}
 		catch (TypeMismatchException ex) {
 			// expected
+			ex.printStackTrace();
 		}
 	}
 
@@ -1760,6 +1776,8 @@ public abstract class AbstractPropertyAccessorTests {
 
 	@Test
 	public void cornerSpr10115() {
+		//todo 静态属性也能获取到
+		//关键在于 ExtendedBeanInfoFactory
 		Spr10115Bean target = new Spr10115Bean();
 		AbstractPropertyAccessor accessor = createAccessor(target);
 		accessor.setPropertyValue("prop1", "val1");
@@ -2169,6 +2187,11 @@ public abstract class AbstractPropertyAccessorTests {
 
 
 	public enum TestEnum {
+
+		TEST_VALUE
+	}
+
+	public enum Test1Enum {
 
 		TEST_VALUE
 	}

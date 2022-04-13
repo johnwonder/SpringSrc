@@ -22,4 +22,13 @@ package org.springframework.beans.support;
  */
 public class DerivedFromProtectedBaseBean extends ProtectedBaseBean {
 
+	private String ownProperty;
+
+	public String getOwnProperty() {
+		return ownProperty;
+	}
+
+	public void setOwnProperty(String ownProperty) {
+		this.ownProperty = ownProperty;
+	}
 }

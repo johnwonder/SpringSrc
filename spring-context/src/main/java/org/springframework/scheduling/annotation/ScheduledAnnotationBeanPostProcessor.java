@@ -242,6 +242,8 @@ public class ScheduledAnnotationBeanPostProcessor
 					((ListableBeanFactory) this.beanFactory).getBeansOfType(SchedulingConfigurer.class);
 			List<SchedulingConfigurer> configurers = new ArrayList<>(beans.values());
 			AnnotationAwareOrderComparator.sort(configurers);
+
+			//todo 遍历 配置 由SchedulingConfigurer 定义的任务 2022-01-27
 			for (SchedulingConfigurer configurer : configurers) {
 				configurer.configureTasks(this.registrar);
 			}
@@ -347,6 +349,8 @@ public class ScheduledAnnotationBeanPostProcessor
 								method, Scheduled.class, Schedules.class);
 						return (!scheduledMethods.isEmpty() ? scheduledMethods : null);
 					});
+
+			//todo 没有 Scheduled 注解的类 就放入nonAnnotatedClasses 2022-01-27
 			if (annotatedMethods.isEmpty()) {
 				this.nonAnnotatedClasses.add(targetClass);
 				if (logger.isTraceEnabled()) {

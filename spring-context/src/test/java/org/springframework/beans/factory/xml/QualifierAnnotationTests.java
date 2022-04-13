@@ -147,6 +147,7 @@ public class QualifierAnnotationTests {
 		reader.loadBeanDefinitions(CONFIG_LOCATION);
 		context.registerSingleton("testBean", QualifiedByAliasTestBean.class);
 		context.refresh();
+		//@Qualifier("stooge") 通过stooge找到 别名为stooge的bean
 		QualifiedByAliasTestBean testBean = (QualifiedByAliasTestBean) context.getBean("testBean");
 		Person person = testBean.getStooge();
 		assertEquals("LarryBean", person.getName());

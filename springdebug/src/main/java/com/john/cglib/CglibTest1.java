@@ -27,14 +27,11 @@ interface IService2 {
 		//设置代理对象需要实现的接口
 		enhancer.setInterfaces(new Class[]{IService1.class, IService2.class});
 		//通过Callback来对被代理方法进行增强
-		enhancer.setCallback(new MethodInterceptor() {
-			@Override
-			public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-				//报NoSuchMethodError
-				//methodProxy.invokeSuper(o,objects);
-				System.out.println("方法：" + method.getName());
-				return null;
-			}
+		enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
+			//报NoSuchMethodError
+			//methodProxy.invokeSuper(o,objects);
+			System.out.println("方法：" + method.getName());
+			return null;
 		});
 		Object proxy = enhancer.create();
 		if (proxy instanceof IService1) {

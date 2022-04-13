@@ -14,9 +14,33 @@
 	  		<property name="name" value="good school"/>
 	</bean>
 
+
+	<!--不能为school ,school1, school2了-->
+	<!--报错 Bean name 'school1' is already used in this <beans> element-->
+	<!-- name可以和id一样-->
+	<bean id="school3" name="school3" class="com.john.xmlconfig.SchoolName">
+		<property name="name" value="good school"/>
+
+		<property name="childSchool" >
+			<bean class="com.john.xmlconfig.SchoolName" name="school">
+				<property name="name" value="child school"/>
+			</bean>
+		</property>
+	</bean>
+
 	<!--bean别名 name为bean名称 alias为别名-->
 	<alias name="school1" alias="aliaslschool"/>
 	<alias name="school1" alias="${aliasName}"/>
+
+	<!--报错 checkForAliasCircle school1 和上面的 school1 冲突-->
+	<alias name="aliaslschool" alias="school2"/>
+
+
+	<alias name="school2" alias="school5"/>
+
+	<alias name="school5" alias="school4"/>
+
+	<!--	<alias name="school4" alias="aliaslschool"/>-->
 
 	<bean id="teachers"  name="teach" class="com.john.xmlconfig.Teachers">
 		<property name="name">

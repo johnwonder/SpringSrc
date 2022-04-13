@@ -308,14 +308,19 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return (T) createBean(beanClass.getName(), bd, null);
 	}
 
+	//
 	@Override
 	public void autowireBean(Object existingBean) {
+		//todo 这句话暂时没看出有什么作用 2022-01-11
+		//Arjen Poutsma提交的  位于Rotterdam(荷兰鹿特丹) https://github.com/poutsma
 		// Use non-singleton bean definition, to avoid registering bean as dependent bean.
 		RootBeanDefinition bd = new RootBeanDefinition(ClassUtils.getUserClass(existingBean));
 		bd.setScope(BeanDefinition.SCOPE_PROTOTYPE);
 		bd.allowCaching = ClassUtils.isCacheSafe(bd.getBeanClass(), getBeanClassLoader());
 		BeanWrapper bw = new BeanWrapperImpl(existingBean);
 		initBeanWrapper(bw);
+		//填充属性
+		//如果有postprocessor 那么会执行
 		populateBean(bd.getBeanClass().getName(), bd, bw);
 	}
 
@@ -326,11 +331,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		RootBeanDefinition bd = null;
 		if (mbd instanceof RootBeanDefinition) {
 			RootBeanDefinition rbd = (RootBeanDefinition) mbd;
+			//不是原型bean 为啥要克隆呢
+			//哦 因为下面要设置scope为 原型
 			bd = (rbd.isPrototype() ? rbd : rbd.cloneBeanDefinition());
 		}
 		if (bd == null) {
 			bd = new RootBeanDefinition(mbd);
 		}
+
 		if (!bd.isPrototype()) {
 			bd.setScope(BeanDefinition.SCOPE_PROTOTYPE);
 			bd.allowCaching = ClassUtils.isCacheSafe(ClassUtils.getUserClass(existingBean), getBeanClassLoader());
@@ -575,6 +583,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// todo CommonAnnotationBeanPostProcessor  @PostConstruct @PreDestroy
 		// todo AutowiredAnnotationBeanPostProcessor @Autowired @Value
 		// Allow post-processors to modify the merged bean definition.
+		//允许修改合并过后的bean definition
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
@@ -609,6 +618,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//todo important 属性值注入
 			populateBean(beanName, mbd, instanceWrapper);
 
+			//Spring Bean生命周期
+			//https://mp.weixin.qq.com/s/e7uJISi2ySh3zyvAC-buWA
 			//Bean Aware 接口回调阶段 - initializeBean
 			//· Bean 初始化前阶段 - initializeBean
 			//· Bean 初始化阶段 - initializeBean
@@ -645,6 +656,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					String[] dependentBeans = getDependentBeans(beanName);
 					Set<String> actualDependentBeans = new LinkedHashSet<>(dependentBeans.length);
 					for (String dependentBean : dependentBeans) {
+						//alreadyCreated 中包含 dependentBean
 						if (!removeSingletonIfCreatedForTypeCheckOnly(dependentBean)) {
 							actualDependentBeans.add(dependentBean);
 						}
@@ -1089,6 +1101,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return getFactoryBean(beanName, instance);
 	}
 
+	//调用
 	/**
 	 * Apply MergedBeanDefinitionPostProcessors to the specified bean definition,
 	 * invoking their {@code postProcessMergedBeanDefinition} methods.
@@ -1306,7 +1319,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * Determine candidate constructors to use for the given bean, checking all registered
-	 * {@link SmartInstantiationAwareBeanPostProcessor SmartInstantiationAwareBeanPostProcessors}.
+	 * {@link SmartInstantiationAware1BeanPostProcessor SmartInstantiationAwareBeanPostProcessors}.
 	 * @param beanClass the raw class of the bean
 	 * @param beanName the name of the bean
 	 * @return the candidate constructors, or {@code null} if none specified
@@ -1477,6 +1490,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		//会执行  InstantiationAwareBeanPostProcessor的  postProcessProperties 和 postProcessPropertyValues
 		//todo 判断是否有 InstantiationAwareBeanPostProcessor 2020-11-03
+		// AutowiredAnnotationBeanPostProcessor 就是一个 InstantiationAwareBeanPostProcessor
 		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
 		boolean needsDepCheck = (mbd.getDependencyCheck() != AbstractBeanDefinition.DEPENDENCY_CHECK_NONE);
 
@@ -1807,6 +1821,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						!PropertyAccessorUtils.isNestedOrIndexedProperty(propertyName);
 				if (convertible) {
 					//todo important convertForProperty  2020-11-09
+					//属性转换 比如 "1，2，3" 转换成 String[]
 					convertedValue = convertForProperty(resolvedValue, propertyName, bw, converter);
 				}
 				// Possibly store converted value in merged bean definition,

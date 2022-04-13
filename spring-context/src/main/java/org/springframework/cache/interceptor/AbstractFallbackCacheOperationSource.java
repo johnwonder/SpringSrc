@@ -129,6 +129,7 @@ public abstract class AbstractFallbackCacheOperationSource implements CacheOpera
 			return null;
 		}
 
+		//https://www.cnblogs.com/milton/p/13755862.html#top
 		// The method may be on an interface, but we need attributes from the target class.
 		// If the target class is null, the method will be unchanged.
 		Method specificMethod = AopUtils.getMostSpecificMethod(method, targetClass);

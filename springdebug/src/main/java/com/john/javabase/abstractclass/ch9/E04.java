@@ -34,6 +34,11 @@ public class E04 {
 		//需要向下转型
 		System.out.println("E04.test(): ");
 		((E04B)e04).hello();
+
+		//Class(java.lang.ClassLoader)' has private access in 'java.lang.Class'
+		//私有构造函数
+		//Class<String> e = new Class<String>();
+
 	}
 
 	static public void test1(E04A1 e041){

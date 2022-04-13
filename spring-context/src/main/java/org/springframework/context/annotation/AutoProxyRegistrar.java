@@ -39,6 +39,7 @@ public class AutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 
 	private final Log logger = LogFactory.getLog(getClass());
 
+	//只要公开 mode 和  proxyTargetClass 属性 就能注册
 	/**
 	 * Register, escalate, and configure the standard auto proxy creator (APC) against the
 	 * given registry. Works by finding the nearest annotation declared on the importing
@@ -69,8 +70,10 @@ public class AutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 					Boolean.class == proxyTargetClass.getClass()) {
 				candidateFound = true;
 				if (mode == AdviceMode.PROXY) {
+					//接口代理
 					AopConfigUtils.registerAutoProxyCreatorIfNecessary(registry);
 					if ((Boolean) proxyTargetClass) {
+						//cglib 类代理
 						AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);
 						return;
 					}

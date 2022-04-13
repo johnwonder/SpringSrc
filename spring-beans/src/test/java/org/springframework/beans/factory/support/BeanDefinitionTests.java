@@ -18,6 +18,7 @@ package org.springframework.beans.factory.support;
 
 import org.junit.Test;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.tests.sample.beans.TestBean;
 
@@ -128,18 +129,52 @@ public class BeanDefinitionTests {
 		bd.getPropertyValues().add("age", "99");
 		bd.setQualifiedElement(getClass());
 
+
+
 		GenericBeanDefinition childBd = new GenericBeanDefinition();
 		childBd.setParentName("bd");
 
 		RootBeanDefinition mergedBd = new RootBeanDefinition(bd);
+		//parentName不会被重载
 		mergedBd.overrideFrom(childBd);
 		assertEquals(2, mergedBd.getConstructorArgumentValues().getArgumentCount());
 		assertEquals(2, mergedBd.getPropertyValues().size());
 		assertEquals(bd, mergedBd);
 
+		System.out.println(mergedBd.getParentName());
+
 		mergedBd.getConstructorArgumentValues().getArgumentValue(1, null).setValue(new Integer(9));
 		assertEquals(new Integer(5), bd.getConstructorArgumentValues().getArgumentValue(1, null).getValue());
 		assertEquals(getClass(), bd.getQualifiedElement());
+	}
+
+	@Test
+	public void beanDefinitionParent() {
+
+		//parentName不会被重载
+		GenericBeanDefinition childBd = new GenericBeanDefinition();
+		childBd.setParentName("bd");
+
+		GenericBeanDefinition mergedBd = new GenericBeanDefinition(childBd);
+
+
+		System.out.println(mergedBd.getParentName());
+
+
+	}
+
+	@Test
+	public void beanDefinitionBuild() {
+
+		BeanDefinitionBuilder builder =  BeanDefinitionBuilder.genericBeanDefinition();
+		builder.setParentName("bd");
+		BeanDefinition beanDefinition = builder.getBeanDefinition();
+	}
+
+	@Test
+	public void beanDefinitionReadUtils() throws ClassNotFoundException {
+
+		AbstractBeanDefinition beanDefinition =BeanDefinitionReaderUtils.createBeanDefinition("bd","org.spring.bean",null);
 	}
 
 }

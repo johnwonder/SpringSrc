@@ -95,7 +95,7 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 	 * started within its 'phase', and all phases will be ordered from lowest to
 	 * highest value. All beans that do not implement {@link SmartLifecycle} will be
 	 * started in the default phase 0. A bean declared as a dependency of another bean
-	 * will be started before the dependent bean regardless of the declared phase.
+	 * will be started before the dependent bean regardless of the declared phase.(不考虑声明阶段)
 	 */
 	@Override
 	public void start() {
@@ -148,6 +148,7 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 					group = new LifecycleGroup(phase, this.timeoutPerShutdownPhase, lifecycleBeans, autoStartupOnly);
 					phases.put(phase, group);
 				}
+				//todo 重要
 				group.add(beanName, bean);
 			}
 		});
@@ -356,7 +357,9 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 				logger.debug("Starting beans in phase " + this.phase);
 			}
 			Collections.sort(this.members);
+			//通过遍历members来启动，有点吊。。。
 			for (LifecycleGroupMember member : this.members) {
+				//传入lifecycleBeans 是为了从lifecycleBeans移除 当前member
 				doStart(this.lifecycleBeans, member.name, this.autoStartupOnly);
 			}
 		}

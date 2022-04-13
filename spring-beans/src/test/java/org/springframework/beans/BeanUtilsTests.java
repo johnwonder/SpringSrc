@@ -71,6 +71,8 @@ public class BeanUtilsTests {
 	@Test
 	public void testGetPropertyDescriptors() throws Exception {
 		PropertyDescriptor[] actual = Introspector.getBeanInfo(TestBean.class).getPropertyDescriptors();
+
+		//内部也是通过Introspector去
 		PropertyDescriptor[] descriptors = BeanUtils.getPropertyDescriptors(TestBean.class);
 		assertNotNull("Descriptors should not be null", descriptors);
 		assertEquals("Invalid number of descriptors returned", actual.length, descriptors.length);
@@ -108,6 +110,7 @@ public class BeanUtilsTests {
 		assertTrue("Touchy copied", tb2.getTouchy().equals(tb.getTouchy()));
 	}
 
+	//todo 不同类也能拷贝属性
 	@Test
 	public void testCopyPropertiesWithDifferentTypes1() throws Exception {
 		DerivedTestBean tb = new DerivedTestBean();
@@ -151,6 +154,7 @@ public class BeanUtilsTests {
 		assertTrue("Age empty", tb2.getAge() == 0);
 		assertTrue("Touchy empty", tb2.getTouchy() == null);
 
+		//todo 实际是根据ITestBean 去查询属性的
 		// "touchy" should not be copied: it's not defined in ITestBean
 		BeanUtils.copyProperties(tb, tb2, ITestBean.class);
 		assertTrue("Name copied", tb2.getName() == null);
@@ -181,6 +185,7 @@ public class BeanUtilsTests {
 		NameAndSpecialProperty source = new NameAndSpecialProperty();
 		source.setName("name");
 		TestBean target = new TestBean();
+		//todo target中没有specialProperty 不受影响
 		BeanUtils.copyProperties(source, target, "specialProperty");
 		assertEquals(target.getName(), "name");
 	}
@@ -191,16 +196,24 @@ public class BeanUtilsTests {
 		source.setName("name");
 		source.setFlag1(true);
 		source.setFlag2(true);
+		source.setValue(2);
+
 		InvalidProperty target = new InvalidProperty();
 		BeanUtils.copyProperties(source, target);
 		assertEquals("name", target.getName());
+		//属性类型不一样
 		assertTrue(target.getFlag1());
 		assertTrue(target.getFlag2());
+
+		//不能赋值
+		assertEquals("2",target.getValue());
 	}
 
 	@Test
 	public void testResolveSimpleSignature() throws Exception {
 		Method desiredMethod = MethodSignatureBean.class.getMethod("doSomething");
+
+		//todo 根据函数签名字符串 获取 函数签名 2022-02-10
 		assertSignatureEquals(desiredMethod, "doSomething");
 		assertSignatureEquals(desiredMethod, "doSomething()");
 	}
@@ -228,6 +241,8 @@ public class BeanUtilsTests {
 	public void testResolveWithAndWithoutArgList() throws Exception {
 		Method desiredMethod = MethodSignatureBean.class.getMethod("doSomethingElse", String.class, int.class);
 		assertSignatureEquals(desiredMethod, "doSomethingElse");
+
+		//todo 因为doSomethingElse 方法有参数
 		assertNull(BeanUtils.resolveSignature("doSomethingElse()", MethodSignatureBean.class));
 	}
 

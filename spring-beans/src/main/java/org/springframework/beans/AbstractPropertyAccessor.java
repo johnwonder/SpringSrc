@@ -100,6 +100,7 @@ public abstract class AbstractPropertyAccessor extends TypeConverterSupport impl
 				setPropertyValue(pv);
 			}
 			catch (NotWritablePropertyException ex) {
+				//todo 这里会判断以下 是否忽略未知的属性
 				if (!ignoreUnknown) {
 					throw ex;
 				}

@@ -207,6 +207,37 @@ public abstract class BeanUtils {
 		return null;
 	}
 
+	//https://blog.csdn.net/qq_32254003/article/details/104700256
+	//Method
+	//
+	//getMethods()
+	//
+	//获取本类及超类的所有公共方法
+	//
+	//返回一个包含Method对象的数组，这些对象反映了此 Class对象表示的类或接口的所有公共方法，包括由类或接口声明的对象以及从超类和超接口继承的对象。
+	//
+	//
+	//
+	//getDeclaredMethods()
+	//
+	//获取本类的所有方法
+	//
+	//返回一个包含Method对象的数组，这些对象反映此 Class对象表示的类或接口的所有已声明方法，包括公共，受保护，默认（程序包）访问和私有方法，但不包括继承的方法。
+	//
+	//getMethod(String name, Class<?>... parameterTypes)
+	//
+	//获取本类指定的公共成员方法
+	//
+	//返回一个Method对象，该对象反映此Class对象表示的类或接口的指定公共成员方法 。
+
+	//getDeclaredMethod(String name, Class<?>... parameterTypes)
+	//
+	//获取本类的成员方法
+	//
+	//返回一个Method对象，该对象反映此Class对象表示的类或接口的指定声明方法 。
+	//————————————————
+	//版权声明：本文为CSDN博主「明日江郎」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+	//原文链接：https://blog.csdn.net/qq_32254003/article/details/104700256
 	/**
 	 * Find a method with the given method name and the given parameter types,
 	 * declared on the given class or one of its superclasses. Prefers public methods,
@@ -297,7 +328,9 @@ public abstract class BeanUtils {
 	public static Method findDeclaredMethodWithMinimalParameters(Class<?> clazz, String methodName)
 			throws IllegalArgumentException {
 
+		//todo 查找方法名 如果有两个相同的那么会报错 2022-02-10
 		Method targetMethod = findMethodWithMinimalParameters(clazz.getDeclaredMethods(), methodName);
+		//查找父类
 		if (targetMethod == null && clazz.getSuperclass() != null) {
 			targetMethod = findDeclaredMethodWithMinimalParameters(clazz.getSuperclass(), methodName);
 		}
@@ -380,6 +413,7 @@ public abstract class BeanUtils {
 					"': expected opening '(' for args list");
 		}
 		else if (startParen == -1) {
+			//startParen 和endParen都为空的情况下
 			return findMethodWithMinimalParameters(clazz, signature);
 		}
 		else {
@@ -674,6 +708,7 @@ public abstract class BeanUtils {
 				PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetPd.getName());
 				if (sourcePd != null) {
 					Method readMethod = sourcePd.getReadMethod();
+					//读方法不为空 且 读方法返回的类型 可以赋值给写方法
 					if (readMethod != null &&
 							ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())) {
 						try {

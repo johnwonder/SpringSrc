@@ -88,11 +88,12 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 		return this.factoryBeanObjectCache.get(beanName);
 	}
 
+	//获取从FactoryBean中暴露的实例
 	/**
 	 * Obtain an object to expose from the given FactoryBean.
 	 * @param factory the FactoryBean instance
 	 * @param beanName the name of the bean
-	 * @param shouldPostProcess whether the bean is subject to post-processing
+	 * @param shouldPostProcess whether the bean is subject to post-processing(是否对bean进行后处理)
 	 * @return the object obtained from the FactoryBean
 	 * @throws BeanCreationException if FactoryBean object creation failed
 	 * @see org.springframework.beans.factory.FactoryBean#getObject()
@@ -116,13 +117,16 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 					}
 					else {
 						if (shouldPostProcess) {
+							//判断 singletonsCurrentlyInCreation map中 是否有这个bean
 							if (isSingletonCurrentlyInCreation(beanName)) {
 								// Temporarily(暂时) return non-post-processed object, not storing it yet..
 								return object;
 							}
+							//尝试放入singletonsCurrentlyInCreation map中
 							beforeSingletonCreation(beanName);
 							try {
 								//默认返回object
+								//todo 会调用 BeanPostProcessor 的 applyBeanPostProcessorsAfterInitialization 方法
 								object = postProcessObjectFromFactoryBean(object, beanName);
 							}
 							catch (Throwable ex) {
@@ -130,6 +134,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 										"Post-processing of FactoryBean's singleton object failed", ex);
 							}
 							finally {
+								//从singletonsCurrentlyInCreation 中移除
 								afterSingletonCreation(beanName);
 							}
 						}

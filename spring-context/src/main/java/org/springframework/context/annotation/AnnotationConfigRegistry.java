@@ -16,6 +16,8 @@
 
 package org.springframework.context.annotation;
 
+//基于注解配置的应用上下文的通用接口
+//定义了 注册 和 扫描的方法。
 /**
  * Common interface for annotation config application contexts,
  * defining {@link #register} and {@link #scan} methods.

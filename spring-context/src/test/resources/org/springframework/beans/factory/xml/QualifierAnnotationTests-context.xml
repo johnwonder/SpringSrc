@@ -5,7 +5,7 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-	<!--这里注册了注解 的 processor-->
+	<!--这里注册了注解 的 processor 也注入了 ContextAnnotationAutowireCandidateResolver 也就是 QualifierAnnotationAutowireCandidateResolver-->
 	<context:annotation-config/>
 
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

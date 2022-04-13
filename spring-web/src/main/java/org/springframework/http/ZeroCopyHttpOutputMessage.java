@@ -34,11 +34,11 @@ public interface ZeroCopyHttpOutputMessage extends ReactiveHttpOutputMessage {
 
 	/**
 	 * Use the given {@link File} to write the body of the message to the underlying
-	 * HTTP layer.
+	 * HTTP la count the number of bytes to be transferred
+	 * 	 * @returyer.
 	 * @param file the file to transfer
 	 * @param position the position within the file from which the transfer is to begin
-	 * @param count the number of bytes to be transferred
-	 * @return a publisher that indicates completion or error.
+	 * @paramn a publisher that indicates completion or error.
 	 */
 	default Mono<Void> writeWith(File file, long position, long count) {
 		return writeWith(file.toPath(), position, count);

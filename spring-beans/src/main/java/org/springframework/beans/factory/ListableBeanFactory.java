@@ -59,6 +59,12 @@ import org.springframework.lang.Nullable;
 //正如这个工厂接口的名字所示，这个工厂接口最大的特点就是可以列出工厂可以生产的所有实例
 public interface ListableBeanFactory extends BeanFactory {
 
+	//ApplicationContext 是委托给内部的bean工厂去调用
+	//containsBeanDefinition,getBeanDefinitionCount,getBeanDefinitionNames
+
+	//内部的bean工厂 也实现了ListableBeanFactory接口
+
+	//直接判断 this.beanDefinitionMap.containsKey(beanName);
 	/**
 	 * Check if this bean factory contains a bean definition with the given name.
 	 * 检查这个工厂是否包含给定名称的bean定义
@@ -74,6 +80,8 @@ public interface ListableBeanFactory extends BeanFactory {
 	boolean containsBeanDefinition(String beanName);
 
 	//不考虑此工厂可能参与的任何层次结构，并忽略 不是通过bean定义 注册的任何单例bean
+	//DefaultListableBeanFactory 直接返回 this.beanDefinitionMap.size()
+	// beanDefinitionMap 是 ConcurrentHashMap
 	/**
 	 * Return the number of beans defined in the factory.
 	 * <p>Does not consider any hierarchy this factory may participate in,
@@ -83,6 +91,10 @@ public interface ListableBeanFactory extends BeanFactory {
 	 */
 	int getBeanDefinitionCount();
 
+	////先获取冻结的beandefinition 名称集合，有就直接返回 beanDefinitionNames
+	//beanDefinitionNames 是ArrayList
+
+	//没有冻结的beandefinition时就 直接 StringUtils.toStringArray(this.beanDefinitionNames)
 	/**
 	 * Return the names of all beans defined in this factory.
 	 * <p>Does not consider any hierarchy this factory may participate in,
@@ -93,6 +105,7 @@ public interface ListableBeanFactory extends BeanFactory {
 	 */
 	String[] getBeanDefinitionNames();
 
+	//在FactoryBeans的情况下，从bean定义或 getObjectType 的值判断
 	/**
 	 * Return the names of beans matching the given type (including subclasses),
 	 * judging from either bean definitions or the value of {@code getObjectType}

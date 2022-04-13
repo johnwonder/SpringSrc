@@ -82,7 +82,9 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 			}
 		}
 
+		//todo 很重要判断bean是否有资格 加入这个advisor 2022-03-16
 		if (isEligible(bean, beanName)) {
+			//定义一个代理工厂
 			ProxyFactory proxyFactory = prepareProxyFactory(bean, beanName);
 			if (!proxyFactory.isProxyTargetClass()) {
 				evaluateProxyInterfaces(bean.getClass(), proxyFactory);

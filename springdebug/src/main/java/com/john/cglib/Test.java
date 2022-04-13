@@ -18,7 +18,7 @@ public class Test {
 	//https://blog.csdn.net/psd0503/article/details/107116881/
 	public static void main(String[] args) {
 		// 设置这个属性，将代理类的字节码文件生成到F盘的code目录下
-		//System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "/Users/zhangjiong/cglibcode");
+		System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "/Users/zhangjiong/cglibcode1");
 		//实例化一个增强器，也就是cglib中的一个class generator
 		Enhancer eh = new Enhancer();
 		//设置目标类

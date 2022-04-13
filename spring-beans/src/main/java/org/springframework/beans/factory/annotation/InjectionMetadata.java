@@ -80,6 +80,7 @@ public class InjectionMetadata {
 
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
 		Collection<InjectedElement> checkedElements = this.checkedElements;
+		//如果checkedElements 不为空就使用 checkedElements
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
 		if (!elementsToIterate.isEmpty()) {
@@ -114,18 +115,23 @@ public class InjectionMetadata {
 	}
 
 
+	//一个单一的注入元素
 	/**
 	 * A single injected element.
 	 */
 	public abstract static class InjectedElement {
 
+		//类的成员 可能是方法 也可能是字段
 		protected final Member member;
 
+		//是否是字段
 		protected final boolean isField;
 
+		//属性描述器
 		@Nullable
 		protected final PropertyDescriptor pd;
 
+		//是否跳过
 		@Nullable
 		protected volatile Boolean skip;
 
@@ -139,6 +145,8 @@ public class InjectionMetadata {
 			return this.member;
 		}
 
+		//如果是字段 直接返回字段的类型
+		//如果是方法则返回第一个参数的类型
 		protected final Class<?> getResourceType() {
 			if (this.isField) {
 				return ((Field) this.member).getType();
@@ -151,6 +159,7 @@ public class InjectionMetadata {
 			}
 		}
 
+		//检查resourceType参数 是否是 当前注入类型相同的类型 或者是它的 父类 或者接口等
 		protected final void checkResourceType(Class<?> resourceType) {
 			if (this.isField) {
 				Class<?> fieldType = ((Field) this.member).getType();
@@ -162,6 +171,8 @@ public class InjectionMetadata {
 			else {
 				Class<?> paramType =
 						(this.pd != null ? this.pd.getPropertyType() : ((Method) this.member).getParameterTypes()[0]);
+
+				//
 				if (!(resourceType.isAssignableFrom(paramType) || paramType.isAssignableFrom(resourceType))) {
 					throw new IllegalStateException("Specified parameter type [" + paramType +
 							"] is incompatible with resource type [" + resourceType.getName() + "]");
@@ -169,6 +180,8 @@ public class InjectionMetadata {
 			}
 		}
 
+		//注入方法
+		//字段注入 方法注入会重写
 		/**
 		 * Either this or {@link #getResourceToInject} needs to be overridden.
 		 */

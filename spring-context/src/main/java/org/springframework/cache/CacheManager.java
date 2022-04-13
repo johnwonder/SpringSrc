@@ -20,11 +20,17 @@ import java.util.Collection;
 
 import org.springframework.lang.Nullable;
 
+//就像Spring Framework中的其他服务一样，缓存服务是一种抽象（不是缓存实现），需要使用实际存储来存储缓存数据 - 也就是说，抽象使开发人员不必编写缓存逻辑 但不提供实际的存储。 这种抽象由org.springframework.cache.Cache和org.springframework.cache.CacheManager接口实现。
+
+//原文链接：https://blog.csdn.net/niugang0920/article/details/89173923
+
+//https://www.cnblogs.com/top-housekeeper/p/11865399.html
 /**
  * Spring's central cache manager SPI.
  * Allows for retrieving named {@link Cache} regions.
  *
- * @author Costin Leau
+ * @author Costin Leau （https://github.com/costin/） 去elastic了
+ * //https://blog.csdn.net/joeyon1985/article/details/41894267
  * @since 3.1
  */
 public interface CacheManager {

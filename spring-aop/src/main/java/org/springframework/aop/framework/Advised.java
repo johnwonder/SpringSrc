@@ -211,6 +211,7 @@ public interface Advised extends TargetClassAware {
 	 */
 	boolean replaceAdvisor(Advisor a, Advisor b) throws AopConfigException;
 
+	//内部还是会添加Advisor
 	/**
 	 * Add the given AOP Alliance advice to the tail of the advice (interceptor) chain.
 	 * <p>This will be wrapped in a DefaultPointcutAdvisor with a pointcut that always

@@ -18,6 +18,8 @@ package org.springframework.beans.factory.support;
 
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
+//仅适用于实际用于并发的定义属性修改
+//本质上，这只适用于在 RootBeanDefinition 本身定义的，但不是它的基类AbstractBeanDefinition等的属性
 /**
  * Post-processor callback interface for <i>merged</i> bean definitions at runtime.
  * {@link BeanPostProcessor} implementations may implement this sub-interface in order

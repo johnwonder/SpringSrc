@@ -46,6 +46,10 @@ public class TransactionManagementConfigurationSelector extends AdviceModeImport
 	@Override
 	protected String[] selectImports(AdviceMode adviceMode) {
 		switch (adviceMode) {
+			//默认是代理模式
+			//todo 重要的还是注册了AutoProxyRegistrar这个类
+			//这个类会注册 InfrastructureAdvisorAutoProxyCreator
+			//InfrastructureAdvisorAutoProxyCreator 会去查找 Advisor类型的Bean
 			case PROXY:
 				return new String[] {AutoProxyRegistrar.class.getName(),
 						ProxyTransactionManagementConfiguration.class.getName()};

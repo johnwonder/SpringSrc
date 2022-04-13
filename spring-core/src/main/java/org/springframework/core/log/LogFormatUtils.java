@@ -71,6 +71,7 @@ public abstract class LogFormatUtils {
 	 */
 	public static void traceDebug(Log logger, Function<Boolean, String> messageFactory) {
 		if (logger.isDebugEnabled()) {
+			//调用Function
 			String logMessage = messageFactory.apply(logger.isTraceEnabled());
 			if (logger.isTraceEnabled()) {
 				logger.trace(logMessage);

@@ -23,17 +23,34 @@ import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.lang.Nullable;
 
+//给应用提供配置的核心接口，
+// 当应用运行的时候这个上下文是只读的，但是实现支持的话 上下文有可能重新加载。
+
+//一个应用上下文提供如下功能：
+
+//1.可以访问应用内部组件，通过继承ListableBeanFactory 接口
+
+//2.可以加载文件资源，通过继承ResourceLoader接口
+
+//3.可以发布事件给注册的监听器，通过继承自ApplicationEventPublisher接口
+
+//4.支持国际化，通过继承自MessageSource接口
+
+//5.可能继承自一个父的上下文, 子上下文内的bean定义通常是优先的
+//比如 每一个servlet都有自己的子上下文 独立于其他的servlet
+
+//6.除了标准的BeanFactory生命周期外，应用上下文 会监测和调用实现ApplicationContextAware接口的bean
 /**
  * Central interface to provide configuration for an application.
  * This is read-only while the application is running, but may be
  * reloaded if the implementation supports this.
- * 给应用提供配置的核心接口， 当应用运行的时候这个接口是只读的，但是接口实现支持的话 有可能重新加载。
+ *
  *
  * <p>An ApplicationContext provides:
  * <ul>
  * <li>Bean factory methods for accessing application components.
  * Inherited from {@link org.springframework.beans.factory.ListableBeanFactory}.
- * 继承自ListableBeanFactory 访问应用组件的bean工厂方法
+ *
  * <li>The ability to load file resources in a generic fashion.
  * Inherited from the {@link org.springframework.core.io.ResourceLoader} interface.
  * <li>The ability to publish events to registered listeners.
@@ -62,6 +79,7 @@ import org.springframework.lang.Nullable;
 public interface ApplicationContext extends EnvironmentCapable, ListableBeanFactory, HierarchicalBeanFactory,
 		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {
 
+	//1.0就继承了ListableBeanFactory,ListableBeanFactory又继承了BeanFactory
 	//1.2.9还没继承EnvironmentCapable接口
 	/**
 	 * Return the unique id of this application context.
@@ -76,6 +94,7 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	 */
 	String getApplicationName();
 
+	//v1.0就开始有了，
 	/**
 	 * Return a friendly name for this context.
 	 * @return a display name for this context (never {@code null})
@@ -88,6 +107,7 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	 */
 	long getStartupDate();
 
+	//v1.0就开始有了，
 	/**
 	 * Return the parent context, or {@code null} if there is no parent
 	 * and this is the root of the context hierarchy.
@@ -96,7 +116,24 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	@Nullable
 	ApplicationContext getParent();
 
-	//导出AutowireCapableBeanFactory
+	//暴露 AutowireCapableBeanFactory的功能
+
+	//可以在应用上下文之外 初始化bean实例
+	//可以把bean的生命周期 应用到这些bean上面。
+
+	//AutowireCapableBeanFactory 提供了  configureBean等配置bean的方法
+
+	//ConfigurableApplicationContext 暴露了ConfigurableListableBeanFactory
+	//因为ConfigurableListableBeanFactory 继承自AutowireCapableBeanFactory 接口
+	//所以同时也可以访问AutowireCapableBeanFactory了
+
+	//本方法主要用作ApplicationContext接口上的一种方便、特定的工具
+
+	//4.2版本起，该方法在应用上下文关闭的情况下会抛出异常
+	//在当前的Spring框架版本中，只有可刷新的应用程序上下文才有这种行为
+	//从4.2开始，所有应用程序上下文实现都需要遵守
+
+	//在refresh调用前不会持有一个自动装配的bean工厂
 	/**
 	 * 对正在初始化的bean实例应用Spring bean生命周期（全部或部分）
 	 * Expose AutowireCapableBeanFactory functionality for this context.

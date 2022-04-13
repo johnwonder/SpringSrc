@@ -408,6 +408,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			Object... uriVariables) throws RestClientException {
 
 		RequestCallback requestCallback = httpEntityCallback(request, responseType);
+		//加入消息转换器
 		HttpMessageConverterExtractor<T> responseExtractor =
 				new HttpMessageConverterExtractor<>(responseType, getMessageConverters(), logger);
 		return execute(url, HttpMethod.POST, requestCallback, responseExtractor, uriVariables);
@@ -727,6 +728,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		Assert.notNull(method, "HttpMethod is required");
 		ClientHttpResponse response = null;
 		try {
+			//通过requestFactory创建 clientHttpRequest
 			ClientHttpRequest request = createRequest(url, method);
 			if (requestCallback != null) {
 				requestCallback.doWithRequest(request);

@@ -266,6 +266,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 		}
 
 		Map<String, Object> attributes = AnnotationUtils.getAnnotationAttributes(annotation);
+		///qualifier 为true就直接返回true了
 		if (attributes.isEmpty() && qualifier == null) {
 			// If no attributes, the qualifier must be present
 			return false;

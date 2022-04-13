@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+//https://mp.weixin.qq.com/s/U0Jtxu-ZJj8yYG00w0viFw
 /**
  * Proxy for a standard Servlet Filter, delegating to a Spring-managed bean that
  * implements the Filter interface. Supports a "targetBeanName" filter init-param
@@ -245,6 +246,8 @@ public class DelegatingFilterProxy extends GenericFilterBean {
 		}
 	}
 
+	//Servlet 容器和Spring IoC容器之间的Filter生命周期并不匹配。为了让Spring IoC容器管理Filter的生命周期，FilterChainProxy便交由Spring Web下的DelegatingFilterProxy来代理。而且FilterChainProxy不会在添加到应用程序上下文的任何过滤器Bean上调用标准Servlet过滤器生命周期方法，
+	// FilterChainProxy的生命周期方法会委托给DelegatingFilterProxy来执行。而DelegatingFilterProxy作为Spring IoC和Servlet的连接器存在
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {

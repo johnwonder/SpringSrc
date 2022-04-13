@@ -183,6 +183,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 		super();
 		setBeanClass(beanClass);
 		setAutowireMode(autowireMode);
+		//不是构造函数自动装配时 才可能检查
 		if (dependencyCheck && getResolvedAutowireMode() != AUTOWIRE_CONSTRUCTOR) {
 			setDependencyCheck(DEPENDENCY_CHECK_OBJECTS);
 		}
@@ -255,6 +256,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 		return null;
 	}
 
+	//不允许改变父Bean
 	@Override
 	public void setParentName(@Nullable String parentName) {
 		if (parentName != null) {

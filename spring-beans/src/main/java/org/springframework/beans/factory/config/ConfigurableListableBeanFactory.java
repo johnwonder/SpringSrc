@@ -81,6 +81,7 @@ public interface ConfigurableListableBeanFactory
 	 */
 	void registerResolvableDependency(Class<?> dependencyType, @Nullable Object autowiredValue);
 
+	//判断beanName指定的bean是否是 descriptor所指定依赖的 自动装配候选者
 	/**
 	 * Determine whether the specified bean qualifies as an autowire candidate,
 	 * to be injected into other beans which declare a dependency of matching type.

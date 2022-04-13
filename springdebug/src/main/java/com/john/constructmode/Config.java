@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
  * @Date: 2020/8/30
  */
 //@ComponentScan("com.john.constructmode")
-@Configuration
+@RibbonClient(
+		 defaultConfiguration = {RibbonClientConfiguration.class}
+)
 public class Config {
 
 //	@Bean()

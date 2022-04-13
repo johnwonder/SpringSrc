@@ -163,6 +163,7 @@ import org.springframework.core.Ordered;
 @Import(AsyncConfigurationSelector.class)
 public @interface EnableAsync {
 
+	//https://mp.weixin.qq.com/s/ky0j0AAMriYVhHEleHcXfg
 	/**
 	 * Indicate the 'async' annotation type to be detected at either class
 	 * or method level.

@@ -20,6 +20,7 @@ import java.sql.Connection;
 
 import org.springframework.lang.Nullable;
 
+//事务传播行为，隔离级别
 /**
  * Interface that defines Spring-compliant transaction properties.
  * Based on the propagation behavior definitions analogous to EJB CMT attributes.
@@ -45,6 +46,7 @@ import org.springframework.lang.Nullable;
  */
 public interface TransactionDefinition {
 
+	//
 	/**
 	 * Support a current transaction; create a new one if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.
@@ -172,6 +174,7 @@ public interface TransactionDefinition {
 	 */
 	int ISOLATION_REPEATABLE_READ = Connection.TRANSACTION_REPEATABLE_READ;
 
+	//串行
 	/**
 	 * Indicates that dirty reads, non-repeatable reads and phantom reads
 	 * are prevented.

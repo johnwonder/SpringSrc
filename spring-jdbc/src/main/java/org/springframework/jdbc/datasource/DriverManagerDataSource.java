@@ -142,6 +142,7 @@ public class DriverManagerDataSource extends AbstractDriverBasedDataSource {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating new JDBC DriverManager Connection to [" + url + "]");
 		}
+		//todo 最重要的是这边
 		return getConnectionFromDriverManager(url, props);
 	}
 

@@ -546,6 +546,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 	}
 
+	//DispatcherServlet初始化的上下文加载的Bean是只对Spring Web MVC有效的Bean，
+	// 如Controller、HandlerMapping、HandlerAdapter等等，该初始化上下文应该只加载Web相关组件。
 	/**
 	 * Initialize and publish the WebApplicationContext for this servlet.
 	 * <p>Delegates to {@link #createWebApplicationContext} for actual creation
@@ -594,6 +596,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			wac = createWebApplicationContext(rootContext);
 		}
 
+		//如果没有触发 再触发一次
 		if (!this.refreshEventReceived) {
 			// Either the context is not a ConfigurableApplicationContext with refresh
 			// support or the context injected at construction time had already been
@@ -996,6 +999,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		LocaleContext localeContext = buildLocaleContext(request);
 
 		RequestAttributes previousAttributes = RequestContextHolder.getRequestAttributes();
+
+		//todo 初始化requestAttributes
 		ServletRequestAttributes requestAttributes = buildRequestAttributes(request, response, previousAttributes);
 
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);

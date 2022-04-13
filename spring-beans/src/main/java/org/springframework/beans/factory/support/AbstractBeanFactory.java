@@ -275,6 +275,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
+			//根据name 判断是获取 FactoryBean 本身还是 真正的bean
+			//todo 如果是FactoryBean 那么需要去尝试看看用户是不是要获取真正的bean而不是FactoryBean本身
+
 			//如果获取到了该单例Bean 且 传入的bean参数为空 , 那就再调用getObjectForBeanInstance
 			//用于FactoryBean的 getObject方法处理
 			//此时已经获取到单例了。。
@@ -330,6 +333,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				//到最后就变成RootBeanDefinition了
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				//这里args好像没用到
+				//判断mbd的isAbstract属性是否为true，
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				//保证依赖bean先初始化
@@ -369,6 +373,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							//创建bean开始
+							//调用子类 AbstractAutowireCapableBeanFactory
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -773,7 +778,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	public boolean containsLocalBean(String name) {
 		String beanName = transformedBeanName(name);
 		//todo containsBeanDefinition 在 DefaultListableBeanFactory 中实现 2020-09-15
-		//todo 在 singleObjects中或者beandefinitionMap中要有 且 不是factoryBean 或者 再判断下是不是factorybean
+		//todo 在 singleObjects中或者beandefinitionMap中要有 且 不是factoryBean本身 或者 再判断下是不是factorybean
 		return ((containsSingleton(beanName) || containsBeanDefinition(beanName)) &&
 				(!BeanFactoryUtils.isFactoryDereference(name) || isFactoryBean(beanName)));
 	}
@@ -1066,6 +1071,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		}
 	}
 
+	//返回给定bean名称的合并过的beandefinition
 	/**
 	 * Return a 'merged' BeanDefinition for the given bean name,
 	 * merging a child bean definition with its parent if necessary.
@@ -1080,10 +1086,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Override
 	public BeanDefinition getMergedBeanDefinition(String name) throws BeansException {
 		String beanName = transformedBeanName(name);
+		//containsBeanDefinition 只会检查当前的beandefinitionMap
 		// Efficiently check whether bean definition exists in this factory.
 		if (!containsBeanDefinition(beanName) && getParentBeanFactory() instanceof ConfigurableBeanFactory) {
 			return ((ConfigurableBeanFactory) getParentBeanFactory()).getMergedBeanDefinition(beanName);
 		}
+		//因为getBeanDefinition只会从当前Bean工厂去查找beandefinition
 		// Resolve merged bean definition locally.
 		return getMergedLocalBeanDefinition(beanName);
 	}
@@ -1210,8 +1218,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @return the transformed bean name
 	 */
 	protected String transformedBeanName(String name) {
-		//todo 解析别名为真正的bean id 2020-10-17
+
+		//todo 先会去除BeanFactory.FACTORY_BEAN_PREFIX  加上BeanFactory.FACTORY_BEAN_PREFIX 是获取FactoryBean本身
+
+		//todo 然后再转换别名 解析别名为真正的bean id 2020-10-17
 		//先会尝试去别名集合里去查找是否是别名
+
 		return canonicalName(BeanFactoryUtils.transformedBeanName(name));
 	}
 
@@ -1228,6 +1240,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return beanName;
 	}
 
+	//todo 初始化BeanWrapper 子类可以修改 牛逼
 	/**
 	 * Initialize the given BeanWrapper with the custom editors registered
 	 * with this factory. To be called for BeanWrappers that will create
@@ -1242,6 +1255,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//todo AbstractNestablePropertyAccessor 的父类 AbstractPropertyAccessor 继承了 TypeConverterSupport 又继承了 PropertyEditorRegistrySupport 2020-09-29
 		bw.setConversionService(getConversionService());
 
+		//bw.setAutoGrowNestedPaths();
 		//todo 会为当前BeanWrapper 注册自定义属性编辑器 2020-12-23
 		registerCustomEditors(bw);
 	}
@@ -1295,6 +1309,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 
+	//如果指定的bean对应于子BeanDefinition,那么就遍历父beanDefinition，返回合并过的RootBeanDefinition
 	/**
 	 * Return a merged RootBeanDefinition, traversing the parent bean definition
 	 * if the specified bean corresponds to a child bean definition.
@@ -1304,6 +1319,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @throws BeanDefinitionStoreException in case of an invalid bean definition
 	 */
 	protected RootBeanDefinition getMergedLocalBeanDefinition(String beanName) throws BeansException {
+		//快速检查mergedBeanDefinitions map,最小锁定
 		// Quick check on the concurrent map first, with minimal locking.
 		RootBeanDefinition mbd = this.mergedBeanDefinitions.get(beanName);
 		if (mbd != null) {
@@ -1344,6 +1360,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			String beanName, BeanDefinition bd, @Nullable BeanDefinition containingBd)
 			throws BeanDefinitionStoreException {
 
+		//进入直接锁
 		synchronized (this.mergedBeanDefinitions) {
 			RootBeanDefinition mbd = null;
 
@@ -1352,7 +1369,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				//检查一遍 有可能是同一个实例
 				mbd = this.mergedBeanDefinitions.get(beanName);
 			}
-
+			//从缓存中获取为空
 			if (mbd == null) {
 				if (bd.getParentName() == null) {
 					// Use copy of given root bean definition.
@@ -1383,7 +1400,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						//GenericBeanDefinition 和 ChildBeanDefinition  的parentName 不为空
 						String parentBeanName = transformedBeanName(bd.getParentName());
 						if (!beanName.equals(parentBeanName)) {
-							//直接从当前beanFactory中去找 父Bean
+							//尝试从当前beanFactory中去找 父Bean
 							pbd = getMergedBeanDefinition(parentBeanName);
 						}
 						else {
@@ -1794,8 +1811,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
 			// 是否是用户定义的而不是应用程序本身定义的
+			//todo 应用定义的才会对这个FactoryBean暴露的实例执行PostProcessor
 			boolean synthetic = (mbd != null && mbd.isSynthetic());
 			// 核心处理类
+			//
 			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
 		}
 		return object;

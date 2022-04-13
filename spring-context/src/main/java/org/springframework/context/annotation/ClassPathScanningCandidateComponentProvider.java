@@ -493,6 +493,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 */
 	protected boolean isCandidateComponent(MetadataReader metadataReader) throws IOException {
 		for (TypeFilter tf : this.excludeFilters) {
+			//todo AutoConfigurationExcludeFilter 会去匹配是否是AutoConfiguration 的类 2022-01-28
+			//todo 也就是这边的候选组件 会排除 AutoConfiguration的类
 			if (tf.match(metadataReader, getMetadataReaderFactory())) {
 				return false;
 			}

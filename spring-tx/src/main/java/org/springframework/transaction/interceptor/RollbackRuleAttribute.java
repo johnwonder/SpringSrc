@@ -42,6 +42,7 @@ public class RollbackRuleAttribute implements Serializable{
 			new RollbackRuleAttribute(RuntimeException.class);
 
 
+	//可能包含异常，正在解析类名，但始终需要FQN。这种方法可以进行多个字符串比较，但我们多久才能决定是否在异常发生后回滚一个事务
 	/**
 	 * Could hold exception, resolving class name but would always require FQN.
 	 * This way does multiple string comparisons, but how often do we decide
@@ -65,6 +66,8 @@ public class RollbackRuleAttribute implements Serializable{
 			throw new IllegalArgumentException(
 					"Cannot construct rollback rule from [" + clazz.getName() + "]: it's not a Throwable");
 		}
+		//todo 这里应该要用类型来匹配 用名字包含会有问题
+		//https://mp.weixin.qq.com/s/ERsDSEB1UK4j_Ao9M3hyKQ
 		this.exceptionName = clazz.getName();
 	}
 
@@ -111,6 +114,7 @@ public class RollbackRuleAttribute implements Serializable{
 
 
 	private int getDepth(Class<?> exceptionClass, int depth) {
+		//https://mp.weixin.qq.com/s/ERsDSEB1UK4j_Ao9M3hyKQ
 		if (exceptionClass.getName().contains(this.exceptionName)) {
 			// Found it!
 			return depth;

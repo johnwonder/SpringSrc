@@ -133,6 +133,7 @@ public class DefaultListableBeanFactoryTests {
 		Properties p = new Properties();
 		p.setProperty("x1.(class)", KnowsIfInstantiated.class.getName());
 		assertTrue("singleton not instantiated", !KnowsIfInstantiated.wasInstantiated());
+		//todo 使用了PropertiesBeanDefinitionReader
 		(new PropertiesBeanDefinitionReader(lbf)).registerBeanDefinitions(p);
 		lbf.preInstantiateSingletons();
 		assertTrue("singleton was instantiated", KnowsIfInstantiated.wasInstantiated());

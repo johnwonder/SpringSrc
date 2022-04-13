@@ -104,6 +104,7 @@ public class TaskExecutorAdapter implements AsyncListenableTaskExecutor {
 				return ((ExecutorService) this.concurrentExecutor).submit(task);
 			}
 			else {
+				//taskDecorator 肯定不为null
 				FutureTask<Object> future = new FutureTask<>(task, null);
 				doExecute(this.concurrentExecutor, this.taskDecorator, future);
 				return future;

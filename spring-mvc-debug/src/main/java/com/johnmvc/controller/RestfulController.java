@@ -20,8 +20,9 @@ public class RestfulController {
 	 * @return
 	 */
 	@GetMapping("resultString")
-	public String resultString() {
-		return "我是一个字符串！";
+	public String resultString() throws Exception {
+		throw new Exception("sss");
+		//return "我是一个字符串！";
 	}
 
 	/**

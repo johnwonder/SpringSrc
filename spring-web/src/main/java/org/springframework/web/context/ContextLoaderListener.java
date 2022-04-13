@@ -113,7 +113,9 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
+		//https://www.iteye.com/blog/jinnianshilongnian-1602617
 		//初始化Web 应用程序上下文
+		//ContextLoaderListener初始化的上下文加载的Bean是对于整个应用程序共享的，不管是使用什么表现层技术，一般如DAO层、Service层Bean；
 		initWebApplicationContext(event.getServletContext());
 	}
 

@@ -264,9 +264,12 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 		if (handlerType != null) {
 			Class<?> userType = ClassUtils.getUserClass(handlerType);
+
+			//lamda表达式
 			Map<Method, T> methods = MethodIntrospector.selectMethods(userType,
 					(MethodIntrospector.MetadataLookup<T>) method -> {
 						try {
+							//内部会判断是否标注@RequestMapping注解
 							return getMappingForMethod(method, userType);
 						}
 						catch (Throwable ex) {
@@ -338,6 +341,10 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 
 	// Handler method lookup
+
+	//getHandler方法中先调用RequestMappingHandlerMapping的getHandlerInternal方法，根据当前请求的路径从基类AbstractHandlerMethodMapping的内部类MappingRegistry中匹配出对应的HandlerMethod然后返回
+
+	//链接：https://www.jianshu.com/p/8a5637874d3d
 
 	/**
 	 * Look up a handler method for the given request.
@@ -577,8 +584,10 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		public void register(T mapping, Object handler, Method method) {
 			this.readWriteLock.writeLock().lock();
 			try {
+				//创建handlerMethod  2021-09-26
 				HandlerMethod handlerMethod = createHandlerMethod(handler, method);
 				assertUniqueMethodMapping(handlerMethod, mapping);
+				//放入mappingLookup
 				this.mappingLookup.put(mapping, handlerMethod);
 
 				List<String> directUrls = getDirectUrls(mapping);

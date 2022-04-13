@@ -51,6 +51,15 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
 import org.springframework.web.context.support.StandardServletEnvironment;
 import org.springframework.web.util.NestedServletException;
 
+//过滤器的简单基本实现，将其配置参数（web.xml中过滤器标记内的init param条目）作为bean属性处理
+//对于任何类型的过滤器来说都是一个方便的超类。
+// 配置参数的类型转换是自动的，使用转换后的值调用相应的setter方法。
+// 子类也可以指定所需的属性。没有匹配bean属性设置器的参数将被忽略
+
+//这个过滤器将实际的过滤留给子类，这些子类必须实现过滤器。doFilter方法。
+//这个通用过滤器基类对Spring 应用上下文没有依赖。
+// 过滤器通常不加载自己的上下文，而是从Spring根应用程序上下文访问服务bean，
+// 可以通过过滤器的ServletContext访问服务bean（请参阅org.springframework.web.context.support.webapplicationContextils）
 /**
  * Simple base implementation of {@link javax.servlet.Filter} which treats
  * its config parameters ({@code init-param} entries within the
@@ -160,6 +169,7 @@ public abstract class GenericFilterBean implements Filter, BeanNameAware, Enviro
 		this.servletContext = servletContext;
 	}
 
+	//仅在初始化为bean时相关，init方法就不会调用了。
 	/**
 	 * Calls the {@code initFilterBean()} method that might
 	 * contain custom initialization of a subclass.
@@ -184,6 +194,8 @@ public abstract class GenericFilterBean implements Filter, BeanNameAware, Enviro
 	}
 
 
+	//子类可以调用此方法 指定某个属性是强制的
+	//此方法仅适用于由FilterConfig实例驱动的传统初始化
 	/**
 	 * Subclasses can invoke this method to specify that this property
 	 * (which must match a JavaBean property they expose) is mandatory,
@@ -212,10 +224,12 @@ public abstract class GenericFilterBean implements Filter, BeanNameAware, Enviro
 
 		this.filterConfig = filterConfig;
 
+		//FilterConfigPropertyValues继承自  MutablePropertyValues
 		// Set bean properties from init parameters.
 		PropertyValues pvs = new FilterConfigPropertyValues(filterConfig, this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
+				//构造一个BeanWrapperImpl实例
 				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(filterConfig.getServletContext());
 				Environment env = this.environment;
@@ -346,6 +360,7 @@ public abstract class GenericFilterBean implements Filter, BeanNameAware, Enviro
 				String property = paramNames.nextElement();
 				Object value = config.getInitParameter(property);
 				addPropertyValue(new PropertyValue(property, value));
+				//添加过了 就可以从必须添加的集合中移除了
 				if (missingProps != null) {
 					missingProps.remove(property);
 				}

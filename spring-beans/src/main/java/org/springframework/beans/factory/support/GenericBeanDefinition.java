@@ -29,7 +29,7 @@ import org.springframework.lang.Nullable;
  * registering user-visible bean definitions (which a post-processor might operate on,
  * potentially even reconfiguring the parent name). Use {@code RootBeanDefinition} /
  * {@code ChildBeanDefinition} where parent/child relationships happen to be pre-determined.
- *
+ *  可能重新配置父名称
  * @author Juergen Hoeller
  * @since 2.5
  * @see #setParentName

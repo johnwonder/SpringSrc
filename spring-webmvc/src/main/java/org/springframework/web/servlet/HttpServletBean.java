@@ -138,6 +138,8 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		return new StandardServletEnvironment();
 	}
 
+	//：：：将Servlet初始化参数（init-param）设置到该组件上（如contextAttribute、contextClass、namespace、contextConfigLocation），
+	// 通过BeanWrapper简化设值过程，方便后续使用
 	/**
 	 * Map config parameters onto bean properties of this servlet, and
 	 * invoke subclass initialization.
@@ -170,6 +172,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 			}
 		}
 
+		//提供给子类初始化扩展点，initServletBean()，该方法由FrameworkServlet覆盖。
 		// Let subclasses do whatever initialization they like.
 		//todo important 初始化servlet 调用FrameworkServlet 2020-11-16
 		initServletBean();

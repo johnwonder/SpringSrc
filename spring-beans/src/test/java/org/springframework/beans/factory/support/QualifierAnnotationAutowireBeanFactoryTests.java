@@ -25,6 +25,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -86,15 +87,22 @@ public class QualifierAnnotationAutowireBeanFactoryTests {
 		cavs2.addGenericArgumentValue(MARK);
 		RootBeanDefinition person2 = new RootBeanDefinition(Person.class, cavs2, null);
 		lbf.registerBeanDefinition(MARK, person2);
+
+		lbf.setAutowireCandidateResolver(new QualifierAnnotationAutowireCandidateResolver());
+
 		DependencyDescriptor qualifiedDescriptor = new DependencyDescriptor(
 				QualifiedTestBean.class.getDeclaredField("qualified"), false);
+		//Person类型
 		DependencyDescriptor nonqualifiedDescriptor = new DependencyDescriptor(
 				QualifiedTestBean.class.getDeclaredField("nonqualified"), false);
-		assertTrue(lbf.isAutowireCandidate(JUERGEN, null));
+		//assertTrue(lbf.isAutowireCandidate(JUERGEN, null));
+
 		assertTrue(lbf.isAutowireCandidate(JUERGEN, nonqualifiedDescriptor));
+		//todo 因为JUERGEN有TestQualifier
 		assertTrue(lbf.isAutowireCandidate(JUERGEN, qualifiedDescriptor));
-		assertTrue(lbf.isAutowireCandidate(MARK, null));
+		//assertTrue(lbf.isAutowireCandidate(MARK, null));
 		assertTrue(lbf.isAutowireCandidate(MARK, nonqualifiedDescriptor));
+		//todo 因为MARK没有TestQualifier
 		assertFalse(lbf.isAutowireCandidate(MARK, qualifiedDescriptor));
 	}
 

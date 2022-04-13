@@ -407,6 +407,7 @@ public class ScheduledTaskRegistrar implements ScheduledTaskHolder, Initializing
 		ScheduledTask scheduledTask = this.unresolvedTasks.remove(task);
 		boolean newTask = false;
 		if (scheduledTask == null) {
+
 			scheduledTask = new ScheduledTask(task);
 			newTask = true;
 		}

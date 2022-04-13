@@ -25,7 +25,9 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-//主要内部使用 bean definition读取器的实现。
+//主要内部使用
+// bean definition读取器实现的工具方法。
+//工具方法可以声明为抽象类
 /**
  * Utility methods that are useful for bean definition reader implementations.
  * Mainly intended for internal use.
@@ -110,8 +112,10 @@ public abstract class BeanDefinitionReaderUtils {
 			BeanDefinition definition, BeanDefinitionRegistry registry, boolean isInnerBean)
 			throws BeanDefinitionStoreException {
 
+		//获取bean定义的类名
 		String generatedBeanName = definition.getBeanClassName();
 		if (generatedBeanName == null) {
+			//如果类名为空那么获取父bean的名称
 			if (definition.getParentName() != null) {
 				generatedBeanName = definition.getParentName() + "$child";
 			}
@@ -129,6 +133,7 @@ public abstract class BeanDefinitionReaderUtils {
 		String id = generatedBeanName;
 		if (isInnerBean) {
 			// Inner bean: generate identity hashcode suffix.
+			//
 			id = generatedBeanName + GENERATED_BEAN_NAME_SEPARATOR + ObjectUtils.getIdentityHexString(definition);
 		}
 		else {

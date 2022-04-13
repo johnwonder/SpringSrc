@@ -18,6 +18,8 @@ package org.springframework.aop;
 
 import org.aopalliance.intercept.MethodInterceptor;
 
+//在Spring中，为目标对象添加新的属性和行为必须声明相应的接口以及相应的实现。
+// 这样，再通过特定的拦截器将新的接口定义以及实现类中的逻辑附加到目标对象上。然后，目标对象（确切的说，是目标对象的代理对象）就拥有了新的状态和行为
 /**
  * Subinterface of AOP Alliance MethodInterceptor that allows additional interfaces
  * to be implemented by the interceptor, and available via a proxy using that
@@ -30,5 +32,5 @@ import org.aopalliance.intercept.MethodInterceptor;
  * @see DynamicIntroductionAdvice
  */
 public interface IntroductionInterceptor extends MethodInterceptor, DynamicIntroductionAdvice {
-
+	//https://blog.csdn.net/f641385712/article/details/89303088
 }

@@ -42,6 +42,7 @@ public class ProxyCachingConfiguration extends AbstractCachingConfiguration {
 	@Bean(name = CacheManagementConfigUtils.CACHE_ADVISOR_BEAN_NAME)
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public BeanFactoryCacheOperationSourceAdvisor cacheAdvisor() {
+
 		BeanFactoryCacheOperationSourceAdvisor advisor = new BeanFactoryCacheOperationSourceAdvisor();
 		advisor.setCacheOperationSource(cacheOperationSource());
 		advisor.setAdvice(cacheInterceptor());
@@ -57,6 +58,7 @@ public class ProxyCachingConfiguration extends AbstractCachingConfiguration {
 		return new AnnotationCacheOperationSource();
 	}
 
+	// 通过 CacheAdviceParser xml构造的也是CacheInterceptor
 	@Bean
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public CacheInterceptor cacheInterceptor() {

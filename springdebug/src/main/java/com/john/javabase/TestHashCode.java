@@ -26,5 +26,9 @@ public class TestHashCode {
 		System.out.println(System.identityHashCode(b));
 		System.out.println(a.hashCode());
 		System.out.println(b.hashCode());
+
+		System.out.println("CGLIB$g$1".hashCode() ^ "()V".hashCode());
+
+		System.out.println("CGLIB$g$1()V".hashCode());
 	}
 }

@@ -279,6 +279,7 @@ class ConfigurationClassBeanDefinitionReader {
 		BeanDefinition beanDefToRegister = beanDef;
 		if (proxyMode != ScopedProxyMode.NO) {
 
+			//todo 可以参考 spring-cloud-context中的 RefreshScope
 			//todo 通过ScopedProxyCreator 创建一个代理 BeanDefinition
 			//todo ConfigurationClassBeanDefinition
 			BeanDefinitionHolder proxyDef = ScopedProxyCreator.createScopedProxy(

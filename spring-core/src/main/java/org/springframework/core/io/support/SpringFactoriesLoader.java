@@ -105,6 +105,7 @@ public final class SpringFactoriesLoader {
 			//实例化一个工厂
 			result.add(instantiateFactory(factoryName, factoryClass, classLoaderToUse));
 		}
+		//todo 还会根据Order 排序
 		AnnotationAwareOrderComparator.sort(result);
 		return result;
 	}

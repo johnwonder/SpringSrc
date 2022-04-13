@@ -145,6 +145,7 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory,
 		HttpURLConnection connection = openConnection(uri.toURL(), this.proxy);
 		prepareConnection(connection, httpMethod.name());
 
+		//默认为true
 		if (this.bufferRequestBody) {
 			return new SimpleBufferingClientHttpRequest(connection, this.outputStreaming);
 		}

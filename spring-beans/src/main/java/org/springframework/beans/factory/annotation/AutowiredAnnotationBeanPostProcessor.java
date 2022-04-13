@@ -230,6 +230,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	}
 
 
+	//内省bean定义，对bean的实际实例进行后期处理之前准备一些缓存的元数据
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, beanType, null);
@@ -436,7 +437,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
-					//内部找到@Autowired注解的成员或者方法
+					//todo 内部找到@Autowired注解的成员或者方法
 					metadata = buildAutowiringMetadata(clazz);
 					//放入缓存
 					this.injectionMetadataCache.put(cacheKey, metadata);
@@ -478,6 +479,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 			//todo 查询是否有方法上标注了@Autowire注解 2021-1-20
 			ReflectionUtils.doWithLocalMethods(targetClass, method -> {
+				//查找提供的桥接方法的原始方法
 				Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
 				if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {
 					return;
@@ -614,7 +616,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				value = resolvedCachedArgument(beanName, this.cachedFieldValue);
 			}
 			else {
-				//构造一个DependencyDescriptor
+				//1.构造一个DependencyDescriptor
 				DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
 				desc.setContainingClass(bean.getClass());
 				Set<String> autowiredBeanNames = new LinkedHashSet<>(1);
@@ -688,6 +690,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				arguments = resolveCachedArguments(beanName);
 			}
 			else {
+				//获取方法参数类型数组
 				Class<?>[] paramTypes = method.getParameterTypes();
 				arguments = new Object[paramTypes.length];
 				DependencyDescriptor[] descriptors = new DependencyDescriptor[paramTypes.length];

@@ -183,7 +183,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	private final Map<Class<?>, String[]> singletonBeanNamesByType = new ConcurrentHashMap<>(64);
 
 	/** List of bean definition names, in registration order. */
-	//bean定义的名字，按照登记顺序
+	//bean定义的名字，按照注册顺序
 	private volatile List<String> beanDefinitionNames = new ArrayList<>(256);
 
 	/** List of names of manually registered singletons, in registration order. */
@@ -491,6 +491,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 	}
 
+	//默认包含原型bean 且允许提起初始化FactoryBean LazyInit Bean
 	@Override
 	public String[] getBeanNamesForType(@Nullable Class<?> type) {
 		return getBeanNamesForType(type, true, true);
@@ -498,7 +499,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	@Override
 	public String[] getBeanNamesForType(@Nullable Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
-		//配置么有冻结 或者type为空 或者不允许 提前初始化的情况下就立马去获取
+		//配置没有冻结 或者type为空 或者不允许 提前初始化的情况下就立马去获取
 		//配置在 实例化所有单例bean前 会冻结
 		if (!isConfigurationFrozen() || type == null || !allowEagerInit) {
 			return doGetBeanNamesForType(ResolvableType.forRawClass(type), includeNonSingletons, allowEagerInit);
@@ -534,6 +535,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			//todo 只有当bean名称没有定义为其他bean的别名时，才认为bean是合格的
 			if (!isAlias(beanName)) {
 				try {
+					//获取合并过后的beandefinition
 					RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 					// Only check bean definition if it is complete.
 					// requiresEagerInitForType(mbd.getFactoryBeanName()) 判断当前单例容器里还没有 就返回true
@@ -598,6 +600,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		//todo 再查找通过registerSingleon 手动注册的
 		// Check manually registered singletons too.
 		for (String beanName : this.manualSingletonNames) {
 			try {
@@ -945,7 +948,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 	}
 
-
+	//beanName 当作 放入 beanDefinitionMap中的key
 	//---------------------------------------------------------------------
 	// Implementation of BeanDefinitionRegistry(登记处) interface
 	//---------------------------------------------------------------------
@@ -1275,6 +1278,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
 			if (result == null) {
+				//继续解析 比如@Value里面的表达式
 				result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
 			}
 			return result;
@@ -1293,11 +1297,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 
 			Class<?> type = descriptor.getDependencyType();
+			//todo 这里解析@Value 值
 			Object value = getAutowireCandidateResolver().getSuggestedValue(descriptor);
 			if (value != null) {
 				if (value instanceof String) {
+					//todo 解析 占位符 ${}
 					String strVal = resolveEmbeddedValue((String) value);
 					BeanDefinition bd = (beanName != null && containsBean(beanName) ? getMergedBeanDefinition(beanName) : null);
+					//todo 解析 #{}
 					value = evaluateBeanDefinitionString(strVal, bd);
 				}
 				TypeConverter converter = (typeConverter != null ? typeConverter : getTypeConverter());

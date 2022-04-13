@@ -73,6 +73,7 @@ public class MethodProxy {
 					CreateInfo ci = createInfo;
 
 					FastClassInfo fci = new FastClassInfo();
+					//helper内部会生成一个FastClass类
 					fci.f1 = helper(ci, ci.c1);
 					fci.f2 = helper(ci, ci.c2);
 					fci.i1 = fci.f1.getIndex(sig1);
@@ -218,6 +219,8 @@ public class MethodProxy {
 		try {
 			init();
 			FastClassInfo fci = fastClassInfo;
+			//f1就是被代理对象
+			//i1 就是被代理方法的索引
 			return fci.f1.invoke(fci.i1, obj, args);
 		}
 		catch (InvocationTargetException ex) {
@@ -244,6 +247,7 @@ public class MethodProxy {
 		try {
 			init();
 			FastClassInfo fci = fastClassInfo;
+			//代理对象内部方法 invoke
 			return fci.f2.invoke(fci.i2, obj, args);
 		}
 		catch (InvocationTargetException e) {

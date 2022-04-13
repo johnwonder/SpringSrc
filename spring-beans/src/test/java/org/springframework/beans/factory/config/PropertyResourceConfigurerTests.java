@@ -215,13 +215,17 @@ public class PropertyResourceConfigurerTests {
 
 	@Test
 	public void testPropertyOverrideConfigurerWithPropertiesXmlFile() {
+
+		//todo 这里注册了一个bean 但是还没创建实例
 		BeanDefinition def = BeanDefinitionBuilder.genericBeanDefinition(IndexedTestBean.class).getBeanDefinition();
 		factory.registerBeanDefinition("tb", def);
 
+		//更新bean definition
 		PropertyOverrideConfigurer poc = new PropertyOverrideConfigurer();
 		poc.setLocation(TEST_PROPS_XML);
 		poc.postProcessBeanFactory(factory);
 
+		//获取bean 并且创建实例
 		IndexedTestBean tb = (IndexedTestBean) factory.getBean("tb");
 		assertEquals(99, tb.getArray()[0].getAge());
 		assertEquals("test", ((TestBean) tb.getList().get(1)).getName());

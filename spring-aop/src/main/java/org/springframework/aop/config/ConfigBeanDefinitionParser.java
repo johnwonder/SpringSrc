@@ -112,6 +112,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 				parsePointcut(elt, parserContext);
 			}
 			else if (ADVISOR.equals(localName)) {
+				//创建的是DefaultBeanFactoryPointcutAdvisor
 				parseAdvisor(elt, parserContext);
 			}
 			else if (ASPECT.equals(localName)) {
@@ -139,6 +140,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 	 * with the supplied {@link BeanDefinitionRegistry}.
 	 */
 	private void parseAdvisor(Element advisorElement, ParserContext parserContext) {
+		//内部解析 advice-ref 属性
 		AbstractBeanDefinition advisorDef = createAdvisorBeanDefinition(advisorElement, parserContext);
 		String id = advisorElement.getAttribute(ID);
 

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.lang.Nullable;
 
+//只考虑基础的advisor
 /**
  * Auto-proxy creator that considers infrastructure Advisor beans only,
  * ignoring any application-defined Advisors.
@@ -40,6 +41,7 @@ public class InfrastructureAdvisorAutoProxyCreator extends AbstractAdvisorAutoPr
 		this.beanFactory = beanFactory;
 	}
 
+	//todo 主要起的作用是判断了 beandefinition的角色是否是 ROLE_INFRASTRUCTURE
 	@Override
 	protected boolean isEligibleAdvisorBean(String beanName) {
 		return (this.beanFactory != null && this.beanFactory.containsBeanDefinition(beanName) &&

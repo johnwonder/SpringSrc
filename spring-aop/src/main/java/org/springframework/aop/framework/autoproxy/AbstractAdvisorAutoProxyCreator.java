@@ -60,7 +60,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 			throw new IllegalArgumentException(
 					"AdvisorAutoProxyCreator requires a ConfigurableListableBeanFactory: " + beanFactory);
 		}
-		//构建一个advisorRetrievalHelper
+		//初始化一个advisorRetrievalHelper
 		initBeanFactory((ConfigurableListableBeanFactory) beanFactory);
 	}
 	//构建一个advisorRetrievalHelper
@@ -173,6 +173,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	protected void extendAdvisors(List<Advisor> candidateAdvisors) {
 	}
 
+	//todo 通常返回已经过滤过的advisors..
 	/**
 	 * This auto-proxy creator always returns pre-filtered Advisors.
 	 */

@@ -11,14 +11,17 @@ public class ImportRegistrarDemo {
 
 	public static void main(String[] args) {
 
-		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.john.ImportBean");
 
 		//ImportConfig 变成 AnnotatedGenericBeanDefinition
-		applicationContext.register(ImportConfig.class);
+		//applicationContext.register(ImportConfig.class);
 
 		//不刷新还会报错。。
-		applicationContext.refresh();
+		//applicationContext.refresh();
 
-		applicationContext.getBean(UserService.class).test();
+		//applicationContext.getBean(UserService.class).test();
+
+		System.out.println(applicationContext.getBean(ImportBeanFactory.class));
+
 	}
 }

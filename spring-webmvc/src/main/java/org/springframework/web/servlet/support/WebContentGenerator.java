@@ -37,6 +37,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 
+//用于提供如浏览器缓存控制、是否必须有session开启、支持的请求方法类型（GET、POST等）等
 /**
  * Convenient superclass for any kind of web content generator,
  * like {@link org.springframework.web.servlet.mvc.AbstractController}

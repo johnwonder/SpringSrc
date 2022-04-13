@@ -61,7 +61,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory
  * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
  */
-//Capable (有能力的)
+//AutowireCapable (有自动装配能力的)
 public interface AutowireCapableBeanFactory extends BeanFactory {
 
 	/**
@@ -141,6 +141,11 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	 */
 	<T> T createBean(Class<T> beanClass) throws BeansException;
 
+	//通过应用实例化后回调和bean属性后处理(比如用于注解驱动的注入)来填充给定的bean实例
+
+	//这本质上是为了（重新）填充带注解的字段和方法，无论是新实例还是反序列化实例
+
+	//不代表可以按照 名称或按类型来自动装配属性
 	/**
 	 * Populate the given bean instance through applying after-instantiation callbacks
 	 * and bean property post-processing (e.g. for annotation-driven injection).
@@ -153,6 +158,7 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	 */
 	void autowireBean(Object existingBean) throws BeansException;
 
+	//配置给定的原始bean
 	/**
 	 * Configure the given raw bean: autowiring bean properties, applying
 	 * bean property values, applying factory callbacks such as {@code setBeanName}
@@ -177,6 +183,8 @@ public interface AutowireCapableBeanFactory extends BeanFactory {
 	// Specialized methods for fine-grained control over the bean lifecycle
 	//-------------------------------------------------------------------------
 
+	//使用指定的autowire策略完全创建给定类的新bean实例
+	//此处支持此接口中定义的所有常量
 	/**
 	 * Fully create a new bean instance of the given class with the specified
 	 * autowire strategy. All constants defined in this interface are supported here.

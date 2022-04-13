@@ -270,6 +270,7 @@ class ConfigurationClassParser {
 	protected final SourceClass doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass)
 			throws IOException {
 
+		//todo 其实 SpringBootApplication 中的 SpringBootConfiguration 也有Component注解
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			//内嵌类
 			// Recursively process any member (nested) classes first
@@ -290,6 +291,7 @@ class ConfigurationClassParser {
 		}
 
 		//todo 处理ComponentScan 注解 2020-11-17
+		//todo 其实 SpringBootApplication 中 也带有ComponentScan 2022-01-28
 		// Process any @ComponentScan annotations
 		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
@@ -558,11 +560,11 @@ class ConfigurationClassParser {
 			for (SourceClass annotation : sourceClass.getAnnotations()) {
 				String annName = annotation.getMetadata().getClassName();
 				if (!annName.startsWith("java") && !annName.equals(Import.class.getName())) {
-					//递归获取Import
+					//递归注解里的Import
 					collectImports(annotation, imports, visited);
 				}
 			}
-			//获取Import注解里的类数组
+			//获取Import注解里的数组中的类名
 			imports.addAll(sourceClass.getAnnotationAttributes(Import.class.getName(), "value"));
 		}
 	}
@@ -583,6 +585,7 @@ class ConfigurationClassParser {
 			//获取import 组
 			Class<? extends Group> group = deferredImport.getImportSelector().getImportGroup();
 
+			//Map的computeIfAbsent方法
 			DeferredImportSelectorGrouping grouping = groupings.computeIfAbsent(
 					(group != null ? group : deferredImport),
 					key -> new DeferredImportSelectorGrouping(createGroup(group)));
@@ -593,6 +596,7 @@ class ConfigurationClassParser {
 					deferredImport.getConfigurationClass());
 		}
 		for (DeferredImportSelectorGrouping grouping : groupings.values()) {
+			//调用group接口的 process 方法
 			grouping.getImports().forEach(entry -> {
 				ConfigurationClass configurationClass = configurationClasses.get(entry.getMetadata());
 				try {
@@ -639,17 +643,28 @@ class ConfigurationClassParser {
 				for (SourceClass candidate : importCandidates) {
 
 					//https://blog.csdn.net/everyok/article/details/81350905
-					//todo @ImportSelector 注解
+					//todo ImportSelector 接口
+					//比如Spring boot中的
+					//ImportAutoConfigurationImportSelector
+					//AutoConfigurationImportSelector
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
+						//实例化selector
 						ImportSelector selector = BeanUtils.instantiateClass(candidateClass, ImportSelector.class);
+
+						//todo Springboot 中 DeterminableImports 接口中所说的 ImportSelector 接口 调用之前 可能会调用Aware接口
+						////2022-01-13
 						ParserStrategyUtils.invokeAwareMethods(
 								selector, this.environment, this.resourceLoader, this.registry);
+
 
 						//deferredImportSelectors 不为空才添加到deferredImportSelectors中
 						if (this.deferredImportSelectors != null && selector instanceof DeferredImportSelector) {
 							//向LinkedList 中添加元素
+							////比如Spring boot中的
+							//ImportAutoConfigurationImportSelector
+							//AutoConfigurationImportSelector
 							this.deferredImportSelectors.add(
 									new DeferredImportSelectorHolder(configClass, (DeferredImportSelector) selector));
 						}
@@ -666,11 +681,17 @@ class ConfigurationClassParser {
 						Class<?> candidateClass = candidate.loadClass();
 						ImportBeanDefinitionRegistrar registrar =
 								BeanUtils.instantiateClass(candidateClass, ImportBeanDefinitionRegistrar.class);
+
+						//todo Springboot 中 DeterminableImports 接口中所说的 ImportSelector 接口 调用之前 可能会调用Aware接口
+						//2022-01-13
 						ParserStrategyUtils.invokeAwareMethods(
 								registrar, this.environment, this.resourceLoader, this.registry);
 						configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());
 					}
 					else {
+						//这里会判断 类不是ImportSelector 或者ImportBeanDefinitionRegistrar
+						//才会触发ImportAware接口的方法
+						//candidate.getMetadata().getClassName() 为 原始类名
 						// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
 						// process it as an @Configuration class
 						this.importStack.registerImport(
@@ -775,6 +796,7 @@ class ConfigurationClassParser {
 	}
 
 
+	//Import 栈 继承自 Jdk ArrayDeque 当作栈使用
 	@SuppressWarnings("serial")
 	private static class ImportStack extends ArrayDeque<ConfigurationClass> implements ImportRegistry {
 
@@ -802,6 +824,7 @@ class ConfigurationClassParser {
 			}
 		}
 
+		//先进后出 后进先出
 		/**
 		 * Given a stack containing (in order)
 		 * <ul>
@@ -906,6 +929,7 @@ class ConfigurationClassParser {
 		public SourceClass(Object source) {
 			this.source = source;
 			if (source instanceof Class) {
+				//如果是类就是标准的反射
 				this.metadata = new StandardAnnotationMetadata((Class<?>) source, true);
 			}
 			else {
@@ -1050,6 +1074,7 @@ class ConfigurationClassParser {
 					return new SourceClass(metadataReaderFactory.getMetadataReader(className));
 				}
 			}
+			//调用ConfigurationClassParser的asSourceClass方法
 			return asSourceClass(className);
 		}
 

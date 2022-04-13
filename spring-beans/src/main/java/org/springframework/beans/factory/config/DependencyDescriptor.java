@@ -41,6 +41,8 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
+//构造函数参数，方法参数或者字段
+//统一访问他们的元数据
 /**
  * Descriptor for a specific dependency that is about to be injected.
  * Wraps a constructor parameter, a method parameter or a field,
@@ -52,8 +54,10 @@ import org.springframework.util.ObjectUtils;
 @SuppressWarnings("serial")
 public class DependencyDescriptor extends InjectionPoint implements Serializable {
 
+	//这个依赖的定义类，比如依赖是字段 那么就代表定义这个字段的类是什么
 	private final Class<?> declaringClass;
 
+	//方法参数所属的方法名称是什么
 	@Nullable
 	private String methodName;
 
@@ -287,6 +291,7 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 		}
 	}
 
+	//（可选）设置包含此依赖项的具体类。这可能不同于声明参数/字段的类，因为它可能是其子类，可能会替换类型变量
 	/**
 	 * Optionally set the concrete class that contains this dependency.
 	 * This may differ from the class that declares the parameter/field in that
@@ -296,7 +301,9 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 	public void setContainingClass(Class<?> containingClass) {
 		this.containingClass = containingClass;
 		this.resolvableType = null;
+		//方法参数类型可能变化
 		if (this.methodParameter != null) {
+			//设置方法参数类型
 			GenericTypeResolver.resolveParameterType(this.methodParameter, containingClass);
 		}
 	}

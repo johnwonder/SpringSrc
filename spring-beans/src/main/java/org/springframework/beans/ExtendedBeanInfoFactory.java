@@ -45,6 +45,7 @@ public class ExtendedBeanInfoFactory implements BeanInfoFactory, Ordered {
 	@Override
 	@Nullable
 	public BeanInfo getBeanInfo(Class<?> beanClass) throws IntrospectionException {
+		//todo supports 判断静态
 		return (supports(beanClass) ? new ExtendedBeanInfo(Introspector.getBeanInfo(beanClass)) : null);
 	}
 

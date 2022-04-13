@@ -33,6 +33,7 @@ import org.springframework.http.HttpMethod;
  */
 public class BufferingClientHttpRequestFactory extends AbstractClientHttpRequestFactoryWrapper {
 
+	//妙，， requestFactory再包一层
 	/**
 	 * Create a buffering wrapper for the given {@link ClientHttpRequestFactory}.
 	 * @param requestFactory the target request factory to wrap

@@ -72,6 +72,7 @@ public class BeanFactoryUtilsTests {
 
 		this.dependentBeansFactory = new DefaultListableBeanFactory();
 		new XmlBeanDefinitionReader(this.dependentBeansFactory).loadBeanDefinitions(DEPENDENT_BEANS_CONTEXT);
+		//实例化单例bean
 		dependentBeansFactory.preInstantiateSingletons();
 		this.listableBeanFactory = child;
 	}
@@ -95,6 +96,8 @@ public class BeanFactoryUtilsTests {
 		// Count minus duplicate
 		assertTrue("Should count 8 beans, not " + BeanFactoryUtils.countBeansIncludingAncestors(this.listableBeanFactory),
 				BeanFactoryUtils.countBeansIncludingAncestors(this.listableBeanFactory) == 8);
+
+		//countBeansIncludingAncestors 内部调用 beanNamesForTypeIncludingAncestors 方法
 	}
 
 	@Test
@@ -111,11 +114,13 @@ public class BeanFactoryUtilsTests {
 		assertEquals(1, names.size());
 		assertTrue(names.contains("indexedBean"));
 		// Distinguish from default ListableBeanFactory behavior
+		//不考虑 父级工厂 所以没有indexedBean
 		assertTrue(listableBeanFactory.getBeanNamesForType(IndexedTestBean.class).length == 0);
 	}
 
 	@Test
 	public void testGetBeanNamesForTypeWithOverride() throws Exception {
+		//也能返回工厂bean
 		List<String> names = Arrays.asList(
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(this.listableBeanFactory, ITestBean.class));
 		// includes 2 TestBeans from FactoryBeans (DummyFactory definitions)
@@ -156,7 +161,7 @@ public class BeanFactoryUtilsTests {
 
 		beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(lbf, DummyFactory.class, true, true);
 		assertEquals(2, beans.size());
-		assertEquals(t3, beans.get("&t3"));
+		assertEquals(t3, beans.get("&t3")); //获取工厂bean本身
 		assertEquals(t4, beans.get("&t4"));
 
 		beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(lbf, FactoryBean.class, true, true);
@@ -180,6 +185,7 @@ public class BeanFactoryUtilsTests {
 		this.listableBeanFactory.registerSingleton("t3", t3);
 		this.listableBeanFactory.registerSingleton("t4", t4);
 
+		//实现ITestBean接口的Bean
 		Map<String, ?> beans =
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(this.listableBeanFactory, ITestBean.class, true, false);
 		assertEquals(6, beans.size());
@@ -195,6 +201,8 @@ public class BeanFactoryUtilsTests {
 
 		beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.listableBeanFactory, ITestBean.class, false, true);
 		Object testFactory1 = this.listableBeanFactory.getBean("testFactory1");
+
+		//t4 不 包含在内
 		assertEquals(5, beans.size());
 		assertEquals(test, beans.get("test"));
 		assertEquals(testFactory1, beans.get("testFactory1"));

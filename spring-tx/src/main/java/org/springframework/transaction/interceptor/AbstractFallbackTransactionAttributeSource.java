@@ -140,6 +140,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 		return new MethodClassKey(method, targetClass);
 	}
 
+	//todo fallback体现 重点在这里 2021-10-27
 	/**
 	 * Same signature as {@link #getTransactionAttribute}, but doesn't cache the result.
 	 * {@link #getTransactionAttribute} is effectively a caching decorator for this method.
@@ -158,6 +159,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 		// If the target class is null, the method will be unchanged.
 		Method specificMethod = AopUtils.getMostSpecificMethod(method, targetClass);
 
+		//先尝试类的方法
 		// First try is the method in the target class.
 		TransactionAttribute txAttr = findTransactionAttribute(specificMethod);
 		if (txAttr != null) {

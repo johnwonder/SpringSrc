@@ -157,6 +157,8 @@ public abstract class WebUtils {
 	 */
 	public static final String ERROR_EXCEPTION_ATTRIBUTE = "javax.servlet.error.exception";
 
+	//错误页面请求URI的标准Servlet 2.3+规范请求属性。
+	//当暴露给标记为错误页的JSP时，直接转发而不是通过servlet容器的错误页解析机制
 	/**
 	 * Standard Servlet 2.3+ spec request attribute for error page request URI.
 	 * <p>To be exposed to JSPs that are marked as error pages, when forwarding

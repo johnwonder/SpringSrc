@@ -61,6 +61,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 	private Environment environment;
 
+	//采用默认的beanNameGenerator
 	private BeanNameGenerator beanNameGenerator = new DefaultBeanNameGenerator();
 
 

@@ -145,6 +145,7 @@ public class StandardBeanExpressionResolver implements BeanExpressionResolver {
 			StandardEvaluationContext sec = this.evaluationCache.get(evalContext);
 			if (sec == null) {
 				sec = new StandardEvaluationContext(evalContext);
+				//添加属性访问器
 				sec.addPropertyAccessor(new BeanExpressionContextAccessor());
 				sec.addPropertyAccessor(new BeanFactoryAccessor());
 				sec.addPropertyAccessor(new MapAccessor());

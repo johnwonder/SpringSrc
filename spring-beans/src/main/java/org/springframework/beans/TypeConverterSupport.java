@@ -36,6 +36,7 @@ import org.springframework.util.Assert;
  */
 public abstract class TypeConverterSupport extends PropertyEditorRegistrySupport implements TypeConverter {
 
+	//由子类实现 比如AbstractNestablePropertyAccessor实现
 	@Nullable
 	TypeConverterDelegate typeConverterDelegate;
 

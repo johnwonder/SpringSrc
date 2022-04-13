@@ -76,6 +76,8 @@ public class DelegatingIntroductionInterceptor extends IntroductionInfoSupport
 	 * additional interfaces.
 	 */
 	protected DelegatingIntroductionInterceptor() {
+		//https://blog.csdn.net/f641385712/article/details/89303088
+		//关键在这边 实现接口的实例是当前对象 参看IntroductionBenchmarkTests
 		init(this);
 	}
 

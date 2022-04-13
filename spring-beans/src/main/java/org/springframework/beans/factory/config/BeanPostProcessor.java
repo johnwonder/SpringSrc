@@ -99,6 +99,7 @@ public interface BeanPostProcessor {
 	 */
 	@Nullable
 	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		//针对FactoryBean创建的实例 会在实例创建完后调用 postProcessObjectFromFactoryBean
 		return bean;
 	}
 

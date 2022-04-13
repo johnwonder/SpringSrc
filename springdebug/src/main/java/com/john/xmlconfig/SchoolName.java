@@ -17,6 +17,16 @@ public class SchoolName {
 		this.name = name;
 	}
 
+	private SchoolName childSchool;
+
+	public SchoolName getChildSchool() {
+		return childSchool;
+	}
+
+	public void setChildSchool(SchoolName childSchool) {
+		this.childSchool = childSchool;
+	}
+
 	@Override
 	public String toString() {
 		return "SchoolName{" +

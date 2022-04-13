@@ -37,6 +37,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+//混合完整的BeanDefinition类的基类，考虑了公共属性(分解公共属性)  GenericBeanDefinition, RootBeanDefinition, and ChildBeanDefinition。
 /**
  * Base class for concrete, full-fledged {@link BeanDefinition} classes,
  * factoring out common properties(分解公共属性) of {@link GenericBeanDefinition},
@@ -277,6 +278,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 
+	//不会重载parentName
 	/**
 	 * Override settings in this bean definition (presumably a copied parent
 	 * from a parent-child inheritance relationship) from the given bean

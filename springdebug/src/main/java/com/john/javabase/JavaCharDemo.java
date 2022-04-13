@@ -1,5 +1,9 @@
 package com.john.javabase;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * @Description: spring5.0-2018
  * @Author: johnwonder
@@ -7,7 +11,7 @@ package com.john.javabase;
  */
 public class JavaCharDemo {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnsupportedEncodingException {
 
 //		16 位编码的所有 65，536 个字符并不能完全表示全世界所有正在使用或曾经使用的字符。于是，Unicode 标准已扩展到包含多达 1，112，064 个字符。那些超出原来的16 位限制的字符被称作增补字符。
 //
@@ -53,6 +57,32 @@ public class JavaCharDemo {
 		int j = 0x7FFFFFFF;
 		System.out.println(j);
 
+		System.out.println(Integer.MAX_VALUE);
+
+		System.out.println(Integer.MIN_VALUE);
+
+		String c4 = new String(new char[] {'c'});
+
+		//1个字节
+		//默认utf8 1个字节
+		System.out.println(c4.getBytes().length);
+		//https://blog.csdn.net/QQxiaoqiang1573/article/details/84937863
+		//utf-16 两个字节
+		//2个字节
+		System.out.println(c4.getBytes(StandardCharsets.UTF_16BE).length);
+
+		//4个字节
+		//带上了 byteorder mark 的两个字节
+		System.out.println(c4.getBytes(StandardCharsets.UTF_16).length);
+
+
+		String defaultCharsetName = Charset.defaultCharset().displayName();
+		System.out.println("defaultCharsetName:" + defaultCharsetName);//获取默认编码字符
+		//defaultCharsetName:UTF-8
+		//不同编码会导致字符编码后（外码）所占字节数是不同的。常见的有：
+		//utf-8编码英文字符所占字节数:1
+		//utf-8编码中文字符所占字节数:3
+
 		//Latin1是ISO-8859-1的别名，有些环境下写作Latin-1。ISO-8859-1编码是单字节编码
 		//Latin1 字符编码
 		//CharacterData.of里学到
@@ -61,5 +91,11 @@ public class JavaCharDemo {
 //		}
 		//Latin1是ISO-8859-1的别名，有些环境下写作Latin-1。ISO-8859-1编码是单字节编码，向下兼容ASCII，
 		// 其编码范围是0x00-0xFF，0x00-0x7F之间完全和ASCII一致，0x80-0x9F之间是控制字符，0xA0-0xFF之间是文字符号。
+
+
+		//int i = 2;
+		//float j = 2d;
+		//double
+		//int x = (i * j);
 	}
 }

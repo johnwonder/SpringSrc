@@ -59,6 +59,7 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 	/** The TargetSource that manages scoping. */
 	private final SimpleBeanTargetSource scopedTargetSource = new SimpleBeanTargetSource();
 
+	//ScopeProxyUtils 中通过 createScopedProxy 创建的时候 添加了targetBeanName属性
 	/** The name of the target bean. */
 	@Nullable
 	private String targetBeanName;
@@ -85,6 +86,8 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 		this.scopedTargetSource.setTargetBeanName(targetBeanName);
 	}
 
+	//https://www.jianshu.com/p/64c3500dacdb
+	//Request Scope流程
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
 		if (!(beanFactory instanceof ConfigurableBeanFactory)) {
@@ -115,6 +118,7 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 
 		// Add an introduction that implements only the methods on ScopedObject.
 		ScopedObject scopedObject = new DefaultScopedObject(cbf, this.scopedTargetSource.getTargetBeanName());
+		//https://blog.csdn.net/f641385712/article/details/89303088
 		pf.addAdvice(new DelegatingIntroductionInterceptor(scopedObject));
 
 		// Add the AopInfrastructureBean marker to indicate that the scoped proxy

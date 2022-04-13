@@ -1,7 +1,9 @@
 package com.john.javabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @Description: spring5.0-2018
@@ -12,6 +14,11 @@ public class ArrayListDemo {
 
 	//https://blog.csdn.net/m0_37991005/article/details/111477484
 	public static void main(String[] args) {
+
+		String userId="1,2,3";
+		List<String> userList = new ArrayList<>();
+		Collections.addAll(userList,userId.split(","));
+		System.out.println(userList);
 
 		boolean a = true;
 		boolean b = true;

@@ -99,6 +99,7 @@ public class HandlerMethod {
 		this.beanType = ClassUtils.getUserClass(bean);
 		this.method = method;
 		this.bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
+		//这边才初始化方法参数 2021-09-27
 		this.parameters = initMethodParameters();
 		evaluateResponseStatus();
 	}

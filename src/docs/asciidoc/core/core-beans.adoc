@@ -478,6 +478,8 @@ lead to concurrent access exceptions, inconsistent state in the bean container, 
 [[beans-beanname]]
 === Naming Beans
 
+每一个bean有一个或多个标识。这些标识是用于在容器中放置bean的所以必须唯一。一个bean通常只有一个标识符。
+如果需要多个，那么可以考虑使用别名(aliases)。
 Every bean has one or more identifiers. These identifiers must be unique within the
 container that hosts the bean. A bean usually has only one identifier. However, if it
 requires more than one, the extra ones can be considered aliases.
@@ -493,6 +495,8 @@ defined as an `xsd:ID` type, which constrained possible characters. As of 3.1,
 it is defined as an `xsd:string` type. Note that bean `id` uniqueness is still
 enforced by the container, though no longer by XML parsers.
 
+其实你不是必须为一个bean提供`name`或者`id`。如果你没有显示提供`name`或者`id`,容器会帮bean生成一个唯一的值。
+但是，如果你想通过名称引用那个bean,比如`ref`元素或者Service Locator,那么必须提供一个名称。
 You are not required to supply a `name` or an `id` for a bean. If you do not supply a
 `name` or `id` explicitly, the container generates a unique name for that bean. However,
 if you want to refer to that bean by name, through the use of the `ref` element or a
@@ -4427,19 +4431,13 @@ product of the `FactoryBean`, whereas invoking `getBean("&myBean")` returns the
 
 
 [[beans-annotation-config]]
-== Annotation-based Container Configuration
+== 基于注解的容器配置
 
-.Are annotations better than XML for configuring Spring?
+.在配置Spring时，注解是否优于XML?
 ****
-The introduction of annotation-based configuration raised the question of whether this
-approach is "`better`" than XML. The short answer is "`it depends.`" The long answer is
-that each approach has its pros and cons, and, usually, it is up to the developer to
-decide which strategy suits them better. Due to the way they are defined, annotations
-provide a lot of context in their declaration, leading to shorter and more concise
-configuration. However, XML excels at wiring up components without touching their source
-code or recompiling them. Some developers prefer having the wiring close to the source
-while others argue that annotated classes are no longer POJOs and, furthermore, that the
-configuration becomes decentralized and harder to control.
+基于注解的配置的引入提出了一个问题，即这种方法是否比XML“更好”.简短的回答是“视情况而定”.长点的答案是，每种方法都有其优缺点，通常由开发人员决定哪种策略更适合他们.
+由于注解的定义方式，他们可以在声明中提供大量的上下文，从而使其配置更简单. 但是，XML擅长在不改动组件源代码的情况下连接组件编码或重新编译它们. 一些开发人员更喜欢让在源代码注入而其他人则认为带注解的类不再是POJO，而且
+配置变得分散，更难控制.
 
 No matter the choice, Spring can accommodate both styles and even mix them together.
 It is worth pointing out that through its <<beans-java,JavaConfig>> option, Spring lets

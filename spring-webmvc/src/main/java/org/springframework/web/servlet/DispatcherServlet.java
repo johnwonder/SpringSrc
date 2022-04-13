@@ -501,6 +501,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+		//文件上传解析，如果请求类型是multipart将通过MultipartResolver进行文件上传解析
 		initMultipartResolver(context);
 		initLocaleResolver(context);
 		initThemeResolver(context);
@@ -618,6 +619,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
+		//handlerMappings 为空 才会去找默认的
 		//会去DispatcherServlet.properties 配置 找默认的
 		//org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping,\
 		//org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
@@ -672,6 +674,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 	}
 
+	//方法会取得所有实现了HandlerExceptionResolver接口的bean并保存起来
 	/**
 	 * Initialize the HandlerExceptionResolver used by this class.
 	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
@@ -867,15 +870,18 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T> List<T> getDefaultStrategies(ApplicationContext context, Class<T> strategyInterface) {
+		//获取类名
 		String key = strategyInterface.getName();
+		//根据类名当作key获取value
 		String value = defaultStrategies.getProperty(key);
 		if (value != null) {
+			//根据逗号分割
 			String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
 			List<T> strategies = new ArrayList<>(classNames.length);
 			for (String className : classNames) {
 				try {
 					Class<?> clazz = ClassUtils.forName(className, DispatcherServlet.class.getClassLoader());
-					//todo 调用容器创建bean 给容器管辖 只不过是原型bean
+					//todo 调用容器创建bean 给容器管辖 只不过是原型bean 2021-09-26
 					Object strategy = createDefaultStrategy(context, clazz);
 					strategies.add((T) strategy);
 				}
@@ -921,6 +927,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		//打印请求
 		logRequest(request);
 
 		// Keep a snapshot of the request attributes in case of an include,
@@ -966,6 +973,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	private void logRequest(HttpServletRequest request) {
+		//java8 Function的应用
 		LogFormatUtils.traceDebug(logger, traceOn -> {
 			String params;
 			if (isEnableLoggingRequestDetails()) {
@@ -1021,20 +1029,24 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
+				//检查请求是否是multipart 文件上传，multipartResolver必须不为空才能检查
 				processedRequest = checkMultipart(request);
+				//处理过的请求不等于原始请求 代表 multipart请求已经被解析
 				multipartRequestParsed = (processedRequest != request);
 
 				//确定当前请求的处理程序
 				// Determine handler for the current request.
 				//todo 2021-3-6 去handlerMappings 中去匹配
 				//从HandlerMapping查找处理request的controller.
+				//返回的是 HandlerExecutionChain
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
-				//找到handler的适配器去执行
+				//获取HandlerExecutionChain的handler
+				//然后找到handler的适配器去执行
 				// Determine handler adapter for the current request.
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
@@ -1056,6 +1068,9 @@ public class DispatcherServlet extends FrameworkServlet {
 				//// 5.实际的处理器处理请求,返回结果视图对象
 				// Actually invoke the handler.
 				//todo 这里会调用ControllerAdvice 注解 的bean 2020-12-12
+				//handle方法调用到RequestMappingHandlerAdapter内的invokeHandlerMethod方法，根据HandlerMethod创建对象ServletInvocableHandlerMethod，然后执行其invokeAndHandle方法
+				//链接：https://www.jianshu.com/p/8a5637874d3
+				//RequestMappingHandlerAdapter
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -1287,6 +1302,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
+			//遍历handlerAdapter去判断 当前适配器是否支持 handler
 			for (HandlerAdapter adapter : this.handlerAdapters) {
 				if (adapter.supports(handler)) {
 					return adapter;
@@ -1317,6 +1333,8 @@ public class DispatcherServlet extends FrameworkServlet {
 		// Check registered HandlerExceptionResolvers...
 		ModelAndView exMv = null;
 		if (this.handlerExceptionResolvers != null) {
+			//todo 遍历
+			// 其中就有ExceptionHandlerExceptionResolver
 			for (HandlerExceptionResolver resolver : this.handlerExceptionResolvers) {
 				exMv = resolver.resolveException(request, response, handler, ex);
 				if (exMv != null) {

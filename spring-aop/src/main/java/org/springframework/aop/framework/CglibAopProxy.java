@@ -666,6 +666,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 			this.advised = advised;
 		}
 
+		//https://blog.csdn.net/psd0503/article/details/107116881/
 		//https://mp.weixin.qq.com/s/UBE9CqASb-i9sRt715ckGA
 		//MethodProxy 方法代理对象 ,可以用于调用被代理类中的方法
 		@Override
@@ -697,6 +698,12 @@ class CglibAopProxy implements AopProxy, Serializable {
 					// it does nothing but a reflective operation on the target, and no hot
 					// swapping or fancy proxying.
 					Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);
+
+					//如果传入的obj是被代理类的对象, 那么在method1中再调用其他方法是不会触发拦截的,
+					// spring的动态代理就是这样做的 事务里调用不触发其他方法不触发事务的问题
+					////todo 很重要 如果target不是代理对象,则相当于直接调用原对象的method
+					//	//否则在就是调用动态代理类的method方法, 会在其中再次调用拦截器
+					//// 直接调用目标对象的方法
 					retVal = methodProxy.invoke(target, argsToUse);
 				}
 				else {

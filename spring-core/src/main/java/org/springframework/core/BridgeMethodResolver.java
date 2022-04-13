@@ -61,6 +61,10 @@ public final class BridgeMethodResolver {
 	 * if no more specific one could be found)
 	 */
 	public static Method findBridgedMethod(Method bridgeMethod) {
+		//https://blog.csdn.net/mhmyqn/article/details/47342577
+		//判断bridgeMethod是否是桥接方法
+		//就是说一个子类在继承（或实现）一个父类（或接口）的泛型方法时，在子类中明确指定了泛型类型，
+		// 那么在编译时编译器会自动生成桥接方法（当然还有其他情况会生成桥接方法，这里只是列举了其中一种情况）。如下所示：
 		if (!bridgeMethod.isBridge()) {
 			return bridgeMethod;
 		}
@@ -69,6 +73,7 @@ public final class BridgeMethodResolver {
 		List<Method> candidateMethods = new ArrayList<>();
 		Method[] methods = ReflectionUtils.getAllDeclaredMethods(bridgeMethod.getDeclaringClass());
 		for (Method candidateMethod : methods) {
+			//名称和参数数量是否相同
 			if (isBridgedCandidateFor(candidateMethod, bridgeMethod)) {
 				candidateMethods.add(candidateMethod);
 			}

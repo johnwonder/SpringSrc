@@ -338,6 +338,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
+		//如果 判断缓存的bean 为不需要 代理
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
@@ -353,8 +354,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		// 为目标 bean 查找合适的通知器
 		// Create proxy if we have advice.
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+
+		//判断是否为空
 		if (specificInterceptors != DO_NOT_PROXY) {
+
+			//放入缓存代表 需要代理
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			//todo 传入了SingletonTargetSource -> bean
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
@@ -455,6 +461,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
+		//通过ProxyFactory来创建代理
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.copyFrom(this);
 
