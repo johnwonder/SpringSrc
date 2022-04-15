@@ -232,6 +232,7 @@ class ConstructorResolver {
 								paramNames = pnd.getParameterNames(candidate);
 							}
 						}
+						//候选参数列表长度为1的时候可以fallback ，如果参数类型是数组，List,Map
 						argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,
 								getUserDeclaredConstructor(candidate), autowiring, candidates.length == 1);
 					}
@@ -925,6 +926,7 @@ class ConstructorResolver {
 			throw ex;
 		}
 		catch (NoSuchBeanDefinitionException ex) {
+			//只有候选构造参数列表为1的情况下才会fallback
 			if (fallback) {
 				// Single constructor or factory method -> let's return an empty array/collection
 				// for e.g. a vararg or a non-null List/Set/Map parameter.

@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class ArrayListDemo {
 
+	private String name,age;
 	//https://blog.csdn.net/m0_37991005/article/details/111477484
 	public static void main(String[] args) {
 

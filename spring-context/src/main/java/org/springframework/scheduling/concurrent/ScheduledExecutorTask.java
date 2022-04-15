@@ -87,7 +87,9 @@ public class ScheduledExecutorTask {
 	 * Create a new ScheduledExecutorTask.
 	 * @param executorTask the Runnable to schedule
 	 * @param delay the delay before starting the task for the first time (ms)
-	 * @param period the period between repeated task executions (ms)
+	 * @param=
+	 *
+	 * period the period between repeated task executions (ms)
 	 * @param fixedRate whether to schedule as fixed-rate execution
 	 */
 	public ScheduledExecutorTask(Runnable executorTask, long delay, long period, boolean fixedRate) {

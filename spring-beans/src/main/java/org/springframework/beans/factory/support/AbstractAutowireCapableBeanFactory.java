@@ -1234,6 +1234,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
+		//通过AutowiredAnnotationBeanPostProcessor 推断
 		//有多个构造函数的话 这里会根据@Autowired 注解 选取构造函数
 		//todo 如果 autowireMode 是 AUTOWIRE_CONSTRUCTOR 肯定会调用 autowireConstructor 2020-1-11
 		// Candidate constructors for autowiring?
