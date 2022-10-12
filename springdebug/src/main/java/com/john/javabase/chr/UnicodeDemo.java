@@ -21,5 +21,15 @@ public class UnicodeDemo {
 
 		String apple = "苹果";
 		System.out.println(apple.length());
+
+		System.out.println(Character.isLetter(0xD7FF));
+	//    int data = Integer.parseInt("\uD7FF", 16);
+	//    System.out.println(((char) data));
+
+		//https://www.jianshu.com/p/53541c5b97f7
+		//https://mp.weixin.qq.com/s/5pAgcjk_lFGrPhSUp2Na3Q
+		//输出HANGUL_JAMO_EXTENDED_B
+		Character.UnicodeBlock of = Character.UnicodeBlock.of(0xD7FF);
+		System.out.println(of);
 	}
 }

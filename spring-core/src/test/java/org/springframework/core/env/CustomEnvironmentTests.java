@@ -37,7 +37,9 @@ public class CustomEnvironmentTests {
 
 	@Test
 	public void control() {
-		Environment env = new AbstractEnvironment() { };
+		Environment env = new AbstractEnvironment() {
+
+		};
 		assertThat(env.acceptsProfiles(defaultProfile()), is(true));
 	}
 

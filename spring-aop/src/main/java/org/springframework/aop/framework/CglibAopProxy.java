@@ -56,6 +56,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
+//https://www.infoq.cn/article/2009/01/ramnivas-aop-choices
 /**
  * CGLIB-based {@link AopProxy} implementation for the Spring AOP framework.
  *
@@ -683,6 +684,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 					setProxyContext = true;
 				}
 				// Get as late as possible to minimize the time we "own" the target, in case it comes from a pool...
+				//获取目标对象
 				target = targetSource.getTarget();
 				Class<?> targetClass = (target != null ? target.getClass() : null);
 

@@ -69,5 +69,9 @@ public class CollectionsSortDemo {
 		List<NotCompareble> comparebles = Arrays.asList(notCompareble,notCompareble1);
 		//Collections.sort(comparebles);
 
+		//二分查找 等于-4 没找到
+		//如果有两个相同的，无法保证找到哪一个
+		List<Integer> binaryList = Arrays.asList(2, 3,1,5,6,1);
+		System.out.println(Collections.binarySearch(binaryList, 1));
 	}
 }

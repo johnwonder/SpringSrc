@@ -9,6 +9,9 @@ public class CglibHashCodeTest {
 
 	public static void main(String[] args) {
 
+
+		System.out.println((CglibHashCodeTest.class instanceof Class));
+
 		System.out.println("g()V".hashCode());
 
 		int a=2;

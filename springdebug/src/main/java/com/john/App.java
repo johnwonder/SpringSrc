@@ -17,6 +17,9 @@ public class App
 {
     public static void main( String[] args )
     {
+    	String url = "www.baidu.com?jsessionid=";
+
+		System.out.println(url.substring(0, url.indexOf("?")));
 
 //		StandardEnv standardEnv = new StandardEnv();
 //

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @Author: johnwonder
  * @Date: 2022/4/15
  */
-//@Component
+@Component
 public class ConstructB {
 
 }

@@ -16,12 +16,12 @@
 		<property name="name" value="John"/>
 	</bean>
 
-	<bean id="beanAbstract" parent="beanAbstract1" abstract="true">
+	<bean id="beanAbstract" parent="beanAbstract1" class="org.wonder.frame.beandefinition.ChildBean" abstract="true">
 	<property name="id" value="2"/>
 <!--	<property name="name" value="Jack"/>-->
 	</bean>
 
-	<bean id="childBean"  abstract="true" class="org.wonder.frame.beandefinition.ChildBean" parent="beanAbstract">
+	<bean id="childBean"    parent="beanAbstract">
 	<!-- 可以覆盖父类赋予的值 -->
 <!--	<property name="name" value="Tom"/>-->
 <!--	<property name="password" value="123"/>-->

@@ -375,6 +375,7 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 	 */
 	public Class<?> getDependencyType() {
 		if (this.field != null) {
+			//比如Optional 和ObjectProvider等
 			if (this.nestingLevel > 1) {
 				Type type = this.field.getGenericType();
 				for (int i = 2; i <= this.nestingLevel; i++) {

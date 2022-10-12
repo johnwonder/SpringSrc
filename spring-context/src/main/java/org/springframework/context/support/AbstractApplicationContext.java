@@ -175,6 +175,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/** Display name. */
 	private String displayName = ObjectUtils.identityToString(this);
 
+	//父级上下文
 	/** Parent context. */
 	//ApplicationContext 实现了BeanFactory 接口
 	@Nullable
@@ -195,12 +196,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/** Flag that indicates whether this context is currently active. */
 	private final AtomicBoolean active = new AtomicBoolean();
 
+	//上下文是否关闭的标志
 	/** Flag that indicates whether this context has been closed already. */
 	private final AtomicBoolean closed = new AtomicBoolean();
 
+	//refresh和destroy的同步监听器
 	/** Synchronization monitor for the "refresh" and "destroy". */
 	private final Object startupShutdownMonitor = new Object();
 
+	//jvm shutdown hook的引用
 	/** Reference to the JVM shutdown hook, if registered. */
 	@Nullable
 	private Thread shutdownHook;
@@ -208,6 +212,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/** ResourcePatternResolver used by this context. */
 	private ResourcePatternResolver resourcePatternResolver;
 
+	//管理当前上下文bean生命周期的 处理器
+	//上下文finishRefresh 的时候会调用
 	/** LifecycleProcessor for managing the lifecycle of beans within this context. */
 	@Nullable
 	private LifecycleProcessor lifecycleProcessor;
@@ -881,6 +887,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void initLifecycleProcessor() {
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+		//只查询当前bean工厂
 		if (beanFactory.containsLocalBean(LIFECYCLE_PROCESSOR_BEAN_NAME)) {
 			this.lifecycleProcessor =
 					beanFactory.getBean(LIFECYCLE_PROCESSOR_BEAN_NAME, LifecycleProcessor.class);
@@ -1468,6 +1475,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 
+	//应用上下文也实现了Lifecycle接口
 	//---------------------------------------------------------------------
 	// Implementation of Lifecycle interface
 	//---------------------------------------------------------------------

@@ -43,6 +43,7 @@ public interface Profiles {
 	boolean matches(Predicate<String> activeProfiles);
 
 
+	//返回一个Profiles 内部静态类ParsedProfiles
 	/**
 	 * Create a new {@link Profiles} instance that checks for matches against
 	 * the given <em>profile strings</em>.

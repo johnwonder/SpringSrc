@@ -26,7 +26,7 @@ public class JavaByteDemo {
 		//https://www.cnblogs.com/zl181015/archive/2004/01/13/9435035.html
 		//负数在计算机中都是以补码的形式保存的，
 		int b = 456; //11001000
-		byte test = (byte) b; //
+		byte test = (byte) b; //byte是 带符号的
 		System.out.println(test); //打印-56
 
 		int d = 2571; //00001011
@@ -79,8 +79,44 @@ public class JavaByteDemo {
 		byte testCC = (byte) cc; // 相当于 1110 0110 以补码形式保存
 		System.out.println(testCC); //打印-26
 
+		int cc1 = -26; //0001 1010 -> 取反 1110 0101 -> +1 1110 0110
+		byte testCC1 = (byte) cc1; // 相当于 1110 0110 以补码形式保存
+		System.out.println(testCC1); //打印-26
+
 		int dd =241; // 1 111 0001;
 		byte testDD = (byte) dd; // 相当于 1110 0110 以补码形式保存
-		System.out.println(testDD); //打印-26
+		System.out.println(testDD); //打印-15
+
+		byte test1 = '(' ;
+		byte test2 = (byte) (test1 - '0');
+
+
+
+		if(test1 > 9){
+			System.out.println(test2); //打印-8
+		}
+
+
+		//字节转换成无符号整数
+		System.out.println(Byte.toUnsignedInt((byte)0xFF));
+		//zuul的ServletInputStreamWrapper类里也有类似做法
+		int ub =  (byte)0xFF & 0xFF;
+		System.out.println(ub); //打印255
+
+		//默认byte是带符号的
+		byte ub1 = (byte)0xFF;
+		System.out.println(ub1); //打印-1
+
+		System.out.println(Byte.toString((byte) 0xFF)); //-1
+
+		int i1 = (byte)0xFF;
+		System.out.println(i1);//打印-1
+
+		int i2 = (byte)-128; //有符号的
+
+		System.out.println(i2);
+
+		//显示-120，默认是10进制
+		System.out.println(Byte.parseByte("\u002D120"));
 	}
 }

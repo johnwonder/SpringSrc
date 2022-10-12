@@ -78,8 +78,10 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 									(PrivilegedExceptionAction<Constructor<?>>) clazz::getDeclaredConstructor);
 						}
 						else {
+							//1.通过clazz.getDeclaredConstructor() 获取构造函数
 							constructorToUse =	clazz.getDeclaredConstructor();
 						}
+						//放入beandefinition的resolvedConstructorOrFactoryMethod(已解析的构造函数或者工厂方法的字段)中
 						bd.resolvedConstructorOrFactoryMethod = constructorToUse;
 					}
 					catch (Throwable ex) {
@@ -87,10 +89,12 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				}
 			}
+
+			//2.通过 Constructor.newInstance 方法
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {
-			//todo 像lookup replace等 需要用cglib 代理来实例化
+			//todo 像@Lookup replace等 需要用cglib 代理来实例化
 			// Must generate CGLIB subclass.
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}

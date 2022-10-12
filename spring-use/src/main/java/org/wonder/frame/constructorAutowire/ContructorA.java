@@ -15,25 +15,25 @@ import java.util.Map;
 public class ContructorA {
 
 	private final ConstructB constructB;
-	private final Map<ConstructB,String> constructBs;
+	//private final Map<ConstructB,String> constructBs;
 
 	private final ConstructC constructC;
 	//调用了默认构造器
-//	public ContructorA() {
-//		this.constructB = new ConstructB();
-//		this.constructC = null;
-//	}
-//	@Autowired
-//	public ContructorA(ConstructB constructB) {
-//		this.constructB = constructB;
-//		this.constructC = null;
-//	}
-
-	public ContructorA(Map<ConstructB,String> constructB) {
-		this.constructBs = constructB;
+	public ContructorA() {
+		this.constructB = null;//new ConstructB();
 		this.constructC = null;
-		this.constructB = null;
 	}
+	@Autowired
+	public ContructorA(ConstructB constructB) {
+		this.constructB = constructB;
+		this.constructC = null;
+	}
+
+//	public ContructorA(Map<ConstructB,String> constructB) {
+//		this.constructBs = constructB;
+//		this.constructC = null;
+//		this.constructB = null;
+//	}
 
 
 //	public ContructorA(ConstructB constructB,ConstructC constructC) {
@@ -46,7 +46,7 @@ public class ContructorA {
 	public String toString() {
 		return "ContructorA{" +
 				"constructB=" + constructB +
-				", constructBs=" + constructBs +
+//				", constructBs=" + constructBs +
 				", constructC=" + constructC +
 				'}';
 	}

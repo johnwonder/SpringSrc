@@ -17,4 +17,12 @@ public class VariableDemo {
 		//实例变量默认为0
 		System.out.println(new VariableDemo().vacationDays);
 	}
+
+//	public VariableDemo(int i,String s){
+//
+//	}
+//
+//	public VariableDemo(String s,int i){
+//
+//	}
 }

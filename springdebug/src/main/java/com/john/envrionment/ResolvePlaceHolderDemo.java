@@ -2,6 +2,9 @@ package com.john.envrionment;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 
 import java.util.Properties;
 
@@ -23,6 +26,9 @@ public class ResolvePlaceHolderDemo {
 		System.out.println(applicationContext.getEnvironment().resolvePlaceholders("${john.name}"));
 
 		//如果解析不了会报错
-		applicationContext.getEnvironment().resolveRequiredPlaceholders("${${java.version}}");
+		applicationContext.getEnvironment().resolveRequiredPlaceholders("${java.version}");
+
+
 	}
+
 }

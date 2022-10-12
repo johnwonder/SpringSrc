@@ -159,7 +159,7 @@ public class CglibProxyTests extends AbstractAopProxyTests implements Serializab
 		target.setName("Rob Harrop");
 
 		AdvisedSupport pc = new AdvisedSupport();
-		pc.setFrozen(true);
+		pc.setFrozen(false);
 		pc.setTarget(target);
 
 		CglibAopProxy aop = new CglibAopProxy(pc);

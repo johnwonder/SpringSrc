@@ -139,12 +139,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	private boolean allowRawInjectionDespiteWrapping = false;
 
+	//
 	/**
 	 * Dependency types to ignore on dependency check and autowire, as Set of
 	 * Class objects: for example, String. Default is none.
 	 */
 	private final Set<Class<?>> ignoredDependencyTypes = new HashSet<>();
 
+	//自动注入属性(写方法)的时候会排除这些接口中定义的方法
 	/**
 	 * Dependency interfaces to ignore on dependency check and autowire, as Set of
 	 * Class objects. By default, only the BeanFactory interface is ignored.
@@ -460,6 +462,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 
+	//AbstractBeanFactory模板方法的实现
 	//---------------------------------------------------------------------
 	// Implementation of relevant(紧密相关的) AbstractBeanFactory template methods
 	//---------------------------------------------------------------------
@@ -521,6 +524,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			//todo 最终调用了doCreateBean 2020-09-16
+			//路人甲Java https://mp.weixin.qq.com/s/TEmlA7UiiOyP3RmH1w-FZQ
 			Object beanInstance = doCreateBean(beanName, mbdToUse, args);
 			if (logger.isTraceEnabled()) {
 				logger.trace("Finished creating instance of bean '" + beanName + "'");
@@ -1172,6 +1176,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	//使用适当的实例化策略 为指定的bean创建一个新的实例
 	//1. 工厂方法 2.构造函数自动注入 3。 简单实例化
+	//路人甲所说的FactoryBean方法创建 不在此处
+	//https://mp.weixin.qq.com/s/TEmlA7UiiOyP3RmH1w-FZQ
 	/**
 	 * Create a new instance for the specified bean, using an appropriate instantiation strategy:
 	 * factory method, constructor autowiring, or simple instantiation.
@@ -1190,6 +1196,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Make sure bean class is actually resolved at this point.
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
 
+		//通过Modifier.isPublic判断
 		//类不是公共类 就抛出异常
 		if (beanClass != null && !Modifier.isPublic(beanClass.getModifiers()) && !mbd.isNonPublicAccessAllowed()) {
 			throw new BeanCreationException(mbd.getResourceDescription(), beanName,
@@ -1253,6 +1260,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Preferred constructors for default construction?
 		ctors = mbd.getPreferredConstructors();
 		if (ctors != null) {
+			//通过构造函数
 			return autowireConstructor(beanName, mbd, ctors, null);
 		}
 
@@ -1365,6 +1373,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			else {
 				//todo 用 clazz.getDeclaredConstructor().newInstance 实例化bean 2020-09-16
+				//根据获取到的策略接口实例化bean
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
 
@@ -1567,6 +1576,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 	}
 
+	//定义“按类型自动注入”（bean属性）行为的抽象方法
 	/**
 	 * Abstract method defining "autowire by type" (bean properties by type) behavior.
 	 * <p>This is like PicoContainer default, in which there must be exactly one bean
@@ -1581,31 +1591,42 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void autowireByType(
 			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
 
+		//获取自定义类型转换器
 		TypeConverter converter = getCustomTypeConverter();
 		if (converter == null) {
 			converter = bw;
 		}
 
 		Set<String> autowiredBeanNames = new LinkedHashSet<>(4);
-		//属性值
+		//通过beanWrapper遍历 属性
+		//会排除 bean定义的 PropertyValues 中 名称相同的属性，优先使用已经存在的PropertyValues中的属性
+		//会排除 bean定义的 值类型的属性
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		//遍历属性值
 		for (String propertyName : propertyNames) {
 			try {
 				PropertyDescriptor pd = bw.getPropertyDescriptor(propertyName);
+				//不要尝试为类型对象按类型自动关联：永远没有意义，即使它在技术上是一个不令人满意的非简单属性
+				//因为无法选择注入哪个对象
 				// Don't try autowiring by type for type Object: never makes sense,
 				// even if it technically is a unsatisfied, non-simple property.
 				if (Object.class != pd.getPropertyType()) {
+					//获取属性写方法的参数
 					MethodParameter methodParam = BeanUtils.getWriteMethodParameter(pd);
 					// Do not allow eager init for type matching in case of a prioritized post-processor.
 					boolean eager = !PriorityOrdered.class.isInstance(bw.getWrappedInstance());
 
 					//todo 创建一个AutowireByTypeDependencyDescriptor 的 DependencyDescriptor 2020-10-17
+					//依赖默认不是必须的
 					DependencyDescriptor desc = new AutowireByTypeDependencyDescriptor(methodParam, eager);
+					//解析依赖
+					//autowiredBeanNames 涉及到支持多个符合类型的bean注入成为 List<Bean>
 					Object autowiredArgument = resolveDependency(desc, beanName, autowiredBeanNames, converter);
 					if (autowiredArgument != null) {
+						//添加到pvs中
 						pvs.add(propertyName, autowiredArgument);
 					}
+
 					for (String autowiredBeanName : autowiredBeanNames) {
 						registerDependentBean(autowiredBeanName, beanName);
 						if (logger.isTraceEnabled()) {
@@ -2128,6 +2149,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	private static class AutowireByTypeDependencyDescriptor extends DependencyDescriptor {
 
 		public AutowireByTypeDependencyDescriptor(MethodParameter methodParameter, boolean eager) {
+			//包装了methodParameter，没有field
 			super(methodParameter, false, eager);
 		}
 

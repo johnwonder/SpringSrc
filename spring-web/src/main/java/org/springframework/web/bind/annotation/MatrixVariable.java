@@ -24,6 +24,8 @@ import java.lang.annotation.Target;
 
 import org.springframework.core.annotation.AliasFor;
 
+
+//https://www.cnblogs.com/hfultrastrong/p/11491391.html
 /**
  * Annotation which indicates that a method parameter should be bound to a
  * name-value pair within a path segment. Supported for {@link RequestMapping}

@@ -11,5 +11,9 @@ public class StringReplaceDemo {
 
 		String objectName = "/awefaw/pic/xx.pdf";
 		System.out.println(objectName.replaceAll("^.*/", ""));
+
+		System.out.println("Accept-Encoding".toLowerCase());
+
+		System.out.println("accept-encoding".toUpperCase());
 	}
 }

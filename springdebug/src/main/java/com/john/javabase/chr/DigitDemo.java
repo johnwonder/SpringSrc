@@ -24,6 +24,7 @@ public class DigitDemo {
 		System.out.println(y); //输出205
 
 		//https://www.jianshu.com/p/619cb6fa376d
+		//java的16进制与10进制互相转换
 		String hex1 = "cd";
 		Integer z = Integer.parseUnsignedInt(hex1,16);
 		System.out.println(z); //输出205
@@ -34,8 +35,8 @@ public class DigitDemo {
 		System.out.println(zz);
 
 
-		String hex3 = "2147483648";
-		Integer maxValue = Integer.parseUnsignedInt(hex3,10);
+		String hex3 = "-2147483648";
+		Integer maxValue = Integer.parseInt(hex3,10);
 		//输出Integer的最大值为2147483647
 //
 		System.out.println(maxValue); //输出11259375
@@ -59,7 +60,14 @@ public class DigitDemo {
 		//是否是中日韩文字
 		System.out.println(Character.isIdeographic('中'));
 
-		char b = '\004'; //\u0004
+		char b = '\007'; //ascii 八进制表示
+		char c = '\077'; //ascii 八进制表示
+		char c2 = '\137'; //ascii 八进制表示
+
+		char c1 =  077;//代表8进制数
+		char d = 0x1277;
+
 		System.out.println(b);
+		System.out.println(c);
 	}
 }

@@ -262,7 +262,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//
 		//args参数是为了创建一个新的对象 所以 不为null 的时候 就直接走else了
 		//todo sharedInstance不为空 有两种情况
-		// 1. 就是 singletonObjects 2. 还是  earlySingletonObjects
+		// 1. 就是 singletonObjects
+		// 2. 还是  earlySingletonObjects
 		if (sharedInstance != null && args == null) {
 
 			if (logger.isTraceEnabled()) {
@@ -384,6 +385,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw ex;
 						}
 					});
+
+					//todo 这里再会处理通过FactoryBean创建的Bean
 					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
 
@@ -404,6 +407,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				else {
 					//获取beandefinition的 scope
+					//todo SpringCloud 的RefreshScope 2022-04-27
 					String scopeName = mbd.getScope();
 					//根据Bean的 scope 去scopes集合获取对应对scope 2021-3-23
 					//RequestScope需加上代理 不然在autowire的时候会报错

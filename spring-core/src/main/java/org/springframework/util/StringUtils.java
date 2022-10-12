@@ -1239,6 +1239,7 @@ public abstract class StringUtils {
 		return new LinkedHashSet<>(Arrays.asList(tokens));
 	}
 
+	//在List<String> 转换为"'1','2','3','4','5','6'"这种比较有用
 	/**
 	 * Convert a {@link Collection} to a delimited {@code String} (e.g. CSV).
 	 * <p>Useful for {@code toString()} implementations.

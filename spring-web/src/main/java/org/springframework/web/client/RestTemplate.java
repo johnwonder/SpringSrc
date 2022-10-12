@@ -733,8 +733,11 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			if (requestCallback != null) {
 				requestCallback.doWithRequest(request);
 			}
+			//执行
 			response = request.execute();
+			//处理响应
 			handleResponse(url, method, response);
+			//提取数据
 			return (responseExtractor != null ? responseExtractor.extractData(response) : null);
 		}
 		catch (IOException ex) {

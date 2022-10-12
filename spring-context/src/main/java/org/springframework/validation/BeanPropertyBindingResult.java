@@ -110,6 +110,7 @@ public class BeanPropertyBindingResult extends AbstractPropertyBindingResult imp
 		if (this.target == null) {
 			throw new IllegalStateException("Cannot access properties on null bean instance '" + getObjectName() + "'");
 		}
+		//
 		return PropertyAccessorFactory.forBeanPropertyAccess(this.target);
 	}
 

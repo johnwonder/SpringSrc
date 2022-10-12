@@ -88,7 +88,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 		return this.factoryBeanObjectCache.get(beanName);
 	}
 
-	//获取从FactoryBean中暴露的实例
+	//从给定的FactoryBean获取要公开的对象
 	/**
 	 * Obtain an object to expose from the given FactoryBean.
 	 * @param factory the FactoryBean instance

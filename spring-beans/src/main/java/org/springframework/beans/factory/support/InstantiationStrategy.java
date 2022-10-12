@@ -23,6 +23,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.lang.Nullable;
 
+//负责 针对root beandefinition 创建实例的 策略接口
+
+//由于各种方法都是可能的，所以做成了 策略接口，
+//包括使用CGLIB动态创建子类以支持方法注入
 /**
  * Interface responsible for creating instances corresponding to a root bean definition.
  *

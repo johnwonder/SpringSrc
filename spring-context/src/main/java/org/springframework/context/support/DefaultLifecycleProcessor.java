@@ -117,6 +117,8 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 		this.running = false;
 	}
 
+	//springboot onRefresh的时候会创建webServer
+	//并创建一个WebServerStartStopLifecycle
 	@Override
 	public void onRefresh() {
 		startBeans(true);
@@ -138,10 +140,13 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 	// Internal helpers
 
 	private void startBeans(boolean autoStartupOnly) {
+		//1.获取
 		Map<String, Lifecycle> lifecycleBeans = getLifecycleBeans();
 		Map<Integer, LifecycleGroup> phases = new HashMap<>();
 		lifecycleBeans.forEach((beanName, bean) -> {
 			if (!autoStartupOnly || (bean instanceof SmartLifecycle && ((SmartLifecycle) bean).isAutoStartup())) {
+
+				//默认返回0
 				int phase = getPhase(bean);
 				LifecycleGroup group = phases.get(phase);
 				if (group == null) {
@@ -149,13 +154,16 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 					phases.put(phase, group);
 				}
 				//todo 重要
+				//添加一个LifecycleGroupMember 把bean放入LifecycleGroupMember中。
 				group.add(beanName, bean);
 			}
 		});
 		if (!phases.isEmpty()) {
 			List<Integer> keys = new ArrayList<>(phases.keySet());
+			//根据bean 的phase排序
 			Collections.sort(keys);
 			for (Integer key : keys) {
+				//调用LifecycleGroup的start方法
 				phases.get(key).start();
 			}
 		}
@@ -174,6 +182,7 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 			for (String dependency : dependenciesForBean) {
 				doStart(lifecycleBeans, dependency, autoStartupOnly);
 			}
+			//bean不在运行
 			if (!bean.isRunning() &&
 					(!autoStartupOnly || !(bean instanceof SmartLifecycle) || ((SmartLifecycle) bean).isAutoStartup())) {
 				if (logger.isTraceEnabled()) {
@@ -287,6 +296,7 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 			if ((beanFactory.containsSingleton(beanNameToRegister) &&
 					(!isFactoryBean || matchesBeanType(Lifecycle.class, beanNameToCheck, beanFactory))) ||
 					matchesBeanType(SmartLifecycle.class, beanNameToCheck, beanFactory)) {
+				//主动获取bean 即使是lazy-init的也会创建
 				Object bean = beanFactory.getBean(beanNameToCheck);
 				if (bean != this && bean instanceof Lifecycle) {
 					beans.put(beanNameToRegister, (Lifecycle) bean);

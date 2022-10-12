@@ -142,6 +142,7 @@ public class BeanDefinitionParserDelegate {
 
 	public static final String FACTORY_BEAN_ATTRIBUTE = "factory-bean";
 
+	//构造函数参数
 	public static final String CONSTRUCTOR_ARG_ELEMENT = "constructor-arg";
 
 	public static final String INDEX_ATTRIBUTE = "index";
@@ -543,11 +544,13 @@ public class BeanDefinitionParserDelegate {
 		//在parseState中 放入一个beanEntry
 		this.parseState.push(new BeanEntry(beanName));
 
+		//当前beandefinition可以不配置classname,可以继承于parent的classname 2022-04-28
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
 		//所以className有可能为空
+
 		String parent = null;
 		//父bean节点判断
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
@@ -769,6 +772,7 @@ public class BeanDefinitionParserDelegate {
 		return autowire;
 	}
 
+	//解析多个constructor-arg 子节点
 	/**
 	 * Parse constructor-arg sub-elements of the given bean element.
 	 */
@@ -862,6 +866,7 @@ public class BeanDefinitionParserDelegate {
 	 * Parse a constructor-arg element.
 	 */
 	public void parseConstructorArgElement(Element ele, BeanDefinition bd) {
+		//index属性
 		String indexAttr = ele.getAttribute(INDEX_ATTRIBUTE);
 		String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
@@ -870,7 +875,9 @@ public class BeanDefinitionParserDelegate {
 			try {
 				//用Integer类解析int
 				int index = Integer.parseInt(indexAttr);
+				//索引不能小于0
 				if (index < 0) {
+					//调用readerContext 的error方法
 					error("'index' cannot be lower than 0", ele);
 				}
 				else {
@@ -879,6 +886,7 @@ public class BeanDefinitionParserDelegate {
 						this.parseState.push(new ConstructorArgumentEntry(index));
 
 						//解析属性值
+						//内部解析ref属性
 						Object value = parsePropertyValue(ele, bd, null);
 						//内部公共静态类ValueHolder
 						ConstructorArgumentValues.ValueHolder valueHolder = new ConstructorArgumentValues.ValueHolder(value);
@@ -1032,6 +1040,7 @@ public class BeanDefinitionParserDelegate {
 			}
 		}
 
+		//引用的bean实例
 		boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);
 		boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE);
 

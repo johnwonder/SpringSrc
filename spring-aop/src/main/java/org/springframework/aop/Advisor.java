@@ -56,6 +56,7 @@ public interface Advisor {
 	Advice EMPTY_ADVICE = new Advice() {};
 
 
+	//返回切面的advice部分，一个advice可能是一个拦截器，一个前置advice,throw advice等。
 	/**
 	 * Return the advice part of this aspect. An advice may be an
 	 * interceptor, a before advice, a throws advice, etc.

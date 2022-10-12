@@ -37,13 +37,15 @@ final class ProfilesParser {
 	private ProfilesParser() {
 	}
 
-
+	//传空字符串的话 expressions 字符串数组不为空，且长度为1
 	static Profiles parse(String... expressions) {
+
 		Assert.notEmpty(expressions, "Must specify at least one profile");
 		Profiles[] parsed = new Profiles[expressions.length];
 		for (int i = 0; i < expressions.length; i++) {
 			parsed[i] = parseExpression(expressions[i]);
 		}
+		//包装解析过的Profiles 返回一个实现了Profiles接口的内部静态类
 		return new ParsedProfiles(expressions, parsed);
 	}
 
