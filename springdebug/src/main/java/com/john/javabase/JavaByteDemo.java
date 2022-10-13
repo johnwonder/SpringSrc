@@ -116,7 +116,7 @@ public class JavaByteDemo {
 
 		System.out.println(i2);
 
-		//显示-120，默认是10进制
+		//显示-120，默认是10进制 \u002D代表-
 		System.out.println(Byte.parseByte("\u002D120"));
 	}
 }

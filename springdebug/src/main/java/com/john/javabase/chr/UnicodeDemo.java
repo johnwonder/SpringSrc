@@ -26,6 +26,7 @@ public class UnicodeDemo {
 	//    int data = Integer.parseInt("\uD7FF", 16);
 	//    System.out.println(((char) data));
 
+		//https://blog.csdn.net/qq_46437309/article/details/116240262
 		//https://www.jianshu.com/p/53541c5b97f7
 		//https://mp.weixin.qq.com/s/5pAgcjk_lFGrPhSUp2Na3Q
 		//输出HANGUL_JAMO_EXTENDED_B
