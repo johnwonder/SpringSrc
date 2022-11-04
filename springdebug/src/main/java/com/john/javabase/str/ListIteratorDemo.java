@@ -32,5 +32,20 @@ public class ListIteratorDemo {
 		}
 
 		System.out.println(list);
+		List<String> lista = new ArrayList<>();
+		lista.add("a");
+		lista.add("b");
+		lista.add("c");
+		lista.add("d");
+		ListIterator<String> listIt1 = lista.listIterator();
+
+		StringBuilder sb = new StringBuilder();
+		while(listIt1.hasNext()){
+			 sb.append(listIt1.next());
+			 if(listIt1.hasNext())
+			 sb.append(";");
+		}
+		System.out.println(sb.toString());
+
 	}
 }

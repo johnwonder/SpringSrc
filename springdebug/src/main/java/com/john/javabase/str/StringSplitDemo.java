@@ -13,6 +13,7 @@ public class StringSplitDemo {
 
 
 
+
 		String s = "abfcdfefbb";
 
 		System.out.println(Arrays.toString(s.split("")));

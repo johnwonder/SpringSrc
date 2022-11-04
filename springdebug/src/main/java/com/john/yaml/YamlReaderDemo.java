@@ -2,6 +2,7 @@ package com.john.yaml;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -21,6 +22,10 @@ public class YamlReaderDemo {
 
 		Yaml yaml = new Yaml(new Constructor(UnitNode.class));
 		InputStream inputStream = new FileInputStream("/Users/zhangjiong/code/SpringSrc/springdebug/src/main/resources/unit.yml");
+		DumperOptions dumperOptions = new DumperOptions();
+		dumperOptions.setCanonical(false);
+
+		dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		UnitNode unit = yaml.load(inputStream);
 
 		System.out.println(unit);

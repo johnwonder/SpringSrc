@@ -21,6 +21,7 @@ public class App
 
 		System.out.println(url.substring(0, url.indexOf("?")));
 
+
 //		StandardEnv standardEnv = new StandardEnv();
 //
 //

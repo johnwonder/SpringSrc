@@ -11,5 +11,16 @@ public class BooleanDemo {
 
 		Boolean b = Boolean.logicalXor(false,false);
 		System.out.println(b);
+
+		char c1 = 'a';
+		char c2 = 'A';
+		if (c1 == c2 || true && Character.toLowerCase(c1) == Character.toLowerCase(c2)) {
+
+			System.out.println("true");
+		}
+
+		String tranCodeSuffix = "JOB_UPDATE".substring("JOB_UPDATE".lastIndexOf("_"));
+		System.out.println(tranCodeSuffix);
+
 	}
 }

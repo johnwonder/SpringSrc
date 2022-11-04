@@ -8,50 +8,66 @@ import java.util.List;
  * @Author: johnwonder
  * @Date: 2022/10/13
  */
-public class UnitNode extends Node  {
-
-	private List<Node> children;
-	private List<Node> employees;
+public class UnitNode extends Node {
 
 	public UnitNode() {
-		super();
 	}
 
-	public UnitNode(String value, String type, String code) {
-		super(value, type, code);
+	private List<UnitNode> children;
+	private List<EmployeeNode> employees;
+	private String abbrev;
+
+	public UnitNode(String id, String value, String abbrev, String type, String code , String source) {
+		super(id,value, type, code,source);
+		this.abbrev =abbrev;
 	}
 
-	public void setChildren(List<Node> children) {
+	public void setChildren(List<UnitNode> children) {
 		this.children = children;
 	}
 
-	public void setEmployees(List<Node> employees) {
+	public void setEmployees(List<EmployeeNode> employees) {
 		this.employees = employees;
 	}
 
-	public List<Node> getEmployees() {
+	public List<EmployeeNode> getEmployees() {
 		return employees;
 	}
 
-	public List<Node> getChildren() {
+	public List<UnitNode> getChildren() {
 		return children;
+	}
+
+	public String getAbbrev() {
+		return abbrev;
+	}
+
+	/**
+	 * 简称
+	 * @param abbrev
+	 */
+	public void setAbbrev(String abbrev) {
+		this.abbrev = abbrev;
 	}
 
 	@Override
 	public void addNode(Node node){
 
-		if("U".equals(node.getType())){
+		if(node instanceof EmployeeNode){
 			if(this.employees == null)
 				this.employees = new ArrayList<>();
-			this.employees.add(node);
+
+			EmployeeNode employyee = (EmployeeNode)node;
+			this.employees.add(employyee);
 			return;
 		}
 		if(this.children == null)
 			this.children = new ArrayList<>();
-		this.children.add(node);
+
+		UnitNode unit = (UnitNode)node;
+		this.children.add(unit);
 
 	}
-
 	@Override
 	public void addAllNode(Node... nodes) {
 
@@ -59,16 +75,8 @@ public class UnitNode extends Node  {
 			return;
 
 		for (Node node : nodes) {
-			 addNode(node);
+			addNode(node);
 		}
 
-	}
-
-	@Override
-	public String toString() {
-		return "UnitNode{" +
-				"children=" + children +
-				", employees=" + employees +
-				'}';
 	}
 }

@@ -6,7 +6,9 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @Description: spring5.0-2018
@@ -17,32 +19,39 @@ public class YamlWriteDemo {
 
 	public static void main(String[] args) throws IOException {
 
-		Node node = new UnitNode("无锡宝通科技股份有限公司","A","bt");
+		Node node = new UnitNode("1111","无锡宝通科技股份有限公司","sss","A","bt","HR");
 
-		Node sNode1 = new UnitNode("无锡百年通工业输送有限公司","O","bnt");
-		Node sNode2 = new UnitNode("山东新宝龙","O","xbl");
+		Node sNode1 = new UnitNode("22","无锡百年通工业输送有限公司","sss","O","bnt","HR");
+		Node sNode2 = new UnitNode("33","山东新宝龙","sss","O","xbl","HR");
 
 		node.addAllNode(sNode1,sNode2);
-		for (int i = 0; i < 200; i++) {
-			Node sNode = new UnitNode("无锡百年通工业输送有限公司"+i,"O","bnt");
-			node.addNode(sNode);
-		}
+//		for (int i = 0; i < 5; i++) {
+//			Node sNode = new UnitNode("无锡百年通工业输送有限公司"+i,"O","bnt");
+//			node.addNode(sNode);
+//		}
 
-		Node sNode1Child1 = new UnitNode("总经办","O","zjb");
-		EmployeeNode child1LeafNode  = new EmployeeNode("李勇恒","U","BNT00011");
-		EmployeeNode child1LeafNode1  = new EmployeeNode("卫志强","U","BNT001");
-		for (int i = 0; i < 1000; i++) {
-			EmployeeNode employeeNode  = new EmployeeNode("李勇恒"+i,"U","BNT00011");
-			sNode1Child1.addNode(employeeNode);
-		}
+		Node sNode1Child1 = new UnitNode("44","总经办","sss","O","zjb","HR");
+
+		List<JobTitle> titles = new ArrayList<>();
+		titles.add(new JobTitle("1","","",""));
+		titles.add(new JobTitle("2","","",""));
+		EmployeeNode child1LeafNode = EmployeeNode.builder().type("U").jobNum("btzn0018").cardNum("sss").titles(titles).build();
+
+		EmployeeNode child1LeafNode1 = EmployeeNode.builder().jobNum("btzn0020").cardNum("ggg").build();
+
+//		for (int i = 0; i < 3; i++) {
+//			EmployeeNode employeeNode  = new EmployeeNode("李勇恒"+i,"U","BNT00011");
+//			sNode1Child1.addNode(employeeNode);
+//		}
 		sNode1Child1.addNode(child1LeafNode);
 
 		sNode1Child1.addNode(child1LeafNode1);
 
 
-		Node sNode1Child2 = new UnitNode("项目部","O","xmb");
-		Node child2LeafNode  = new EmployeeNode("谢丁丁","U","BNT0021");
-		Node child2LeafNode1  = new EmployeeNode("郁浩钧","U","BNT021");
+		Node sNode1Child2 = new UnitNode("555","项目部","1","O","xmb","HR");
+		EmployeeNode child2LeafNode = EmployeeNode.builder().id("ssasasas").value("aas").code("sss").jobNum("btzn0120").cardNum("aaa").build();
+		EmployeeNode child2LeafNode1 = EmployeeNode.builder().jobNum("btzn0220").cardNum("bbb").build();
+
 		sNode1Child2.addNode(child2LeafNode);
 		sNode1Child2.addNode(child2LeafNode1);
 
@@ -50,7 +59,7 @@ public class YamlWriteDemo {
 		sNode1.addNode(sNode1Child1);
 		sNode1.addNode(sNode1Child2);
 
-		Node sNode2Child1 = new UnitNode("人力资源","O","hr");
+		Node sNode2Child1 = new UnitNode("66","人力资源","1","O","hr","HR");
 		sNode2.addNode(sNode2Child1);
 
 		//设置yml格式，一般使用的是最喜欢的格式
