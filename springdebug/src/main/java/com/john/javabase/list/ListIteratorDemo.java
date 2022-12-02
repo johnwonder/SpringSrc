@@ -2,10 +2,7 @@ package com.john.javabase.list;
 
 import org.springframework.core.env.MapPropertySource;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description: spring5.0-2018
@@ -25,6 +22,28 @@ public class ListIteratorDemo {
 		Iterator var9 =  configurations.entrySet().iterator();
 
 		System.out.println(iteratorResult(var9));
+
+
+		ArrayList<String> sArray = new ArrayList<>();
+		sArray.add("1");
+		sArray.add("2");
+		sArray.add("3");
+		sArray.add("4");
+		sArray.add("5");
+
+		Spliterator<String> spliterator = sArray.spliterator();
+		Spliterator<String> stringSpliterator = spliterator.trySplit();
+		System.out.println(stringSpliterator.estimateSize());
+
+		stringSpliterator.tryAdvance(c -> {
+			System.out.println(("advance:" + c));
+		});
+
+		stringSpliterator.forEachRemaining(System.out::println);
+
+		//0
+		System.out.println(stringSpliterator.estimateSize());
+
 	}
 
 	private  static  String iteratorResult(Iterator iterator){

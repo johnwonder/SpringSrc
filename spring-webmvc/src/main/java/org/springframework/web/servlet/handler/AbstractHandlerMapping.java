@@ -47,6 +47,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UrlPathHelper;
 
+//HandlerMapping接口的抽象基类实现。支持排序，默认handler,handler拦截器，
+//包含被路径模式映射后的handler拦截器
+//这个基类不支持PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE 暴露。
+//对该属性的支持取决于具体的子类，通常基于请求URL映射
 /**
  * Abstract base class for {@link org.springframework.web.servlet.HandlerMapping}
  * implementations. Supports ordering, a default handler, handler interceptors,
@@ -77,8 +81,10 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 
 	private PathMatcher pathMatcher = new AntPathMatcher();
 
+	//拦截器列表
 	private final List<Object> interceptors = new ArrayList<>();
 
+	//适配后的拦截器列表
 	private final List<HandlerInterceptor> adaptedInterceptors = new ArrayList<>();
 
 	private CorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
@@ -290,10 +296,17 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	protected void initApplicationContext() throws BeansException {
 		extendInterceptors(this.interceptors);
+		//检测映射拦截器
+		//默认往adaptedInterceptors中添加所有MappedInterceptor
+		//子类可以更改策略
 		detectMappedInterceptors(this.adaptedInterceptors);
+		//初始化拦截器
+		//适配 WebRequestInterceptor
 		initInterceptors();
 	}
 
+	//扩展钩子 子类可以覆盖后注册附加的拦截器
+	//在initInterceptors方法之前调用
 	/**
 	 * Extension hook that subclasses can override to register additional interceptors,
 	 * given the configured interceptors (see {@link #setInterceptors}).
@@ -338,6 +351,8 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		}
 	}
 
+	//适配给定的interceptor对象到HandlerInterceptor接口
+	//WebRequestInterceptor 会被包装进一个WebRequestHandlerInterceptorAdapter
 	/**
 	 * Adapt the given interceptor object to the {@link HandlerInterceptor} interface.
 	 * <p>By default, the supported interceptor types are {@link HandlerInterceptor}
@@ -372,6 +387,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 				this.adaptedInterceptors.toArray(new HandlerInterceptor[0]) : null);
 	}
 
+	//返回adaptedInterceptors中的MappedInterceptor列表
 	/**
 	 * Return all configured {@link MappedInterceptor MappedInterceptors} as an array.
 	 * @return the array of {@link MappedInterceptor MappedInterceptors}, or {@code null} if none
@@ -403,12 +419,15 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		//链接：https://www.jianshu.com/p/8a5637874d3d
 
 		Object handler = getHandlerInternal(request);
+		//如果handler为空 那么就尝试获取默认的handler
 		if (handler == null) {
 			handler = getDefaultHandler();
 		}
+		//最终handler还是为空，那么就返回空吧
 		if (handler == null) {
 			return null;
 		}
+		//如果handler是一个字符串，那么就尝试去容器中获取这个字符串代表的bean对象
 		// Bean name or resolved handler?
 		if (handler instanceof String) {
 			String handlerName = (String) handler;
@@ -428,6 +447,14 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			logger.debug("Mapped to " + executionChain.getHandler());
 		}
 
+		//浏览器判断跨域为简单请求时候，会在Request Header中添加 Origin （协议 + 域名 + 端口）字段 ，
+		// 它表示我们的请求源，CORS服务端会将该字段作为跨源标志。
+		//CORS接收到此次请求后 ， 首先会判断Origin是否在允许源（由服务端决定）范围之内，
+		// 如果验证通过，服务端会在Response Header 添加 Access-Control-Allow-Origin、Access-Control-Allow-Credentials等字段。
+		//https://zhuanlan.zhihu.com/p/24411090
+		//CORS 全称是跨域资源共享(Cross-Origin Resource Sharing),是一种 AJAX 跨域请求资源的方式,支持现代浏览器,IE支持10以上
+
+		//判断HttpHeader里是否带有Origin
 		if (CorsUtils.isCorsRequest(request)) {
 			CorsConfiguration globalConfig = this.corsConfigurationSource.getCorsConfiguration(request);
 			CorsConfiguration handlerConfig = getCorsConfiguration(handler, request);
@@ -438,6 +465,10 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		return executionChain;
 	}
 
+	/**
+	 * 为一个给定的request查好一个handler,如果没找到就返回null
+	 * 这个方法被getHandler调用
+	 */
 	/**
 	 * Look up a handler for the given request, returning {@code null} if no
 	 * specific one is found. This method is called by {@link #getHandler};

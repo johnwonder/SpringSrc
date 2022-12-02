@@ -23,6 +23,18 @@ import org.springframework.lang.Nullable;
 //如果在应用程序上下文中没有注册HandlerMapping bean，则BeanNameUrlHandlerMapping是默认值
 //请求到处理器的映射，如果映射成功返回一个HandlerExecutionChain对象（包含一个Handler处理器（页面控制器）对象、
 // 多个HandlerInterceptor拦截器）对象；如BeanNameUrlHandlerMapping将URL与Bean名字映射，映射成功的Bean就是此处的处理器；
+
+//HandlerMapping的实现可以支持映射拦截器但不是必须的，
+//一个处理器经常会被包装在一个HandlerExecutionChain实例中，可以伴随一些HandlerInterceptor实例。
+//DispatchServlet 会首先按照指定顺序调用各个HandlerInterceptor的preHandle方法，
+// 如果所有preHandle方法返回true，那么最后就会调用handler自己
+
+//参数化这个映射的能力是这个MVC框架的一个强大而不同寻常的功能
+//例如，可以根据会话状态、cookie状态或许多其他变量编写自定义映射。似乎没有其他MVC框架具有同样的灵活性
+
+//注意：实现可以实现｛@link.org.springframework.core.Ordered｝接口，
+//以便能够指定排序顺序，从而指定DispatcherServlet应用的优先级。
+// 无序实例被视为最低优先级
 /**
  * Interface to be implemented by objects that define a mapping between
  * requests and handler objects.
