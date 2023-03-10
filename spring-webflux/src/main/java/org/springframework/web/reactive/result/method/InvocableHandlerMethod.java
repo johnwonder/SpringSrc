@@ -176,6 +176,8 @@ public class InvocableHandlerMethod extends HandlerMethod {
 			return EMPTY_ARGS;
 		}
 		try {
+			//一个一个参数解析器查找
+			//todo 查看是否支持WebSessionArgument
 			List<Mono<Object>> argMonos = Stream.of(getMethodParameters())
 					.map(param -> {
 						param.initParameterNameDiscovery(this.parameterNameDiscoverer);

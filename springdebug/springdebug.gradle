@@ -9,6 +9,7 @@ plugins {
 
 dependencies {
 
+	compile("io.projectreactor:reactor-core:3.5.2")
 	compile(project(":spring-context"))
 	compile(project(":spring-beans"))
 	compile(project(":spring-core"))

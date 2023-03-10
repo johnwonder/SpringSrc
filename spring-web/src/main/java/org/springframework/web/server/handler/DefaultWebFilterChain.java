@@ -19,7 +19,9 @@ package org.springframework.web.server.handler;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
+import org.springframework.lang.Nullable;
 import reactor.core.publisher.Mono;
 
 import org.springframework.util.Assert;
@@ -43,6 +45,34 @@ public class DefaultWebFilterChain implements WebFilterChain {
 
 	private final int index;
 
+	//5.1开始改成这种形式
+//	public DefaultWebFilterChain(WebHandler handler, List<WebFilter> filters) {
+//		Assert.notNull(handler, "WebHandler is required");
+//		this.allFilters = Collections.unmodifiableList(filters);
+//		this.handler = handler;
+//		DefaultWebFilterChain chain = initChain(filters, handler);
+//		this.currentFilter = chain.currentFilter;
+//		this.chain = chain.chain;
+//	}
+//
+	//chain形成了链表
+//	private static DefaultWebFilterChain initChain(List<WebFilter> filters, WebHandler handler) {
+//		DefaultWebFilterChain chain = new DefaultWebFilterChain(filters, handler, null, null);
+//		ListIterator<? extends WebFilter> iterator = filters.listIterator(filters.size());
+//		while (iterator.hasPrevious()) {
+//			chain = new DefaultWebFilterChain(filters, handler, iterator.previous(), chain);
+//		}
+//		return chain;
+//	}
+
+//	private DefaultWebFilterChain(List<WebFilter> allFilters, WebHandler handler,
+//								  @Nullable WebFilter currentFilter, @Nullable DefaultWebFilterChain chain) {
+//
+//		this.allFilters = allFilters;
+//		this.currentFilter = currentFilter;
+//		this.handler = handler;
+//		this.chain = chain;
+//	}
 
 	public DefaultWebFilterChain(WebHandler handler, WebFilter... filters) {
 		Assert.notNull(handler, "WebHandler is required");
@@ -66,10 +96,20 @@ public class DefaultWebFilterChain implements WebFilterChain {
 		return this.handler;
 	}
 
+//	@Override
+//	public Mono<Void> filter(ServerWebExchange exchange) {
+	//相当于调用下一个filter
+//		return Mono.defer(() ->
+//				this.currentFilter != null && this.chain != null ?
+//						invokeFilter(this.currentFilter, this.chain, exchange) :
+//						this.handler.handle(exchange));
+//	}
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange) {
+		//https://blog.csdn.net/john1337/article/details/104205774
 		return Mono.defer(() -> {
+			//遍历过滤器
 			if (this.index < this.filters.size()) {
 				WebFilter filter = this.filters.get(this.index);
 				WebFilterChain chain = new DefaultWebFilterChain(this, this.index + 1);

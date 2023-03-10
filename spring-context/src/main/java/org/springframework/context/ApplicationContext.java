@@ -120,7 +120,6 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 
 	//可以在应用上下文之外 初始化bean实例
 	//可以把bean的生命周期 应用到这些bean上面。
-
 	//AutowireCapableBeanFactory 提供了  configureBean等配置bean的方法
 
 	//ConfigurableApplicationContext 暴露了ConfigurableListableBeanFactory

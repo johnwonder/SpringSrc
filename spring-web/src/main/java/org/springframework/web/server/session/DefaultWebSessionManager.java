@@ -78,6 +78,10 @@ public class DefaultWebSessionManager implements WebSessionManager {
 
 	@Override
 	public Mono<WebSession> getSession(ServerWebExchange exchange) {
+		//一个使用Mono.just创建，一个用Mono.defer创建，然后分别通过lambda表达式订阅这两个publisher，可以看到两个输出的时间都是10:22：51，延迟5秒钟后重新订阅，Mono.just创建的数据源时间没变，
+		// 但是Mono.defer创建的数据源时间相应的延迟了5秒钟，原因在于Mono.just会在声明阶段构造Date对象，只创建一次，但是Mono.defer却是在subscribe阶段才会创建对应的Date对象，每次调用subscribe方法都会创建Date对象，在webflux中
+		//版权声明：本文为CSDN博主「PolarisHuster」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+		//原文链接：https://blog.csdn.net/john1337/article/details/104205774
 		return Mono.defer(() -> retrieveSession(exchange)
 				.switchIfEmpty(this.sessionStore.createWebSession())
 				.doOnNext(session -> exchange.getResponse().beforeCommit(() -> save(exchange, session))));
@@ -92,6 +96,7 @@ public class DefaultWebSessionManager implements WebSessionManager {
 	private Mono<Void> save(ServerWebExchange exchange, WebSession session) {
 		List<String> ids = getSessionIdResolver().resolveSessionIds(exchange);
 
+		//session还没开始 或者已经过期
 		if (!session.isStarted() || session.isExpired()) {
 			if (!ids.isEmpty()) {
 				// Expired on retrieve or while processing request, or invalidated..
@@ -100,6 +105,7 @@ public class DefaultWebSessionManager implements WebSessionManager {
 			return Mono.empty();
 		}
 
+		//ids为空 或者ids第一个 跟当前sessionid不同
 		if (ids.isEmpty() || !session.getId().equals(ids.get(0))) {
 			this.sessionIdResolver.setSessionId(exchange, session.getId());
 		}

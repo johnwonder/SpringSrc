@@ -363,7 +363,7 @@ public abstract class BeanFactoryUtils {
 				Map<String, T> parentResult = beansOfTypeIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), type, includeNonSingletons, allowEagerInit);
 
-				//会合并
+				//把父工厂里的 bean合并到当前result中
 				parentResult.forEach((beanName, beanType) -> {
 					if (!result.containsKey(beanName) && !hbf.containsLocalBean(beanName)) {
 						result.put(beanName, beanType);

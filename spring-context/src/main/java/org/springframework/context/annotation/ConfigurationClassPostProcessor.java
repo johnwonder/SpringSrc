@@ -286,6 +286,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		//todo 通过BeanDefinitionRegistry 获取 BeanDefinitionNames
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
+		//会遍历 AnnotationConfigUtils内部定义的internalConfigurationAnnotationProcessor等。
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 

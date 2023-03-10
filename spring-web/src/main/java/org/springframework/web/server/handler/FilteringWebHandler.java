@@ -57,6 +57,7 @@ public class FilteringWebHandler extends WebHandlerDecorator {
 
 	@Override
 	public Mono<Void> handle(ServerWebExchange exchange) {
+		//会先执行filter
 		return this.filters.length != 0 ?
 				new DefaultWebFilterChain(getDelegate(), this.filters).filter(exchange) :
 				super.handle(exchange);

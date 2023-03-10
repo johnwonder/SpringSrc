@@ -11,6 +11,9 @@ import java.text.Format;
 public class JavaNumBaseDemo {
 
 	public static void main(String[] args) {
+
+		System.out.println(String.format("%02d", 25));
+
 		int num01  = 0b1100 ; //二进制 跟go一样
 		int num02  = 014;   //八进制 //go中 用 0o14代表8进制
 		int num03  = 0xC  ;  //十六进制 根go一样

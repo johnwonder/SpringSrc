@@ -30,6 +30,11 @@ import org.springframework.http.HttpLogging;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
 
+//https://blog.csdn.net/ssehs/article/details/120927767
+//https://juejin.cn/post/6844903784309587981
+//https://blog.csdn.net/cunfu6353/article/details/107228601/
+//Reactor
+//https://www.infoq.com/articles/Servlet-and-Reactive-Stacks-Spring-Framework-5/?topicPageSponsorship=c1246725-b0a7-43a6-9ef9-68102c8d48e1
 /**
  * Adapt {@link HttpHandler} to the Reactor Netty channel handling function.
  *
@@ -45,12 +50,15 @@ public class ReactorHttpHandlerAdapter implements BiFunction<HttpServerRequest, 
 	private final HttpHandler httpHandler;
 
 
+	//https://zhuanlan.zhihu.com/p/461779410
 	public ReactorHttpHandlerAdapter(HttpHandler httpHandler) {
 		Assert.notNull(httpHandler, "HttpHandler must not be null");
 		this.httpHandler = httpHandler;
 	}
 
 
+	//https://blog.csdn.net/wenhaipan/article/details/103643033
+	//collectMap
 	@Override
 	public Mono<Void> apply(HttpServerRequest reactorRequest, HttpServerResponse reactorResponse) {
 		NettyDataBufferFactory bufferFactory = new NettyDataBufferFactory(reactorResponse.alloc());
@@ -62,6 +70,7 @@ public class ReactorHttpHandlerAdapter implements BiFunction<HttpServerRequest, 
 				response = new HttpHeadResponseDecorator(response);
 			}
 
+			//交给httpHandler执行
 			return this.httpHandler.handle(request, response)
 					.doOnError(ex -> logger.trace(request.getLogPrefix() + "Failed to complete: " + ex.getMessage()))
 					.doOnSuccess(aVoid -> logger.trace(request.getLogPrefix() + "Handling completed"));

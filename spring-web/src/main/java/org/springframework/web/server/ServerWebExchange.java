@@ -33,6 +33,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 
+//HTTP请求-响应交互契约，提供对HTTP请求和响应的访问，并公开其他服务器端处理相关的属性和功能，如请求属性
 /**
  * Contract for an HTTP request-response interaction. Provides access to the HTTP
  * request and response and also exposes additional server-side processing

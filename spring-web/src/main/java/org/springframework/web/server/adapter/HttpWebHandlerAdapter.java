@@ -45,6 +45,7 @@ import org.springframework.web.server.i18n.LocaleContextResolver;
 import org.springframework.web.server.session.DefaultWebSessionManager;
 import org.springframework.web.server.session.WebSessionManager;
 
+//https://zhuanlan.zhihu.com/p/461779410
 /**
  * Default adapter of {@link WebHandler} to the {@link HttpHandler} contract.
  *
@@ -237,12 +238,15 @@ public class HttpWebHandlerAdapter extends WebHandlerDecorator implements HttpHa
 			request = this.forwardedHeaderTransformer.apply(request);
 		}
 
+		//创建exchange
 		ServerWebExchange exchange = createExchange(request, response);
 
 		LogFormatUtils.traceDebug(logger, traceOn ->
 				exchange.getLogPrefix() + formatRequest(exchange.getRequest()) +
 						(traceOn ? ", headers=" + formatHeaders(exchange.getRequest().getHeaders()) : ""));
 
+		//执行 参看WebHttpHandlerBuilder.build方法
+		//最终调用DispatchHandler
 		return getDelegate().handle(exchange)
 				.doOnSuccess(aVoid -> logResponse(exchange))
 				.onErrorResume(ex -> handleUnresolvedError(exchange, ex))

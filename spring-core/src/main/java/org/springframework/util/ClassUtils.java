@@ -193,6 +193,7 @@ public abstract class ClassUtils {
 			// No thread context class loader -> use class loader of this class.
 			cl = ClassUtils.class.getClassLoader();
 			if (cl == null) {
+				//https://www.dandelioncloud.cn/article/details/1487100061510389762
 				// getClassLoader() returning null indicates the bootstrap ClassLoader
 				try {
 					cl = ClassLoader.getSystemClassLoader();

@@ -11,6 +11,7 @@ public class StringFormatDemo {
 
 	public static void main(String[] args) {
 
+		System.out.printf("%S%n", "gpk");
 		//https://mp.weixin.qq.com/s?__biz=MzU3MTAzNTMzMQ==&mid=2247486701&idx=1&sn=26268a35c3849406c97847a485baff07&chksm=fce71741cb909e572fb112f7ba643a797bb89823cd46452fe383c000bd7a571e5c29aac1825c&token=746106928&lang=zh_CN&scene=21#wechat_redirect
 		String s =String.format("我是 %s","john");
 		System.out.println(s);

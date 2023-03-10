@@ -919,6 +919,7 @@ class ConstructorResolver {
 			return injectionPoint;
 		}
 		try {
+			//todo 方法参数类型 放入DependencyDescriptor的methodParameter里 2023-02-09
 			return this.beanFactory.resolveDependency(
 					new DependencyDescriptor(param, true), beanName, autowiredBeanNames, typeConverter);
 		}

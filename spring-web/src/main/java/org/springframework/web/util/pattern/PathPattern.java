@@ -71,6 +71,7 @@ import org.springframework.util.StringUtils;
  */
 public class PathPattern implements Comparable<PathPattern> {
 
+	//https://spring.io/blog/2020/06/30/url-matching-with-pathpattern-in-spring-mvc
 	private static final PathContainer EMPTY_PATH = PathContainer.parsePath("");
 
 	/**

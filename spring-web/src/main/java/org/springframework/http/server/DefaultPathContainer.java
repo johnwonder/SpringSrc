@@ -121,6 +121,7 @@ final class DefaultPathContainer implements PathContainer {
 
 	private static PathSegment parsePathSegment(String segment) {
 		Charset charset = StandardCharsets.UTF_8;
+		//https://spring.io/blog/2020/06/30/url-matching-with-pathpattern-in-spring-mvc
 		int index = segment.indexOf(';');
 		if (index == -1) {
 			String valueToMatch = StringUtils.uriDecode(segment, charset);
@@ -129,6 +130,7 @@ final class DefaultPathContainer implements PathContainer {
 		else {
 			String valueToMatch = StringUtils.uriDecode(segment.substring(0, index), charset);
 			String pathParameterContent = segment.substring(index);
+			//解析路径参数
 			MultiValueMap<String, String> parameters = parsePathParams(pathParameterContent, charset);
 			return new DefaultPathSegment(segment, valueToMatch, parameters);
 		}

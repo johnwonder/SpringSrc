@@ -293,6 +293,7 @@ class ConfigurationClassBeanDefinitionReader {
 			logger.trace(String.format("Registering bean definition for @Bean method %s.%s()",
 					configClass.getMetadata().getClassName(), beanName));
 		}
+		//todo 注册@Bean 注解标注的方法 2023-02-10
 		this.registry.registerBeanDefinition(beanName, beanDefToRegister);
 	}
 

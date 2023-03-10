@@ -113,6 +113,7 @@ public class InMemoryWebSessionStore implements WebSessionStore {
 	public Mono<WebSession> createWebSession() {
 		Instant now = this.clock.instant();
 		this.expiredSessionChecker.checkIfNecessary(now);
+		//通过fromSupplier创建
 		return Mono.fromSupplier(() -> new InMemoryWebSession(now));
 	}
 

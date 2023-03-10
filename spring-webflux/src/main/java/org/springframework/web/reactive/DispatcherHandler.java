@@ -118,11 +118,14 @@ public class DispatcherHandler implements WebHandler, ApplicationContextAware {
 
 
 	protected void initStrategies(ApplicationContext context) {
+		//查找HandlerMapping映射
 		Map<String, HandlerMapping> mappingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(
 				context, HandlerMapping.class, true, false);
 
 		ArrayList<HandlerMapping> mappings = new ArrayList<>(mappingBeans.values());
+		//排序HandlerMapping
 		AnnotationAwareOrderComparator.sort(mappings);
+		//
 		this.handlerMappings = Collections.unmodifiableList(mappings);
 
 		Map<String, HandlerAdapter> adapterBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(
@@ -155,6 +158,7 @@ public class DispatcherHandler implements WebHandler, ApplicationContextAware {
 	private Mono<HandlerResult> invokeHandler(ServerWebExchange exchange, Object handler) {
 		if (this.handlerAdapters != null) {
 			for (HandlerAdapter handlerAdapter : this.handlerAdapters) {
+				//判断是否支持当前handler
 				if (handlerAdapter.supports(handler)) {
 					return handlerAdapter.handle(exchange, handler);
 				}

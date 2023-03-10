@@ -202,6 +202,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	@Override
 	public final ConfigurableListableBeanFactory getBeanFactory() {
 		synchronized (this.beanFactoryMonitor) {
+
+			//如果bean工厂为空 那么就抛出异常。。。
+			//关闭工厂后就为空了
 			if (this.beanFactory == null) {
 				throw new IllegalStateException("BeanFactory not initialized or already closed - " +
 						"call 'refresh' before accessing beans via the ApplicationContext");

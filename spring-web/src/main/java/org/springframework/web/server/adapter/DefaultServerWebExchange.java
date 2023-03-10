@@ -126,6 +126,7 @@ public class DefaultServerWebExchange implements ServerWebExchange {
 
 		this.request = request;
 		this.response = response;
+		//获取session的动作执行一次就缓存起来
 		this.sessionMono = sessionManager.getSession(this).cache();
 		this.localeContextResolver = localeContextResolver;
 		this.formDataMono = initFormData(request, codecConfigurer, getLogPrefix());

@@ -155,17 +155,22 @@ public final class WebHttpHandlerBuilder {
 	 * @return the prepared builder
 	 */
 	public static WebHttpHandlerBuilder applicationContext(ApplicationContext context) {
+
+		//通过容器获取WebHandler 执行handle
 		WebHttpHandlerBuilder builder = new WebHttpHandlerBuilder(
 				context.getBean(WEB_HANDLER_BEAN_NAME, WebHandler.class), context);
 
 		// Autowire lists for @Bean + @Order
 
+		//已经排序的Bean容器
 		SortedBeanContainer container = new SortedBeanContainer();
 		context.getAutowireCapableBeanFactory().autowireBean(container);
+		//添加filter
 		builder.filters(filters -> filters.addAll(container.getFilters()));
 		builder.exceptionHandlers(handlers -> handlers.addAll(container.getExceptionHandlers()));
 
 		try {
+			//通过注入的bean获取 sessionManager
 			builder.sessionManager(
 					context.getBean(WEB_SESSION_MANAGER_BEAN_NAME, WebSessionManager.class));
 		}
@@ -236,6 +241,7 @@ public final class WebHttpHandlerBuilder {
 		if (this.filters.isEmpty()) {
 			return;
 		}
+
 
 		List<WebFilter> filtersToUse = this.filters.stream()
 				.peek(filter -> {
@@ -356,9 +362,14 @@ public final class WebHttpHandlerBuilder {
 	 */
 	public HttpHandler build() {
 
+		//各种delegate webHandler一般就是DispatchHandler
 		WebHandler decorated = new FilteringWebHandler(this.webHandler, this.filters);
 		decorated = new ExceptionHandlingWebHandler(decorated,  this.exceptionHandlers);
 
+		//https://baijiahao.baidu.com/s?id=1717126366440376459&wfr=spider&for=pc
+		//http handler做的事情第一是将request 和 response转为一个exchange，
+		// 这个exchange非常核心，是各个filter之间参数流转的载体，
+		// 该类包含request、response、attributes(扩展字段)，接着做的事情就是web filter链的执行，其中的逻辑主要是监控。
 		HttpWebHandlerAdapter adapted = new HttpWebHandlerAdapter(decorated);
 		if (this.sessionManager != null) {
 			adapted.setSessionManager(this.sessionManager);

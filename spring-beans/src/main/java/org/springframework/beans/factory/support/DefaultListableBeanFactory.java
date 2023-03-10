@@ -1267,6 +1267,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		else if (ObjectFactory.class == descriptor.getDependencyType() ||
 				ObjectProvider.class == descriptor.getDependencyType()) {
 
+			//todo ObjectProvider 延迟注入的实现
 			//todo important 返回BeanFactory中的内部类
 			return new DependencyObjectProvider(descriptor, requestingBeanName);
 		}
@@ -1334,7 +1335,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Object instanceCandidate;
 
 			//如果匹配的bean 数量大于1
-			//里面会探测是否是Primary 主要的 determinePrimaryCandidate
+			//todo 里面会探测是否是Primary 主要的 determinePrimaryCandidate
 			if (matchingBeans.size() > 1) {
 				autowiredBeanName = determineAutowireCandidate(matchingBeans, descriptor);
 				if (autowiredBeanName == null) {
@@ -1382,7 +1383,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 	}
 
-	//多个Bean注入 比如
+	//todo 多个Bean注入 比如
 	// @Autowired
 	// List<BeanType> beans;
 	@Nullable
@@ -1391,6 +1392,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		final Class<?> type = descriptor.getDependencyType();
 
+		//todo 重要看 findAutowireCandidates 会过滤掉自己
+		//https://blog.csdn.net/wangwei19871103/article/details/105093344
 		if (descriptor instanceof StreamDependencyDescriptor) {
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, type, descriptor);
 			if (autowiredBeanNames != null) {
@@ -1399,6 +1402,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Stream<Object> stream = matchingBeans.keySet().stream()
 					.map(name -> descriptor.resolveCandidate(name, type, this))
 					.filter(bean -> !(bean instanceof NullBean));
+			//判断是否排序
 			if (((StreamDependencyDescriptor) descriptor).isOrdered()) {
 				stream = stream.sorted(adaptOrderComparator(matchingBeans));
 			}
@@ -1553,6 +1557,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		//2.遍历 候选的bean名称
 		for (String candidate : candidateNames) {
 			//不是自我引用 且 是符合自动装配候选的
+			//todo isAutowireCandidate 内部会去check Qualifier
+			//todo isSelfReference 会判断不是自己的引用
 			if (!isSelfReference(beanName, candidate) && isAutowireCandidate(candidate, descriptor)) {
 				addCandidateEntry(result, candidate, descriptor, requiredType);
 			}
@@ -1926,6 +1932,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 
+	//解析stream的时候才会使用，比如ObjectProvider
 	/**
 	 * A dependency descriptor marker for stream access to multiple elements.
 	 */
